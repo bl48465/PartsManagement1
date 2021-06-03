@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useContext, useState } from "react";
+import React, {useContext, useState} from "react";
 import {
   BoldLink,
   BoxContainer,
@@ -12,184 +12,124 @@ import {
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 
-export function SignupForm() {
+export function SignupForm(){
 
-  const { switchToSignin } = useContext(AccountContext);
-  const url = "http://localhost:44395/api/user/register";
-  const [data, setData] = useState({
-    Emri: '',
-    Mbiemri: '',
-    Company: '',
-    Email: '',
-    Password: '',
-    ConfirmPassword: '',
-    formErrors: {
-      ErrEmri: '',
-      ErrMbiemri: '',
-      ErrCompany: '',
-      ErrEmail: '',
-      ErrPassword: '',
-      ErrConfirmPassword: '',
-      ErrAll:''
-    }
-  })
+    const [formState, setFormState] = useState({
+      formValues: {
+        Emri: '',
+        Mbiemri: '',
+        Company: '',
+        Email: '',
+        Password: '',
+        ConfirmPassword: '',
+      },
+      formErrors: {
+        Emri: '',
+        Mbiemri: '',
+        Company: '',
+        Email: '',
+        Password: '',
+        ConfirmPassword: '',
+      },
+      formValidity: {
+        Emri: false,
+        Mbiemri: false,
+        Company: false,
+        Email: false,
+        Password: false,
+        ConfirmPassword: false
+      }
+    });
 
-  function submit(e) {
-    if(data.Emri === '' || data.Mbiemri === ''  || data.Company === ''  || data.Email === ''  || data.Password === ''  || data.ConfirmPassword === ''){
-      data.formErrors.ErrAll = 'Rishikoni të dhënat!';
-    }
-    else{
+    const handleValidation = target => {
 
-    e.preventDefault();
+      const { name, value } = target;
+      const fieldValidationErrors = formState.formErrors;
+      const validity = formState.formValidity;
 
-    axios.post(url, {
-      Emri: data.Emri,
-      Mbiemri: data.Mbiemri,
-      Company: data.Company,
-      Email: data.Email,
-      Password: data.Password,
-      ConfirmPassword: data.ConfirmPassword
-    })
-      .then(res => {
-        console.log(res.data)
-      })
-    }
-  }
+      const isEmail = name === "Email";
+      const isPassword = name === "Password";
+      const isConfirmPassword = name === "ConfirmPassword";
+      const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+      const PasswordReg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+  
+      validity[name] = value.length > 3 ;
+      fieldValidationErrors[name] = validity[name]
+        ? ""
+        : `${name} duhet të ketë së paku 3 shkronja `;
+      if (validity[name]) {
+        if (isEmail) {
+          validity[name] = emailTest.test(value);
+          fieldValidationErrors[name] = validity[name]
+            ? ""
+            : `${name} duhet të jetë valid`;
+        }
+        if (isPassword) {
+          validity[name] = PasswordReg.test(value);
+          fieldValidationErrors[name] = validity[name]
+            ? ""
+            : `Fjalëkalimi duhet të përmbajë së paku 8 shkronja (1 numër, 1 shkronjë të madhe)`;
+        }
+        if (isConfirmPassword) {
+          validity[name] = formState.formValues.ConfirmPassword === formState.formValues.Password
+          fieldValidationErrors[name] = validity[name]
+            ? ""
+            : `Fjalëkalimet nuk përputhen`;
+        }
+      }
 
+  setFormState({
+        ...formState,
+        formErrors: fieldValidationErrors,
+        formValidity: validity
+      });
+    };
 
-  function handleEmri(e) {
-    const newdata = { ...data }
-    newdata[e.target.name] = e.target.value
+    const handleChange = ({ target }) => {
+      const { formValues } = formState;
+      formValues[target.name] = target.value;
+      setFormState({ formValues });
+      handleValidation(target);
+    };
 
-    if (newdata.Emri.length < 3 || newdata.Emri === '') {
-      newdata.formErrors.ErrEmri = 'Ju lutem shtypni një emër valid';
-    }
-    else {
-      newdata.formErrors.ErrEmri = '';
+    const handleSubmit = event => {
+      event.preventDefault();
+      const { formValues, formValidity } = formState;
+      if (Object.values(formValidity).every(Boolean)) {
+        axios.post("http://localhost:44395/api/user/register",formValues);
+        console.log(formValues);
+      } else {
+        for (let key in formValues) {
+          let target = {
+            name: key,
+            value: formValues[key]
+          };
+          handleValidation(target);
+        }
+      }
+    };
 
-    }
-    setData(newdata)
-
-  }
-
-  function handleMbiemri(e) {
-    const newdata = { ...data }
-    newdata[e.target.name] = e.target.value
-
-    if (newdata.Mbiemri.length < 3 || newdata.Mbiemri === '') {
-      newdata.formErrors.ErrMbiemri = 'Ju lutem shtypni një mbiemër valid';
-
-    }
-    else {
-      newdata.formErrors.ErrMbiemri = '';
-
-    }
-    setData(newdata)
-
-  }
-
-  function handleCompany(e) {
-
-    const newdata = { ...data }
-    newdata[e.target.name] = e.target.value
-
-    if (newdata.Company.length < 3 || newdata.Company === '') {
-      newdata.formErrors.ErrCompany = 'Ju lutem shtypni një kompani valide';
-
-    }
-    else {
-      newdata.formErrors.ErrCompany = '';
-    }
-
-    setData(newdata)
-
-
-  }
-
-  function handleEmail(e) {
-
-    const emailRegex = /\S+@\S+\.\S+/;
-    const newdata = { ...data }
-    newdata[e.target.name] = e.target.value
-
-    if (newdata.Email.length < 3 || newdata.Email === '' || !newdata.Email.match(emailRegex)) {
-      newdata.formErrors.ErrEmail = 'Ju lutem shtypni një email valid';
-
-    }
-    else {
-      newdata.formErrors.ErrEmail = '';
-
-    }
-
-    setData(newdata)
-
-
-  }
-
-  function handlePassword(e) {
-
-    const newdata = { ...data }
-    newdata[e.target.name] = e.target.value
-
-    if (newdata.Password.length < 8 || newdata.Password === '') {
-      newdata.formErrors.ErrPassword = 'Ju lutem shtypni një fjalëkalim valid';
-    }
-    else {
-      newdata.formErrors.ErrPassword = '';
-
-    }
-
-    setData(newdata)
-
-
-  }
-
-  function handleConfirmPassword(e) {
-
-    const newdata = { ...data }
-    newdata[e.target.name] = e.target.value
-
-    if (newdata.ConfirmPassword.length < 8 || newdata.ConfirmPassword !== newdata.Password) {
-      newdata.formErrors.ErrConfirmPassword = 'Fjalëkalimet nuk përputhen';
-    }
-    else {
-      newdata.formErrors.ErrConfirmPassword = '';
-    }
-
-    setData(newdata)
-
-
-  }
-
+    const { switchToSignin } = useContext(AccountContext);
 
   return (
     <BoxContainer>
-      
-      <ErrMessage>{data.formErrors.ErrAll}</ErrMessage>
-      <FormContainer>
-        <ErrMessage>{data.formErrors.ErrEmri}</ErrMessage>
-        <Input onChange={(e) => handleEmri(e)} type="text" placeholder="Emri" name="Emri" value={data.Emri} />
-
-        <ErrMessage>{data.formErrors.ErrMbiemri}</ErrMessage>
-        <Input onChange={(e) => handleMbiemri(e)} type="text" placeholder="Mbiemri" name="Mbiemri" value={data.Mbiemri} />
-
-        <ErrMessage>{data.formErrors.ErrCompany}</ErrMessage>
-        <Input onChange={(e) => handleCompany(e)} type="text" placeholder="Kompania" name="Company" value={data.Company} />
-
-        <ErrMessage>{data.formErrors.ErrEmail}</ErrMessage>
-        <Input onChange={(e) => handleEmail(e)} type="email" placeholder="Emaili" name="Email" value={data.Email} />
-
-        <ErrMessage>{data.formErrors.ErrPassword}</ErrMessage>
-        <Input onChange={(e) => handlePassword(e)} type="password" placeholder="Fjalëkalimi" name="Password" value={data.Password} required />
-
-        <ErrMessage>{data.formErrors.ErrConfirmPassword}</ErrMessage>
-        <Input onChange={(e) => handleConfirmPassword(e)} type="password" placeholder="Konfirmo" name="ConfirmPassword" value={data.ConfirmPassword} />
-
+      <FormContainer onSubmit={handleSubmit}>
+        <ErrMessage>{formState.formErrors.Emri}</ErrMessage>
+        <Input  type="text" placeholder="Emri" name="Emri" onChange={handleChange}  value={formState.formValues.Emri} />
+        <ErrMessage>{formState.formErrors.Mbiemri}</ErrMessage>
+        <Input  type="text" placeholder="Mbiemri" name="Mbiemri" onChange={handleChange} value={formState.formValues.Mbiemri} />
+        <ErrMessage>{formState.formErrors.Company}</ErrMessage>
+        <Input  type="text" placeholder="Kompania" name="Company" onChange={handleChange} value={formState.formValues.Company} />
+        <ErrMessage>{formState.formErrors.Email}</ErrMessage>
+        <Input  type="email" placeholder="Emaili" name="Email" onChange={handleChange} value={formState.formValues.Email}/>
+        <ErrMessage>{formState.formErrors.Password}</ErrMessage>
+        <Input  type="password" placeholder="Fjalëkalimi" name="Password" onChange={handleChange} value={formState.formValues.Password}/>
+        <ErrMessage>{formState.formErrors.ConfirmPassword}</ErrMessage>
+        <Input  type="password" placeholder="Fjalëkalimi" name="ConfirmPassword" onChange={handleChange} value={formState.formValues.ConfirmPassword}/>
       </FormContainer>
-      <Marginer direction="vertical" margin={10}/>
-      
-      <SubmitButton type="submit" onClick={(e) => submit(e)}>Regjistrohu</SubmitButton>
-      <Marginer direction="vertical" margin="1em"/>
+      <Marginer direction="vertical" margin={10} />
+      <SubmitButton type="submit" onClick={handleSubmit} >Regjistrohu</SubmitButton>
+      <Marginer direction="vertical" margin="1em" />
       <MutedLink href="#">
         Jeni regjistruar më parë?
           <BoldLink href="#" onClick={switchToSignin}>
