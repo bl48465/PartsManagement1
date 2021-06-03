@@ -11,10 +11,8 @@ import {
 } from "./common";
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
-import { useForm } from "react-hook-form";
 
 export function SignupForm() {
-
 
   const { switchToSignin } = useContext(AccountContext);
   const url = "http://localhost:44395/api/user/register";
@@ -32,12 +30,15 @@ export function SignupForm() {
       ErrEmail: '',
       ErrPassword: '',
       ErrConfirmPassword: '',
-      ErrAll:'Rishikoni të dhënat',
-      ErrExists:'Emaili eshte ne perdorim'
+      ErrAll:''
     }
   })
 
   function submit(e) {
+    if(data.Emri === '' || data.Mbiemri === ''  || data.Company === ''  || data.Email === ''  || data.Password === ''  || data.ConfirmPassword === ''){
+      data.formErrors.ErrAll = 'Rishikoni të dhënat!';
+    }
+    else{
 
     e.preventDefault();
 
@@ -49,13 +50,11 @@ export function SignupForm() {
       Password: data.Password,
       ConfirmPassword: data.ConfirmPassword
     })
-      .catch(err => {
-        if(err.response.status === 500){
-          data.formErrors.ErrExists = '';
-        }
+      .then(res => {
+        console.log(res.data)
       })
     }
-
+  }
 
 
   function handleEmri(e) {
@@ -159,13 +158,14 @@ export function SignupForm() {
 
     setData(newdata)
 
+
   }
+
 
   return (
     <BoxContainer>
       
       <ErrMessage>{data.formErrors.ErrAll}</ErrMessage>
-      <ErrMessage>{data.formErrors.ErrExists}</ErrMessage>
       <FormContainer>
         <ErrMessage>{data.formErrors.ErrEmri}</ErrMessage>
         <Input onChange={(e) => handleEmri(e)} type="text" placeholder="Emri" name="Emri" value={data.Emri} />
@@ -180,7 +180,7 @@ export function SignupForm() {
         <Input onChange={(e) => handleEmail(e)} type="email" placeholder="Emaili" name="Email" value={data.Email} />
 
         <ErrMessage>{data.formErrors.ErrPassword}</ErrMessage>
-        <Input onChange={(e) => handlePassword(e)} type="password" placeholder="Fjalëkalimi" name="Password" value={data.Password} />
+        <Input onChange={(e) => handlePassword(e)} type="password" placeholder="Fjalëkalimi" name="Password" value={data.Password} required />
 
         <ErrMessage>{data.formErrors.ErrConfirmPassword}</ErrMessage>
         <Input onChange={(e) => handleConfirmPassword(e)} type="password" placeholder="Konfirmo" name="ConfirmPassword" value={data.ConfirmPassword} />
