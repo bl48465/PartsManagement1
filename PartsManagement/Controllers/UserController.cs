@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,7 +36,7 @@ namespace PartsManagement.Controllers
                 if (_context.Users.Any(u => u.Email == user.Email))
                 {
                     throw new ArgumentException(
-                            $"Emaili {user.Email} Ã«shtÃ« nÃ« pÃ«rdorim.");
+                            $"Emaili {user.Email} është në përdorim.");
                 }
 
                 PasswordHasher<User> hasher = new PasswordHasher<User>();
@@ -95,7 +95,7 @@ namespace PartsManagement.Controllers
                 if (result == 0)
                 {
                     throw new ArgumentException(
-                           $"FjalÃ«kalmi i dhÃ«nÃ« gabim");
+                           $"Fjalëkalmi i dhënë gabim");
                 }
 
                 HttpContext.Session.SetInt32("UserId", UserInDB.UserId);
