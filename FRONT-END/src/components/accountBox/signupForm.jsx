@@ -13,31 +13,36 @@ import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 
 export function SignupForm(){
+    const[errorState,setError] = useState({
+      errValues:{
+        emailExist : ''
+      }
+    })
 
     const [formState, setFormState] = useState({
       formValues: {
         Emri: '',
         Mbiemri: '',
-        Company: '',
+        Kompania: '',
         Email: '',
         Password: '',
-        ConfirmPassword: '',
+        Konfirmimi: '',
       },
       formErrors: {
         Emri: '',
         Mbiemri: '',
-        Company: '',
+        Kompania: '',
         Email: '',
         Password: '',
-        ConfirmPassword: '',
+        Konfirmimi: '',
       },
       formValidity: {
         Emri: false,
         Mbiemri: false,
-        Company: false,
+        Kompania: false,
         Email: false,
         Password: false,
-        ConfirmPassword: false
+        Konfirmimi: false
       }
     });
 
@@ -49,7 +54,7 @@ export function SignupForm(){
 
       const isEmail = name === "Email";
       const isPassword = name === "Password";
-      const isConfirmPassword = name === "ConfirmPassword";
+      const isKonfirmimi = name === "Konfirmimi";
       const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
       const PasswordReg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   
@@ -70,8 +75,8 @@ export function SignupForm(){
             ? ""
             : `Fjalëkalimi duhet të përmbajë së paku 8 shkronja (1 numër, 1 shkronjë të madhe)`;
         }
-        if (isConfirmPassword) {
-          validity[name] = formState.formValues.ConfirmPassword === formState.formValues.Password
+        if (isKonfirmimi) {
+          validity[name] = formState.formValues.Konfirmimi === formState.formValues.Password
           fieldValidationErrors[name] = validity[name]
             ? ""
             : `Fjalëkalimet nuk përputhen`;
@@ -95,8 +100,19 @@ export function SignupForm(){
     const handleSubmit = event => {
       event.preventDefault();
       const { formValues, formValidity } = formState;
+      const { errValues } = errorState;
       if (Object.values(formValidity).every(Boolean)) {
-        axios.post("http://localhost:44395/api/user/register",formValues);
+        axios.post("http://localhost:44395/api/user/register",formValues)
+        .catch((error)=> {
+            if(error.response){
+              console.log(error.response.status);
+              if(error.response.status === 500){
+                errorState.errValues.emailExist = "Emaili është në përdorim";
+                setError({errValues});
+                console.log(errorState.errValues.emailExist);
+              }
+            }
+        })
         console.log(formValues);
       } else {
         for (let key in formValues) {
@@ -114,18 +130,21 @@ export function SignupForm(){
   return (
     <BoxContainer>
       <FormContainer onSubmit={handleSubmit}>
-        <ErrMessage>{formState.formErrors.Emri}</ErrMessage>
+        <ErrMessage>{formState.formValidity.Emri}</ErrMessage>
         <Input  type="text" placeholder="Emri" name="Emri" onChange={handleChange}  value={formState.formValues.Emri} />
         <ErrMessage>{formState.formErrors.Mbiemri}</ErrMessage>
         <Input  type="text" placeholder="Mbiemri" name="Mbiemri" onChange={handleChange} value={formState.formValues.Mbiemri} />
-        <ErrMessage>{formState.formErrors.Company}</ErrMessage>
-        <Input  type="text" placeholder="Kompania" name="Company" onChange={handleChange} value={formState.formValues.Company} />
-        <ErrMessage>{formState.formErrors.Email}</ErrMessage>
+        <ErrMessage>{formState.formErrors.Kompania}</ErrMessage>
+        <Input  type="text" placeholder="Kompania" name="Kompania" onChange={handleChange} value={formState.formValues.Kompania} />
+        
+        <ErrMessage>{formState.formErrors.Email}
+                    {errorState.errValues.emailExist}
+        </ErrMessage>
         <Input  type="email" placeholder="Emaili" name="Email" onChange={handleChange} value={formState.formValues.Email}/>
         <ErrMessage>{formState.formErrors.Password}</ErrMessage>
         <Input  type="password" placeholder="Fjalëkalimi" name="Password" onChange={handleChange} value={formState.formValues.Password}/>
-        <ErrMessage>{formState.formErrors.ConfirmPassword}</ErrMessage>
-        <Input  type="password" placeholder="Fjalëkalimi" name="ConfirmPassword" onChange={handleChange} value={formState.formValues.ConfirmPassword}/>
+        <ErrMessage>{formState.formErrors.Konfirmimi}</ErrMessage>
+        <Input  type="password" placeholder="Fjalëkalimi" name="Konfirmimi" onChange={handleChange} value={formState.formValues.Konfirmimi}/>
       </FormContainer>
       <Marginer direction="vertical" margin={10} />
       <SubmitButton type="submit" onClick={handleSubmit} >Regjistrohu</SubmitButton>

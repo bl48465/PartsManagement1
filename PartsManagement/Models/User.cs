@@ -24,7 +24,7 @@ namespace PartsManagement.Models
 
             [Required]
             [MinLength(3)]
-            public string Company { get; set; }
+            public string Kompania { get; set; }
 
             [Required]
             [EmailAddress]
@@ -40,7 +40,7 @@ namespace PartsManagement.Models
             [DataType(DataType.Password)]
             [Compare("Password")]
 
-            public string ConfirmPassword { get; set; }
+            public string Konfirmimi { get; set; }
             public DateTime CreatedAt { get; set; } = DateTime.Now;
             public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
