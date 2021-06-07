@@ -10,6 +10,10 @@ namespace PartsManagement.Models
     {
         public MyContext(DbContextOptions options) : base(options) { }
         public DbSet<User> Users { get; set; }
-        public DbSet<AdminLogin> Admins { get; set; }
+        public DbSet<Komenti> Komentet { get; set; }
+        public DbSet<Produkti> Produktet { get; set; }
+        public DbSet<Porosia> Porosite { get; set; }
+        public DbSet<Sektori> Sektoret { get; set; }
+        public DbSet<Shitja> Shitjet { get; set; }
     }
 }

@@ -24,17 +24,15 @@ namespace PartsManagement
         {
             services.AddSession();
 
-            services.AddMvc(options => options.EnableEndpointRouting = false);
-
-            services.AddControllers();
-
             services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             
             services.AddCors();
 
             services.AddHttpClient();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,38 +22,43 @@ namespace PartsManagement.Controllers
         }
 
         // GET: api/User
-        [HttpGet("register")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var sektoret  = await _context.Users
+                            .Include(a=>a.Sektoret)
+                            .ThenInclude(a=>a.Produktet)
+                            .Include(a=>a.Porosite)
+                            .Include(a=>a.Komentet)
+                            .Include(a=>a.Shitjet)
+                            .ToListAsync();
+            return Ok(sektoret);
         }
-   
-        [HttpPost("register")]
-        public async Task<ActionResult<User>> PostUser(User user)
+
+        // GET: api/User/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUser(int id)
         {
-            if (ModelState.IsValid)
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
             {
-                if (_context.Users.Any(u => u.Email == user.Email))
-                {
-                    throw new ArgumentException(
-                            $"Emaili {user.Email} është në përdorim.");
-                }
-
-                PasswordHasher<User> hasher = new PasswordHasher<User>();
-                user.Password = hasher.HashPassword(user, user.Password);
-
-                var newUser = _context.Users.Add(user).Entity;
-                await _context.SaveChangesAsync();
-
-                HttpContext.Session.SetInt32("UserId", newUser.UserId);
+                return NotFound();
             }
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+
+            return user;
         }
 
+        // PUT: api/User/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditUser(int id, User user)
+        public async Task<IActionResult> PutUser(int id, User user)
         {
-            user.UserId = id;
+            if (id != user.UserID)
+            {
+                return BadRequest();
+            }
 
             _context.Entry(user).State = EntityState.Modified;
 
@@ -63,7 +68,7 @@ namespace PartsManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!(_context.Users.Any(e => e.UserId == id)))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -76,116 +81,50 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLogin userlogin)
+        // POST: api/User
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost]
+        public async Task<ActionResult<User>> PostUser(User user)
         {
             if (ModelState.IsValid)
             {
-                var UserInDB = await _context.Users.FirstOrDefaultAsync(u => u.Email == userlogin.Email);
-
-                if (UserInDB == null)
+                if (_context.Users.Any(u => u.Email == user.Email))
                 {
                     throw new ArgumentException(
-                           $"Useri nuk ekziston");
+                            $"Emaili {user.Email} Ã«shtÃ« nÃ« pÃ«rdorim.");
                 }
 
-                var hasher = new PasswordHasher<UserLogin>();
-                var result = hasher.VerifyHashedPassword(userlogin, UserInDB.Password, userlogin.Password);
-                
-                if (result == 0)
-                {
-                    throw new ArgumentException(
-                           $"Fjalëkalmi i dhënë gabim");
-                }
+                PasswordHasher<User> hasher = new PasswordHasher<User>();
+                user.Password = hasher.HashPassword(user, user.Password);
+                user.Konfirmimi = hasher.HashPassword(user, user.Konfirmimi);
 
-                HttpContext.Session.SetInt32("UserId", UserInDB.UserId);
-                
-                //redirect to dashboard
-                throw new ArgumentException(
-                           $"Jeni kyqur me sukses..");
-            }
-
-            //redirect to login + error
-            throw new ArgumentException(
-                           $"Te dhenat jo valide!");
-        }
-
-        [HttpPost("admin")]
-        public async Task<IActionResult> Admin(AdminLogin admlogin)
-        {
-            if (ModelState.IsValid)
-            {
-                var AdminInDB = await _context.Admins.FirstOrDefaultAsync(u => u.Username == admlogin.Username);
-
-                if (AdminInDB == null)
-                {
-                    throw new ArgumentException(
-                         $"Te dhenat jo valide!");
-                }
-
-                if (AdminInDB.Password == admlogin.Password)
-                {
-                    HttpContext.Session.SetInt32("AdminId", AdminInDB.AdminId);
-
-                    //Redirekto ne dashboard!
-                    throw new ArgumentException(
-                         $"Sukses!");
-                }
-            }
-            throw new ArgumentException(
-                         $"Te dhenat jo valide!");
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditAdmin(int id, AdminLogin admin)
-        {
-            admin.AdminId= id;
-
-            _context.Entry(admin).State = EntityState.Modified;
-
-            try
-            {
+                var newUser = _context.Users.Add(user).Entity;
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!(_context.Admins.Any(e => e.AdminId == id)))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
-        }
-
-        [HttpGet("logout")]
-        public IActionResult Logout()
-        {
-
-            //redirekto ne login
-            HttpContext.Session.Clear();
-            throw new ArgumentException(
-                         $"Login Again!");
+            return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
         // DELETE: api/User/5
-        /* [HttpDelete("{id}")]
-         public async Task<ActionResult<User>> DeleteUser(int id)
-         {
-             var user = await _context.Users.FindAsync(id);
-             if (user == null)
-             {
-                 return NotFound();
-             }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<User>> DeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-             _context.Users.Remove(user);
-             await _context.SaveChangesAsync();
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
 
-             return user;
-         }*/
+            return user;
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.Users.Any(e => e.UserID == id);
+        }
     }
 }

@@ -11,42 +11,43 @@ namespace PartsManagement.Models
 {
     public class User
     {
-            [Key]
-            public int UserId { get; set; }
+        [Key]
+        public int UserID { get; set; }
 
-            [Required]
-            [MinLength(3)]
-            public string Emri { get; set; }
+        [Required]
+        [MinLength(3)]
+        public string Emri { get; set; }
 
-            [Required]
-            [MinLength(3)]
-            public string Mbiemri { get; set; }
+        [Required]
+        [MinLength(3)]
+        public string Mbiemri { get; set; }
 
-            [Required]
-            [MinLength(3)]
-            public string Kompania { get; set; }
+        [Required]
+        [MinLength(3)]
+        public string Kompania { get; set; }
 
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
 
-            [Required]
-            [MinLength(8)]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
+        [Required]
+        [MinLength(8)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
 
-            [Required]
-            [NotMapped]
-            [DataType(DataType.Password)]
-            [Compare("Password")]
+        [Required]
+        [NotMapped]
+        [DataType(DataType.Password)]
+        [Compare("Password")]
 
-            public string Konfirmimi { get; set; }
-            public DateTime CreatedAt { get; set; } = DateTime.Now;
-            public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public string Konfirmimi { get; set; }
 
-            private string _status = "Pending";
-            public string Status
-            {
+        public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
+        public string UpdatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
+
+        private string _status = "Pending";
+        public string Status
+        {
             get
             {
                 return this._status;
@@ -55,34 +56,36 @@ namespace PartsManagement.Models
             {
                 this._status = value;
             }
+        }
+
+        private int _roli = 1;
+        public int Roli
+        {
+            get
+            {
+                return this._roli;
             }
-
-            //public List<Pjese> pjeset...
+            set
+            {
+                this._roli = value;
+            }
         }
 
-        public class UserLogin
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+        public virtual List<Sektori> Sektoret { get; set; }
+        public virtual List<Porosia> Porosite { get; set; }
+        public virtual List<Shitja>  Shitjet { get; set; }
+        public virtual List<Komenti> Komentet { get; set; }
+    }
+    public class UserLogin
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
 
-            [Required]
-            [MinLength(8)]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-        }
-        public class AdminLogin
-        {
-            [Key]
-            public int AdminId { get; set; }
-
-            [Required]
-            public string Username { get; set; }
-
-            [Required]
-            [MinLength(8)]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-        }
+        [Required]
+        [MinLength(8)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+    }
 }
 
