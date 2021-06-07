@@ -19,7 +19,7 @@ namespace PartsManagement.Controllers
         {
             _context = context;
         }
-
+        //Metoda 
         // GET: api/Porosia
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Porosia>>> GetPorosite()
