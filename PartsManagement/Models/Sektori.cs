@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace PartsManagement.Models
 {
@@ -16,10 +17,9 @@ namespace PartsManagement.Models
         [Required]
         public string Emri { get; set; }
 
-        public int UserId { get; set; }
-        public User Krijuesi { get; set; }
+        public User User { get; set; }
 
-        public virtual List<Produkti> Produktet { get; set; }
+        public virtual ICollection<Produkti> Produktet { get; set; } = new List<Produkti>();
 
     }
 }

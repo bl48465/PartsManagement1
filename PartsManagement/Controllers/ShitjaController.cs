@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PartsManagement.Models;
+using PartsManagement.Data;
+using PartsManagement.Dtos;
+using PartsManagement.Helpers;
 
 namespace PartsManagement.Controllers
 {
@@ -14,31 +17,48 @@ namespace PartsManagement.Controllers
     public class ShitjaController : ControllerBase
     {
         private readonly MyContext _context;
+        private readonly IUserRepository _repository;
+        private readonly JwtService _jwtservice;
 
-        public ShitjaController(MyContext context)
+        public ShitjaController(MyContext context,IUserRepository repository, JwtService jwtService)
         {
             _context = context;
+            _repository = repository;
+            _jwtservice = jwtService;
         }
 
         // GET: api/Shitja
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Shitja>>> GetShitjet()
         {
-            return await _context.Shitjet.ToListAsync();
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var usr = _repository.GetById(userId);
+            if (usr == null) return Unauthorized();
+
+            var shitjet = await _context.Shitjet.Where(u => u.User == usr).ToListAsync();
+            return Ok(shitjet);
         }
 
         // GET: api/Shitja/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Shitja>> GetShitja(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var usr = _repository.GetById(userId);
+            if (usr == null) return Unauthorized();
+
+            var shitja = await _context.Shitjet.Where(a=>a.User == usr && a.ShitjaID == id).ToListAsync();
 
             if (shitja == null)
             {
                 return NotFound();
             }
 
-            return shitja;
+            return Ok(shitja);
         }
 
         // PUT: api/Shitja/5
@@ -47,6 +67,12 @@ namespace PartsManagement.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShitja(int id, Shitja shitja)
         {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var usr = _repository.GetById(userId);
+            if (usr == null) return Unauthorized();
+
             if (id != shitja.ShitjaID)
             {
                 return BadRequest();
@@ -77,49 +103,66 @@ namespace PartsManagement.Controllers
         // POST: api/Shitja
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("{userid}/{id}/{quantity}")]
-        public async Task<ActionResult<Shitja>> PostShitja(Shitja shitja,int id,int userid, int quantity)
-        {
-            shitja.UserID = userid;
+        [HttpPost("{produktiID}")]
+        public async Task<ActionResult<Shitja>> PostShitja(ShitjaDTO dto,int produktiID)
+        { 
+            var productToDelete = await _context.Produktet.FindAsync(produktiID);
 
-            var productToDelete = await _context.Produktet.FindAsync(id);
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
 
-            if (quantity > productToDelete.Sasia)
-            {   
-                throw new ArgumentException(
-                       $"Nuk ke sasi te mjaftueshme");
+            if(user == null)
+            {
+                return Unauthorized(new
+                {
+                    message="Kyquni së pari"
+                });
+            }
+
+            var shitja = new Shitja
+            {
+                Emri = dto.Emri,
+                User = user,
+                Qmimi = dto.Qmimi * dto.Sasia,
+                Sasia = dto.Sasia ,
+                OEnumber = dto.OEnumber,
+            };
+
+            
+            if (dto.Sasia > productToDelete.Sasia)
+            {
+                return BadRequest(new
+                {
+                    message = "Nuk ke sasi të mjaftueshme"
+                });
+            }
+
+            if (productToDelete.Sasia == 0)
+            {
+                _context.Produktet.Remove(productToDelete);
             }
             else
             {
-
-                shitja.Emri = productToDelete.Emri;
-                shitja.Qmimi = productToDelete.Qmimi * quantity;
-                shitja.Sasia = quantity;
-                shitja.OEnumber = productToDelete.OEnumber;
-
-
-               
-                if (productToDelete.Sasia == 0)
-                {
-                    _context.Produktet.Remove(productToDelete);
-                }
-                else
-                {
-                    productToDelete.Sasia -= quantity;
-                }
+                productToDelete.Sasia -= dto.Sasia;
 
                 _context.Shitjet.Add(shitja);
-                //_context.Produktet.Add(productToDelete);
                 await _context.SaveChangesAsync();
-
-                return CreatedAtAction("GetShitja", new { id = shitja.ShitjaID }, shitja);
             }
+                return CreatedAtAction("GetShitja", new { id = shitja.ShitjaID }, shitja);
         }
 
         // DELETE: api/Shitja/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Shitja>> DeleteShitja(int id)
         {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var usr = _repository.GetById(userId);
+            if (usr == null) return Unauthorized();
+
             var shitja = await _context.Shitjet.FindAsync(id);
             if (shitja == null)
             {

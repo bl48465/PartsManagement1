@@ -13,8 +13,6 @@ namespace PartsManagement.Models
         public int ShitjaID { get; set; }
 
         public string Emri { get; set; }
-
-        public int UserID { get; set; }
         public User User { get; set; }
         public double Qmimi { get; set; }
 

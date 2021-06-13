@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PartsManagement.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using PartsManagement.Helpers;
+using PartsManagement.Data;
 
 namespace PartsManagement.Controllers
 {
@@ -15,46 +18,59 @@ namespace PartsManagement.Controllers
     public class UserController : ControllerBase
     {
         private readonly MyContext _context;
+        private readonly IUserRepository _repository;
+        private readonly JwtService _jwtservice;
 
-        public UserController(MyContext context)
+        public UserController(MyContext context, IUserRepository repository, JwtService jwtService)
         {
             _context = context;
+            _repository = repository;
+            _jwtservice = jwtService;
         }
 
-        // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var sektoret  = await _context.Users
-                            .Include(a=>a.Sektoret)
-                            .ThenInclude(a=>a.Produktet)
-                            .Include(a=>a.Porosite)
-                            .Include(a=>a.Komentet)
-                            .Include(a=>a.Shitjet)
-                            .ToListAsync();
-            return Ok(sektoret);
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null || user.Roli != 0) return Unauthorized();
+
+            var users = await _context.Users.ToListAsync();
+            return Ok(users);
         }
 
-        // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null || user.Roli != 0) return Unauthorized();
 
-            if (user == null)
+            var usr = await _context.Users.Include(s => s.Sektoret).Where(u => u.UserID == id).ToListAsync(); ;
+
+            if (usr == null)
             {
-                return NotFound();
+                return NotFound(new { 
+                message = "Përdoruesi nuk u gjet."
+                });
             }
-
-            return user;
+            return Ok(user);
         }
 
-        // PUT: api/User/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var usr = _repository.GetById(userId);
+            if (usr == null || usr.Roli != 0) return Unauthorized();
+
             if (id != user.UserID)
             {
                 return BadRequest();
@@ -81,35 +97,16 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        // POST: api/User
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            if (ModelState.IsValid)
-            {
-                if (_context.Users.Any(u => u.Email == user.Email))
-                {
-                    throw new ArgumentException(
-                            $"Emaili {user.Email} është në përdorim.");
-                }
-
-                PasswordHasher<User> hasher = new PasswordHasher<User>();
-                user.Password = hasher.HashPassword(user, user.Password);
-                user.Konfirmimi = hasher.HashPassword(user, user.Konfirmimi);
-
-                var newUser = _context.Users.Add(user).Entity;
-                await _context.SaveChangesAsync();
-            }
-
-            return CreatedAtAction("GetUser", new { id = user.UserID }, user);
-        }
-
-        // DELETE: api/User/5
+ 
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var usr = _repository.GetById(userId);
+            if (usr == null || usr.Roli != 0) return Unauthorized();
+
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -124,6 +121,7 @@ namespace PartsManagement.Controllers
 
         private bool UserExists(int id)
         {
+
             return _context.Users.Any(e => e.UserID == id);
         }
     }

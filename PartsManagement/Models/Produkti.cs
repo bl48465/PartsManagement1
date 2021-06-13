@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace PartsManagement.Models
 {
@@ -22,8 +23,9 @@ namespace PartsManagement.Models
         public string OEnumber { get; set; }
 
         public int SektoriID { get; set; }
+        [JsonIgnore]
+        public Sektori Sektori { get; set; }
 
-        public virtual Sektori Sektori { get; set; }
         public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
         public string UpdatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
     }

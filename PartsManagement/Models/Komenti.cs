@@ -18,8 +18,7 @@ namespace PartsManagement.Models
         
         public string Mesazhi { get; set; }
 
-        public int UserID { get; set; }
-        public User Krijuesi { get; set; }
+        public User User { get; set; }
         
         public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
         public string UpdatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");

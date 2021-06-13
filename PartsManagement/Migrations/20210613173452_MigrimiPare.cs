@@ -35,7 +35,7 @@ namespace PartsManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Titulli = table.Column<string>(nullable: true),
                     Mesazhi = table.Column<string>(nullable: true),
-                    UserID = table.Column<int>(nullable: false),
+                    UserID = table.Column<int>(nullable: true),
                     CreatedAt = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<string>(nullable: true)
                 },
@@ -47,7 +47,7 @@ namespace PartsManagement.Migrations
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,7 +58,7 @@ namespace PartsManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Emri = table.Column<string>(nullable: false),
                     Sasia = table.Column<int>(nullable: false),
-                    UserID = table.Column<int>(nullable: false),
+                    UserID = table.Column<int>(nullable: true),
                     CreatedAt = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<string>(nullable: true)
                 },
@@ -70,7 +70,7 @@ namespace PartsManagement.Migrations
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,17 +80,17 @@ namespace PartsManagement.Migrations
                     SektoriID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Emri = table.Column<string>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UserID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sektoret", x => x.SektoriID);
                     table.ForeignKey(
-                        name: "FK_Sektoret_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Sektoret_Users_UserID",
+                        column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,7 +100,7 @@ namespace PartsManagement.Migrations
                     ShitjaID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Emri = table.Column<string>(nullable: true),
-                    UserID = table.Column<int>(nullable: false),
+                    UserID = table.Column<int>(nullable: true),
                     Qmimi = table.Column<double>(nullable: false),
                     Sasia = table.Column<int>(nullable: false),
                     OEnumber = table.Column<string>(nullable: true),
@@ -115,7 +115,7 @@ namespace PartsManagement.Migrations
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,7 +128,7 @@ namespace PartsManagement.Migrations
                     Qmimi = table.Column<double>(nullable: false),
                     Sasia = table.Column<int>(nullable: false),
                     OEnumber = table.Column<string>(nullable: true),
-                    SektoriID = table.Column<int>(nullable: false),
+                    SektoriID = table.Column<int>(nullable: true),
                     CreatedAt = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<string>(nullable: true)
                 },
@@ -140,7 +140,7 @@ namespace PartsManagement.Migrations
                         column: x => x.SektoriID,
                         principalTable: "Sektoret",
                         principalColumn: "SektoriID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -159,9 +159,9 @@ namespace PartsManagement.Migrations
                 column: "SektoriID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sektoret_UserId",
+                name: "IX_Sektoret_UserID",
                 table: "Sektoret",
-                column: "UserId");
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shitjet_UserID",

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,11 +31,13 @@ namespace PartsManagement.Models
         public string Email { get; set; }
 
         [Required]
+        [JsonIgnore]
         [MinLength(8)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Required]
+        [JsonIgnore]
         [NotMapped]
         [DataType(DataType.Password)]
         [Compare("Password")]
@@ -59,6 +61,7 @@ namespace PartsManagement.Models
         }
 
         private int _roli = 1;
+        [JsonIgnore]
         public int Roli
         {
             get
@@ -71,21 +74,10 @@ namespace PartsManagement.Models
             }
         }
 
-        public virtual List<Sektori> Sektoret { get; set; }
-        public virtual List<Porosia> Porosite { get; set; }
-        public virtual List<Shitja>  Shitjet { get; set; }
-        public virtual List<Komenti> Komentet { get; set; }
-    }
-    public class UserLogin
-    {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        [MinLength(8)]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public  ICollection<Sektori> Sektoret { get; set; } = new List<Sektori>();
+        public  ICollection<Porosia> Porosite { get; set; } = new List<Porosia>();
+        public  ICollection<Shitja> Shitjet { get; set; } = new List<Shitja>();
+        public  ICollection<Komenti> Komentet { get; set; } = new List<Komenti>();
     }
 }
 

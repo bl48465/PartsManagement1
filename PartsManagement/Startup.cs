@@ -7,7 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PartsManagement.Models;
-
+using PartsManagement.Data;
+using PartsManagement.Helpers;
 namespace PartsManagement
 {
     public class Startup
@@ -24,6 +25,9 @@ namespace PartsManagement
         {
             services.AddSession();
 
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<JwtService>();
+
             services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             
             services.AddCors();
@@ -39,14 +43,18 @@ namespace PartsManagement
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors(options =>
-            options.WithOrigins("http://localhost:3000")
+            options
+            .WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
+            .AllowCredentials()
             .AllowAnyMethod());
 
             if (env.IsDevelopment())

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, {useContext, useState} from "react";
+import { Redirect ,Router , useHistory, Link } from 'react-router-dom';
 import {
   BoldLink,
   BoxContainer,
@@ -13,9 +14,10 @@ import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 
 export function SignupForm(){
+    let history = useHistory();
     const[errorState,setError] = useState({
       errValues:{
-        emailExist : ''
+        emailExist : '',
       }
     })
 
@@ -102,7 +104,7 @@ export function SignupForm(){
       const { formValues, formValidity } = formState;
       const { errValues } = errorState;
       if (Object.values(formValidity).every(Boolean)) {
-        axios.post("http://localhost:44395/api/user/register",formValues)
+        axios.post("http://localhost:44395/api/user/",formValues)
         .catch((error)=> {
             if(error.response){
               console.log(error.response.status);
@@ -122,6 +124,7 @@ export function SignupForm(){
           };
           handleValidation(target);
         }
+        
       }
     };
 
@@ -130,7 +133,8 @@ export function SignupForm(){
   return (
     <BoxContainer>
       <FormContainer onSubmit={handleSubmit}>
-        <ErrMessage>{formState.formValidity.Emri}</ErrMessage>
+        <ErrMessage>{errorState.errValues.sukses}</ErrMessage>
+        <ErrMessage>{formState.formErrors.Emri}</ErrMessage>
         <Input  type="text" placeholder="Emri" name="Emri" onChange={handleChange}  value={formState.formValues.Emri} />
         <ErrMessage>{formState.formErrors.Mbiemri}</ErrMessage>
         <Input  type="text" placeholder="Mbiemri" name="Mbiemri" onChange={handleChange} value={formState.formValues.Mbiemri} />
@@ -147,12 +151,11 @@ export function SignupForm(){
         <Input  type="password" placeholder="Fjalëkalimi" name="Konfirmimi" onChange={handleChange} value={formState.formValues.Konfirmimi}/>
       </FormContainer>
       <Marginer direction="vertical" margin={10} />
-      <SubmitButton type="submit" onClick={handleSubmit} >Regjistrohu</SubmitButton>
+      <SubmitButton type="submit"  onClick={handleSubmit} as={Link} to="/">Krijo</SubmitButton>
       <Marginer direction="vertical" margin="1em" />
       <MutedLink href="#">
         Jeni regjistruar më parë?
-          <BoldLink href="#" onClick={switchToSignin}>
-          Kyquni
+          <BoldLink href="#" onClick={switchToSignin}>Kyquni
           </BoldLink>
       </MutedLink>
     </BoxContainer>

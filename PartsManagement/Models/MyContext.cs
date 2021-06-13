@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace PartsManagement.Models
 {
     public class MyContext : DbContext
@@ -15,5 +16,32 @@ namespace PartsManagement.Models
         public DbSet<Porosia> Porosite { get; set; }
         public DbSet<Sektori> Sektoret { get; set; }
         public DbSet<Shitja> Shitjet { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder model)
+        {
+            model.Entity<User>()
+                 .HasMany(s => s.Sektoret)
+                 .WithOne(u => u.User);
+
+            model.Entity<User>()
+                 .HasMany(s => s.Shitjet)
+                 .WithOne(u => u.User);
+
+            model.Entity<User>()
+                 .HasMany(s => s.Komentet)
+                 .WithOne(u => u.User);
+
+            model.Entity<User>()
+                 .HasMany(s => s.Porosite)
+                 .WithOne(u => u.User);
+
+            model.Entity<User>()
+                 .HasMany(s => s.Sektoret)
+                 .WithOne(u => u.User);
+
+            model.Entity<Sektori>()
+                .HasMany(p => p.Produktet)
+                .WithOne(s => s.Sektori);
+        }
     }
 }

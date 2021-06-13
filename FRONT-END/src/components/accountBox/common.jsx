@@ -81,9 +81,4 @@ export const SubmitButton = styled.button`
   &:hover {
     filter: brightness(1.03);
   };
-
-  &:disabled {
-  background-color: #cccccc;
-  color: #666666;
-  };
 `;

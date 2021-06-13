@@ -1,110 +1,117 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PartsManagement.Models;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using PartsManagement.Models;
+//using PartsManagement.Helpers;
+//using PartsManagement.Data;
 
-namespace PartsManagement.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PorosiaController : ControllerBase
-    {
-        private readonly MyContext _context;
+//namespace PartsManagement.Controllers
+//{
+//    [Route("api/[controller]")]
+//    [ApiController]
+//    public class PorosiaController : ControllerBase
+//    {
+//        private readonly MyContext _context;
+//        private readonly IUserRepository _repository;
+//        private readonly JwtService _jwtservice;
 
-        public PorosiaController(MyContext context)
-        {
-            _context = context;
-        }
-        //Metoda 
-        // GET: api/Porosia
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Porosia>>> GetPorosite()
-        {
-            return await _context.Porosite.ToListAsync();
-        }
+//        public PorosiaController(MyContext context, IUserRepository repository, JwtService jwtService)
+//        {
+//            _context = context;
+//            _repository = repository;
+//            _jwtservice = jwtService;
+//        }
+//        //Metoda 
+//        // GET: api/Porosia
+//        [HttpGet]
+//        public async Task<ActionResult<IEnumerable<Porosia>>> GetPorosite()
+//        {
 
-        // GET: api/Porosia/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Porosia>> GetPorosia(int id)
-        {
-            var porosia = await _context.Porosite.FindAsync(id);
+//            return await _context.Porosite.ToListAsync();
+//        }
 
-            if (porosia == null)
-            {
-                return NotFound();
-            }
+//        // GET: api/Porosia/5
+//        [HttpGet("{id}")]
+//        public async Task<ActionResult<Porosia>> GetPorosia(int id)
+//        {
+//            var porosia = await _context.Porosite.FindAsync(id);
 
-            return porosia;
-        }
+//            if (porosia == null)
+//            {
+//                return NotFound();
+//            }
 
-        // PUT: api/Porosia/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPorosia(int id, Porosia porosia)
-        {
-            if (id != porosia.PorosiaID)
-            {
-                return BadRequest();
-            }
+//            return porosia;
+//        }
 
-            _context.Entry(porosia).State = EntityState.Modified;
+//        // PUT: api/Porosia/5
+//        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+//        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+//        [HttpPut("{id}")]
+//        public async Task<IActionResult> PutPorosia(int id, Porosia porosia)
+//        {
+//            if (id != porosia.PorosiaID)
+//            {
+//                return BadRequest();
+//            }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PorosiaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+//            _context.Entry(porosia).State = EntityState.Modified;
 
-            return NoContent();
-        }
+//            try
+//            {
+//                await _context.SaveChangesAsync();
+//            }
+//            catch (DbUpdateConcurrencyException)
+//            {
+//                if (!PorosiaExists(id))
+//                {
+//                    return NotFound();
+//                }
+//                else
+//                {
+//                    throw;
+//                }
+//            }
 
-        // POST: api/Porosia
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("{id}")]
-        public async Task<ActionResult<Porosia>> PostPorosia(Porosia porosia,int id)
-        {
-            porosia.UserID = id;
-            _context.Porosite.Add(porosia);
-            await _context.SaveChangesAsync();
+//            return NoContent();
+//        }
 
-            return CreatedAtAction("GetPorosia", new { id = porosia.PorosiaID }, porosia);
-        }
+//        // POST: api/Porosia
+//        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+//        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+//        [HttpPost("{id}")]
+//        public async Task<ActionResult<Porosia>> PostPorosia(Porosia porosia, int id)
+//        {
+//            porosia.UserID = id;
+//            _context.Porosite.Add(porosia);
+//            await _context.SaveChangesAsync();
 
-        // DELETE: api/Porosia/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Porosia>> DeletePorosia(int id)
-        {
-            var porosia = await _context.Porosite.FindAsync(id);
-            if (porosia == null)
-            {
-                return NotFound();
-            }
+//            return CreatedAtAction("GetPorosia", new { id = porosia.PorosiaID }, porosia);
+//        }
 
-            _context.Porosite.Remove(porosia);
-            await _context.SaveChangesAsync();
+//        // DELETE: api/Porosia/5
+//        [HttpDelete("{id}")]
+//        public async Task<ActionResult<Porosia>> DeletePorosia(int id)
+//        {
+//            var porosia = await _context.Porosite.FindAsync(id);
+//            if (porosia == null)
+//            {
+//                return NotFound();
+//            }
 
-            return porosia;
-        }
+//            _context.Porosite.Remove(porosia);
+//            await _context.SaveChangesAsync();
 
-        private bool PorosiaExists(int id)
-        {
-            return _context.Porosite.Any(e => e.PorosiaID == id);
-        }
-    }
-}
+//            return porosia;
+//        }
+
+//        private bool PorosiaExists(int id)
+//        {
+//            return _context.Porosite.Any(e => e.PorosiaID == id);
+//        }
+//    }
+//}
