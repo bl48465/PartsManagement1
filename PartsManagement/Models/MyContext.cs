@@ -42,6 +42,20 @@ namespace PartsManagement.Models
             model.Entity<Sektori>()
                 .HasMany(p => p.Produktet)
                 .WithOne(s => s.Sektori);
+
+            model.Entity<PerkatesiaProduktit>()
+                .HasKey(b => new { b.modeliID, b.produktiID });
+
+            model.Entity<PerkatesiaProduktit>()
+                .HasOne(b => b.model)
+                .WithMany(bc => bc.ProduktetPerkatese)
+                .HasForeignKey(b => b.modeliID);
+
+            model.Entity<PerkatesiaProduktit>()
+               .HasOne(b => b.prod)
+               .WithMany(c => c.ProduktetPerkatese)
+               .HasForeignKey(b => b.produktiID);
+
         }
     }
 }

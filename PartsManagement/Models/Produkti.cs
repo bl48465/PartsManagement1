@@ -16,18 +16,18 @@ namespace PartsManagement.Models
 
         public string Emri { get; set; }
 
-        public double Qmimi { get; set; }
-
-        public int Sasia { get; set; }
-
         public string OEnumber { get; set; }
 
         public int SektoriID { get; set; }
         [JsonIgnore]
         public Sektori Sektori { get; set; }
 
+        public DetajetHyrese DetajetHyrese { get; set; }
+        public DetajetDalese DetajetDalese { get; set; }
+
         public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
         public string UpdatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
+        public ICollection<PerkatesiaProduktit> ProduktetPerkatese { get; set; }
     }
 
 }

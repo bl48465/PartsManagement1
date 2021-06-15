@@ -12,15 +12,13 @@ namespace PartsManagement.Models
         [Key]
         public int ShitjaID { get; set; }
 
-        public string Emri { get; set; }
+        public string Komenti { get; set; }
         public User User { get; set; }
-        public double Qmimi { get; set; }
+       
+        public int UserID { get; set; }
 
-        public int Sasia { get; set; }
-
-        public string OEnumber { get; set; }
-
-
+        public int FaturaDaleseID { get; set; }
+        public FaturaDalese FaturimiDales { get; set; }
         public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
         public string UpdatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
     }
