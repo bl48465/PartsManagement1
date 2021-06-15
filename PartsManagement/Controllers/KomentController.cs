@@ -46,84 +46,109 @@ namespace PartsManagement.Controllers
             return Ok(komentet);
         }
 
-        //// GET: api/Koment/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Komenti>> GetKomenti(int id)
-        //{
-        //    var komenti = await _context.Komentet.FindAsync(id);
+        // GET: api/Koment/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Komenti>> GetKomenti(int id)
+        {
+            var komenti = await _context.Komentet.FindAsync(id);
 
-        //    if (komenti == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (komenti == null)
+            {
+                return NotFound();
+            }
 
-        //    return komenti;
-        //}
+            return komenti;
+        }
 
-        //// PUT: api/Koment/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
-        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutKomenti(int id, Komenti komenti)
-        //{
-        //    if (id != komenti.KomentiID)
-        //    {
-        //        return BadRequest();
-        //    }
+        // PUT: api/Koment/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutKomenti(int id, Komenti komenti)
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
 
-        //    _context.Entry(komenti).State = EntityState.Modified;
+            if (id != komenti.KomentiID)
+            {
+                return BadRequest();
+            }
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!KomentiExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            _context.Entry(komenti).State = EntityState.Modified;
 
-        //    return NoContent();
-        //}
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!KomentiExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-        //// POST: api/Koment
-        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
-        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        //[HttpPost("{id}")]
-        //public async Task<ActionResult<Komenti>> PostKomenti(Komenti komenti, int id)
-        //{
-        //    komenti.UserID = id;
-        //    _context.Komentet.Add(komenti);
-        //    await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
-        //    return CreatedAtAction("GetKomenti", new { id = komenti.KomentiID }, komenti);
-        //}
+        // POST: api/Koment
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost("{id}")]
+        public async Task<ActionResult<Komenti>> PostKomenti(Komenti komenti, int id)
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
 
-        //// DELETE: api/Koment/5
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<Komenti>> DeleteKomenti(int id)
-        //{
-        //    var komenti = await _context.Komentet.FindAsync(id);
-        //    if (komenti == null)
-        //    {
-        //        return NotFound();
-        //    }
+            Komenti k = new Komenti
+            {
+                Titulli = komenti.Titulli,
+                Mesazhi = komenti.Mesazhi
 
-        //    _context.Komentet.Remove(komenti);
-        //    await _context.SaveChangesAsync();
+            };
+            
 
-        //    return komenti;
-        //}
+            _context.Komentet.Add(k);
+            await _context.SaveChangesAsync();
 
-        //private bool KomentiExists(int id)
-        //{
-        //    return _context.Komentet.Any(e => e.KomentiID == id);
-        //}
+            return CreatedAtAction("GetKomenti", new { id = komenti.KomentiID }, komenti);
+        }
+
+        // DELETE: api/Koment/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Komenti>> DeleteKomenti(int id)
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
+
+            var komenti = await _context.Komentet.FindAsync(id);
+            if (komenti == null)
+            {
+                return NotFound();
+            }
+
+            _context.Komentet.Remove(komenti);
+            await _context.SaveChangesAsync();
+
+            return komenti;
+        }
+
+        private bool KomentiExists(int id)
+        {
+            return _context.Komentet.Any(e => e.KomentiID == id);
+        }
     }
 }
