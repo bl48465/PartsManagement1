@@ -11,48 +11,48 @@ namespace PartsManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShitjaController : ControllerBase
+    public class ModeliController : ControllerBase
     {
         private readonly MyContext _context;
 
-        public ShitjaController(MyContext context)
+        public ModeliController(MyContext context)
         {
             _context = context;
         }
 
-        // GET: api/Shitja
+        // GET: api/Modelis
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shitja>>> GetShitjet()
+        public async Task<ActionResult<IEnumerable<Modeli>>> GetModeli()
         {
-            return await _context.Shitjet.ToListAsync();
+            return await _context.Modeli.ToListAsync();
         }
 
-        // GET: api/Shitja/5
+        // GET: api/Modelis/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Shitja>> GetShitja(int id)
+        public async Task<ActionResult<Modeli>> GetModeli(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
+            var modeli = await _context.Modeli.FindAsync(id);
 
-            if (shitja == null)
+            if (modeli == null)
             {
                 return NotFound();
             }
 
-            return shitja;
+            return modeli;
         }
 
-        // PUT: api/Shitja/5
+        // PUT: api/Modelis/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShitja(int id, Shitja shitja)
+        public async Task<IActionResult> PutModeli(int id, Modeli modeli)
         {
-            if (id != shitja.ShitjaID)
+            if (id != modeli.ModeliID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(shitja).State = EntityState.Modified;
+            _context.Entry(modeli).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace PartsManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ShitjaExists(id))
+                if (!ModeliExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +73,37 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        // POST: api/Shitja
+        // POST: api/Modelis
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Shitja>> PostShitja(Shitja shitja)
+        public async Task<ActionResult<Modeli>> PostModeli(Modeli modeli)
         {
-            _context.Shitjet.Add(shitja);
+            _context.Modeli.Add(modeli);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetShitja", new { id = shitja.ShitjaID }, shitja);
+            return CreatedAtAction("GetModeli", new { id = modeli.ModeliID }, modeli);
         }
 
-        // DELETE: api/Shitja/5
+        // DELETE: api/Modelis/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Shitja>> DeleteShitja(int id)
+        public async Task<ActionResult<Modeli>> DeleteModeli(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
-            if (shitja == null)
+            var modeli = await _context.Modeli.FindAsync(id);
+            if (modeli == null)
             {
                 return NotFound();
             }
 
-            _context.Shitjet.Remove(shitja);
+            _context.Modeli.Remove(modeli);
             await _context.SaveChangesAsync();
 
-            return shitja;
+            return modeli;
         }
 
-        private bool ShitjaExists(int id)
+        private bool ModeliExists(int id)
         {
-            return _context.Shitjet.Any(e => e.ShitjaID == id);
+            return _context.Modeli.Any(e => e.ModeliID == id);
         }
     }
 }

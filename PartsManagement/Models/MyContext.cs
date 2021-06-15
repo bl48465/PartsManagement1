@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PartsManagement.Models;
 
 
 namespace PartsManagement.Models
@@ -16,6 +17,8 @@ namespace PartsManagement.Models
         public DbSet<Porosia> Porosite { get; set; }
         public DbSet<Sektori> Sektoret { get; set; }
         public DbSet<Shitja> Shitjet { get; set; }
+
+        public DbSet<Furnitori> Furnitoret { get; set; }
 
         protected override void OnModelCreating(ModelBuilder model)
         {
@@ -57,5 +60,17 @@ namespace PartsManagement.Models
                .HasForeignKey(b => b.produktiID);
 
         }
+
+        public DbSet<PartsManagement.Models.FaturaDalese> FaturaDalese { get; set; }
+
+        public DbSet<PartsManagement.Models.FaturaHyrese> FaturaHyrese { get; set; }
+
+        public DbSet<PartsManagement.Models.DetajetDalese> DetajetDalese { get; set; }
+
+        public DbSet<PartsManagement.Models.DetajetHyrese> DetajetHyrese { get; set; }
+
+        public DbSet<PartsManagement.Models.Modeli> Modeli { get; set; }
+
+        public DbSet<PartsManagement.Models.Marka> Marka { get; set; }
     }
 }

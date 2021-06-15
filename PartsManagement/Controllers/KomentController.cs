@@ -41,7 +41,7 @@ namespace PartsManagement.Controllers
             var user = _repository.GetById(userId);
             if (user == null) return Unauthorized();
 
-            var komentet = await _context.Users.Include(x => x.Komentet).Where(a => a.UserID == user.UserID).ToListAsync();
+            var komentet = await _context.Komentet.ToListAsync();
 
             return Ok(komentet);
         }
@@ -113,7 +113,8 @@ namespace PartsManagement.Controllers
             Komenti k = new Komenti
             {
                 Titulli = komenti.Titulli,
-                Mesazhi = komenti.Mesazhi
+                Mesazhi = komenti.Mesazhi,
+                User = user
 
             };
             

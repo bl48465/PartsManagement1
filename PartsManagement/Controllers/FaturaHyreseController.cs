@@ -11,48 +11,48 @@ namespace PartsManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShitjaController : ControllerBase
+    public class FaturaHyreseController : ControllerBase
     {
         private readonly MyContext _context;
 
-        public ShitjaController(MyContext context)
+        public FaturaHyreseController(MyContext context)
         {
             _context = context;
         }
 
-        // GET: api/Shitja
+        // GET: api/FaturaHyrese
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shitja>>> GetShitjet()
+        public async Task<ActionResult<IEnumerable<FaturaHyrese>>> GetFaturaHyrese()
         {
-            return await _context.Shitjet.ToListAsync();
+            return await _context.FaturaHyrese.ToListAsync();
         }
 
-        // GET: api/Shitja/5
+        // GET: api/FaturaHyrese/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Shitja>> GetShitja(int id)
+        public async Task<ActionResult<FaturaHyrese>> GetFaturaHyrese(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
+            var faturaHyrese = await _context.FaturaHyrese.FindAsync(id);
 
-            if (shitja == null)
+            if (faturaHyrese == null)
             {
                 return NotFound();
             }
 
-            return shitja;
+            return faturaHyrese;
         }
 
-        // PUT: api/Shitja/5
+        // PUT: api/FaturaHyrese/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShitja(int id, Shitja shitja)
+        public async Task<IActionResult> PutFaturaHyrese(int id, FaturaHyrese faturaHyrese)
         {
-            if (id != shitja.ShitjaID)
+            if (id != faturaHyrese.FaturaHyreseID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(shitja).State = EntityState.Modified;
+            _context.Entry(faturaHyrese).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace PartsManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ShitjaExists(id))
+                if (!FaturaHyreseExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +73,37 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        // POST: api/Shitja
+        // POST: api/FaturaHyrese
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Shitja>> PostShitja(Shitja shitja)
+        public async Task<ActionResult<FaturaHyrese>> PostFaturaHyrese(FaturaHyrese faturaHyrese)
         {
-            _context.Shitjet.Add(shitja);
+            _context.FaturaHyrese.Add(faturaHyrese);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetShitja", new { id = shitja.ShitjaID }, shitja);
+            return CreatedAtAction("GetFaturaHyrese", new { id = faturaHyrese.FaturaHyreseID }, faturaHyrese);
         }
 
-        // DELETE: api/Shitja/5
+        // DELETE: api/FaturaHyrese/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Shitja>> DeleteShitja(int id)
+        public async Task<ActionResult<FaturaHyrese>> DeleteFaturaHyrese(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
-            if (shitja == null)
+            var faturaHyrese = await _context.FaturaHyrese.FindAsync(id);
+            if (faturaHyrese == null)
             {
                 return NotFound();
             }
 
-            _context.Shitjet.Remove(shitja);
+            _context.FaturaHyrese.Remove(faturaHyrese);
             await _context.SaveChangesAsync();
 
-            return shitja;
+            return faturaHyrese;
         }
 
-        private bool ShitjaExists(int id)
+        private bool FaturaHyreseExists(int id)
         {
-            return _context.Shitjet.Any(e => e.ShitjaID == id);
+            return _context.FaturaHyrese.Any(e => e.FaturaHyreseID == id);
         }
     }
 }

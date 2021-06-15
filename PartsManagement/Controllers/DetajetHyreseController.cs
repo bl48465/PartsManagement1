@@ -11,48 +11,48 @@ namespace PartsManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShitjaController : ControllerBase
+    public class DetajetHyreseController : ControllerBase
     {
         private readonly MyContext _context;
 
-        public ShitjaController(MyContext context)
+        public DetajetHyreseController(MyContext context)
         {
             _context = context;
         }
 
-        // GET: api/Shitja
+        // GET: api/DetajetHyrese
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shitja>>> GetShitjet()
+        public async Task<ActionResult<IEnumerable<DetajetHyrese>>> GetDetajetHyrese()
         {
-            return await _context.Shitjet.ToListAsync();
+            return await _context.DetajetHyrese.ToListAsync();
         }
 
-        // GET: api/Shitja/5
+        // GET: api/DetajetHyrese/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Shitja>> GetShitja(int id)
+        public async Task<ActionResult<DetajetHyrese>> GetDetajetHyrese(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
+            var detajetHyrese = await _context.DetajetHyrese.FindAsync(id);
 
-            if (shitja == null)
+            if (detajetHyrese == null)
             {
                 return NotFound();
             }
 
-            return shitja;
+            return detajetHyrese;
         }
 
-        // PUT: api/Shitja/5
+        // PUT: api/DetajetHyrese/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShitja(int id, Shitja shitja)
+        public async Task<IActionResult> PutDetajetHyrese(int id, DetajetHyrese detajetHyrese)
         {
-            if (id != shitja.ShitjaID)
+            if (id != detajetHyrese.DetajetHyreseID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(shitja).State = EntityState.Modified;
+            _context.Entry(detajetHyrese).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace PartsManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ShitjaExists(id))
+                if (!DetajetHyreseExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +73,37 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        // POST: api/Shitja
+        // POST: api/DetajetHyrese
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Shitja>> PostShitja(Shitja shitja)
+        public async Task<ActionResult<DetajetHyrese>> PostDetajetHyrese(DetajetHyrese detajetHyrese)
         {
-            _context.Shitjet.Add(shitja);
+            _context.DetajetHyrese.Add(detajetHyrese);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetShitja", new { id = shitja.ShitjaID }, shitja);
+            return CreatedAtAction("GetDetajetHyrese", new { id = detajetHyrese.DetajetHyreseID }, detajetHyrese);
         }
 
-        // DELETE: api/Shitja/5
+        // DELETE: api/DetajetHyrese/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Shitja>> DeleteShitja(int id)
+        public async Task<ActionResult<DetajetHyrese>> DeleteDetajetHyrese(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
-            if (shitja == null)
+            var detajetHyrese = await _context.DetajetHyrese.FindAsync(id);
+            if (detajetHyrese == null)
             {
                 return NotFound();
             }
 
-            _context.Shitjet.Remove(shitja);
+            _context.DetajetHyrese.Remove(detajetHyrese);
             await _context.SaveChangesAsync();
 
-            return shitja;
+            return detajetHyrese;
         }
 
-        private bool ShitjaExists(int id)
+        private bool DetajetHyreseExists(int id)
         {
-            return _context.Shitjet.Any(e => e.ShitjaID == id);
+            return _context.DetajetHyrese.Any(e => e.DetajetHyreseID == id);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace PartsManagement.Controllers
             var user = _repository.GetById(userId);
             if (user == null) return Unauthorized();
 
-            var porosia = await _context.Users.Include(x => x.Porosite).Where(a => a.UserID == user.UserID).ToListAsync();
+            var porosia = await _context.Porosite.ToListAsync();
 
             return Ok(porosia);
         }
@@ -117,6 +117,7 @@ namespace PartsManagement.Controllers
             {
                 Emri = porosia.Emri,
                 Sasia = porosia.Sasia,
+                User = user
 
             };
 

@@ -11,48 +11,48 @@ namespace PartsManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShitjaController : ControllerBase
+    public class MarkaController : ControllerBase
     {
         private readonly MyContext _context;
 
-        public ShitjaController(MyContext context)
+        public MarkaController(MyContext context)
         {
             _context = context;
         }
 
-        // GET: api/Shitja
+        // GET: api/Marka
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shitja>>> GetShitjet()
+        public async Task<ActionResult<IEnumerable<Marka>>> GetMarka()
         {
-            return await _context.Shitjet.ToListAsync();
+            return await _context.Marka.ToListAsync();
         }
 
-        // GET: api/Shitja/5
+        // GET: api/Marka/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Shitja>> GetShitja(int id)
+        public async Task<ActionResult<Marka>> GetMarka(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
+            var marka = await _context.Marka.FindAsync(id);
 
-            if (shitja == null)
+            if (marka == null)
             {
                 return NotFound();
             }
 
-            return shitja;
+            return marka;
         }
 
-        // PUT: api/Shitja/5
+        // PUT: api/Marka/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShitja(int id, Shitja shitja)
+        public async Task<IActionResult> PutMarka(int id, Marka marka)
         {
-            if (id != shitja.ShitjaID)
+            if (id != marka.MarkaID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(shitja).State = EntityState.Modified;
+            _context.Entry(marka).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace PartsManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ShitjaExists(id))
+                if (!MarkaExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +73,37 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        // POST: api/Shitja
+        // POST: api/Marka
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Shitja>> PostShitja(Shitja shitja)
+        public async Task<ActionResult<Marka>> PostMarka(Marka marka)
         {
-            _context.Shitjet.Add(shitja);
+            _context.Marka.Add(marka);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetShitja", new { id = shitja.ShitjaID }, shitja);
+            return CreatedAtAction("GetMarka", new { id = marka.MarkaID }, marka);
         }
 
-        // DELETE: api/Shitja/5
+        // DELETE: api/Marka/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Shitja>> DeleteShitja(int id)
+        public async Task<ActionResult<Marka>> DeleteMarka(int id)
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
-            if (shitja == null)
+            var marka = await _context.Marka.FindAsync(id);
+            if (marka == null)
             {
                 return NotFound();
             }
 
-            _context.Shitjet.Remove(shitja);
+            _context.Marka.Remove(marka);
             await _context.SaveChangesAsync();
 
-            return shitja;
+            return marka;
         }
 
-        private bool ShitjaExists(int id)
+        private bool MarkaExists(int id)
         {
-            return _context.Shitjet.Any(e => e.ShitjaID == id);
+            return _context.Marka.Any(e => e.MarkaID == id);
         }
     }
 }

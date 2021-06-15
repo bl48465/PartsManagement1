@@ -11,6 +11,7 @@ namespace PartsManagement.Models
         public string EmriFatures { get; set; }
         public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
         public DetajetHyrese Detajet { get; set; }
+      
     }
 
 

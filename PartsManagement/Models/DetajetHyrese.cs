@@ -13,6 +13,7 @@ namespace PartsManagement.Models
         public double Cmimi { get; set; }
         public FaturaHyrese Fatura { get; set; }
         public int FaturaHyreseID { get; set; }
+
         public int ProduktiID { get; set; }
         public  Produkti Produkti { get; set; }
 

@@ -37,7 +37,14 @@ namespace PartsManagement.Controllers
             var user = _repository.GetById(userId);
             if (user == null || user.Roli != 0) return Unauthorized();
 
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.Users
+                .Include(p => p.Komentet)
+                .Include(p=>p.Shitjet)
+                .Include(p => p.Porosite)
+                .Include(s => s.Sektoret)
+                .ThenInclude(p => p.Produktet)
+                .ThenInclude(p => p.DetajetHyrese)
+                .ThenInclude(p => p.Fatura).ToListAsync();
             return Ok(users);
         }
 
@@ -50,7 +57,7 @@ namespace PartsManagement.Controllers
             var user = _repository.GetById(userId);
             if (user == null || user.Roli != 0) return Unauthorized();
 
-            var usr = await _context.Users.Include(s => s.Sektoret).Where(u => u.UserID == id).ToListAsync(); ;
+            var usr = await _context.Users.Include(s => s.Sektoret).Where(u => u.UserID == id).ToListAsync(); 
 
             if (usr == null)
             {
