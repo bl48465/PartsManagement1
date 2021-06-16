@@ -58,6 +58,16 @@ namespace PartsManagement.Models
                .HasOne(b => b.prod)
                .WithMany(c => c.ProduktetPerkatese)
                .HasForeignKey(b => b.produktiID);
+         
+            model.Entity<User>()
+           .HasOne(s => s.Vendbanimi)
+           .WithMany(g => g.Users)
+           .HasForeignKey(s => s.VendbanimiID);
+
+            model.Entity<Vendbanimi>()
+         .HasOne(s => s.Shteti)
+         .WithMany(g => g.Qyteti)
+         .HasForeignKey(s => s.ShtetiID);
 
         }
 
@@ -72,5 +82,9 @@ namespace PartsManagement.Models
         public DbSet<PartsManagement.Models.Modeli> Modeli { get; set; }
 
         public DbSet<PartsManagement.Models.Marka> Marka { get; set; }
+
+        public DbSet<PartsManagement.Models.Shteti> Shteti { get; set; }
+
+        public DbSet<PartsManagement.Models.Vendbanimi> Vendbanimi { get; set; }
     }
 }

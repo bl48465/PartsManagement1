@@ -24,7 +24,7 @@ namespace PartsManagement.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Marka>>> GetMarka()
         {
-            return await _context.Marka.ToListAsync();
+            return await _context.Marka.Include(p=>p.Modelet).ToListAsync();
         }
 
         // GET: api/Marka/5

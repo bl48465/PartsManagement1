@@ -11,7 +11,9 @@ namespace PartsManagement.Models
 
         public string EmriModelit { get; set; }
 
+        public int MarkaID { get; set; }
         public Marka Marka { get; set; }
+ 
         public ICollection<PerkatesiaProduktit> ProduktetPerkatese { get; set; }
     }
 }

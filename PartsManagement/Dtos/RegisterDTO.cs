@@ -13,6 +13,6 @@ namespace PartsManagement.Dtos
         public string Email { get; set; }
         public string Password { get; set; } 
         public string Konfirmimi { get; set; }
-
+        public int VendbanimiID { get;  set; }
     }
 }

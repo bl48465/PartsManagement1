@@ -35,7 +35,8 @@ namespace PartsManagement.Controllers
                 Kompania = dto.Kompania,
                 Email = dto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                Konfirmimi = BCrypt.Net.BCrypt.HashPassword(dto.Konfirmimi)
+                Konfirmimi = BCrypt.Net.BCrypt.HashPassword(dto.Konfirmimi),
+                VendbanimiID = dto.VendbanimiID
             };
 
             var check = _repository.GetByEmail(dto.Email);

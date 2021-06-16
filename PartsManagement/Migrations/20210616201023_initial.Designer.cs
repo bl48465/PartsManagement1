@@ -10,8 +10,8 @@ using PartsManagement.Models;
 namespace PartsManagement.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20210615215229_initialCreate")]
-    partial class initialCreate
+    [Migration("20210616201023_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -325,6 +325,21 @@ namespace PartsManagement.Migrations
                     b.ToTable("Shitjet");
                 });
 
+            modelBuilder.Entity("PartsManagement.Models.Shteti", b =>
+                {
+                    b.Property<int>("ShtetiID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("EmriShtetit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ShtetiID");
+
+                    b.ToTable("Shteti");
+                });
+
             modelBuilder.Entity("PartsManagement.Models.User", b =>
                 {
                     b.Property<int>("UserID")
@@ -364,9 +379,34 @@ namespace PartsManagement.Migrations
                     b.Property<string>("UpdatedAt")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("VendbanimiID")
+                        .HasColumnType("int");
+
                     b.HasKey("UserID");
 
+                    b.HasIndex("VendbanimiID");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.Vendbanimi", b =>
+                {
+                    b.Property<int>("VendbanimiID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("EmriQytetit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShtetiID")
+                        .HasColumnType("int");
+
+                    b.HasKey("VendbanimiID");
+
+                    b.HasIndex("ShtetiID");
+
+                    b.ToTable("Vendbanimi");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.DetajetDalese", b =>
@@ -469,6 +509,24 @@ namespace PartsManagement.Migrations
                     b.HasOne("PartsManagement.Models.User", "User")
                         .WithMany("Shitjet")
                         .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.User", b =>
+                {
+                    b.HasOne("PartsManagement.Models.Vendbanimi", "Vendbanimi")
+                        .WithMany("Users")
+                        .HasForeignKey("VendbanimiID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.Vendbanimi", b =>
+                {
+                    b.HasOne("PartsManagement.Models.Shteti", "Shteti")
+                        .WithMany("Qyteti")
+                        .HasForeignKey("ShtetiID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

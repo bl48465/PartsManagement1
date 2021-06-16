@@ -2,7 +2,7 @@
 
 namespace PartsManagement.Migrations
 {
-    public partial class initialCreate : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,24 +47,16 @@ namespace PartsManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "Shteti",
                 columns: table => new
                 {
-                    UserID = table.Column<int>(nullable: false)
+                    ShtetiID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Emri = table.Column<string>(nullable: false),
-                    Mbiemri = table.Column<string>(nullable: false),
-                    Kompania = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: false),
-                    CreatedAt = table.Column<string>(nullable: true),
-                    UpdatedAt = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true),
-                    Roli = table.Column<int>(nullable: false)
+                    EmriShtetit = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserID);
+                    table.PrimaryKey("PK_Shteti", x => x.ShtetiID);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,6 +97,54 @@ namespace PartsManagement.Migrations
                         principalTable: "Marka",
                         principalColumn: "MarkaID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Vendbanimi",
+                columns: table => new
+                {
+                    VendbanimiID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmriQytetit = table.Column<string>(nullable: true),
+                    ShtetiID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vendbanimi", x => x.VendbanimiID);
+                    table.ForeignKey(
+                        name: "FK_Vendbanimi_Shteti_ShtetiID",
+                        column: x => x.ShtetiID,
+                        principalTable: "Shteti",
+                        principalColumn: "ShtetiID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Emri = table.Column<string>(nullable: false),
+                    Mbiemri = table.Column<string>(nullable: false),
+                    Kompania = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: false),
+                    CreatedAt = table.Column<string>(nullable: true),
+                    UpdatedAt = table.Column<string>(nullable: true),
+                    VendbanimiID = table.Column<int>(nullable: false),
+                    Status = table.Column<string>(nullable: true),
+                    Roli = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserID);
+                    table.ForeignKey(
+                        name: "FK_Users_Vendbanimi_VendbanimiID",
+                        column: x => x.VendbanimiID,
+                        principalTable: "Vendbanimi",
+                        principalColumn: "VendbanimiID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -374,6 +414,16 @@ namespace PartsManagement.Migrations
                 name: "IX_Shitjet_UserID",
                 table: "Shitjet",
                 column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_VendbanimiID",
+                table: "Users",
+                column: "VendbanimiID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vendbanimi_ShtetiID",
+                table: "Vendbanimi",
+                column: "ShtetiID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -419,6 +469,12 @@ namespace PartsManagement.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Vendbanimi");
+
+            migrationBuilder.DropTable(
+                name: "Shteti");
         }
     }
 }

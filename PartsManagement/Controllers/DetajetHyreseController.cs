@@ -24,7 +24,7 @@ namespace PartsManagement.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DetajetHyrese>>> GetDetajetHyrese()
         {
-            return await _context.DetajetHyrese.ToListAsync();
+            return await _context.DetajetHyrese.Include(p=>p.Fatura).Include(p=>p.Produkti).ToListAsync();
         }
 
         // GET: api/DetajetHyrese/5

@@ -11,52 +11,48 @@ namespace PartsManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProduktiController : ControllerBase
+    public class VendbanimiController : ControllerBase
     {
         private readonly MyContext _context;
 
-        public ProduktiController(MyContext context)
+        public VendbanimiController(MyContext context)
         {
             _context = context;
         }
 
-        // GET: api/Produktis
+        // GET: api/Vendbanimis
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Produkti>>> GetProduktet()
+        public async Task<ActionResult<IEnumerable<Vendbanimi>>> GetVendbanimi()
         {
-            return await _context.Produktet
-                .Include(p=>p.Sektori)
-                .Include(p=>p.DetajetHyrese)
-                .Include(p=>p.DetajetDalese)
-                .Include(p=>p.ProduktetPerkatese).ToListAsync();
+            return await _context.Vendbanimi.ToListAsync();
         }
 
-        // GET: api/Produktis/5
+        // GET: api/Vendbanimis/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Produkti>> GetProdukti(int id)
+        public async Task<ActionResult<Vendbanimi>> GetVendbanimi(int id)
         {
-            var produkti = await _context.Produktet.FindAsync(id);
+            var vendbanimi = await _context.Vendbanimi.FindAsync(id);
 
-            if (produkti == null)
+            if (vendbanimi == null)
             {
                 return NotFound();
             }
 
-            return produkti;
+            return vendbanimi;
         }
 
-        // PUT: api/Produktis/5
+        // PUT: api/Vendbanimis/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProdukti(int id, Produkti produkti)
+        public async Task<IActionResult> PutVendbanimi(int id, Vendbanimi vendbanimi)
         {
-            if (id != produkti.ProduktiID)
+            if (id != vendbanimi.VendbanimiID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(produkti).State = EntityState.Modified;
+            _context.Entry(vendbanimi).State = EntityState.Modified;
 
             try
             {
@@ -64,7 +60,7 @@ namespace PartsManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProduktiExists(id))
+                if (!VendbanimiExists(id))
                 {
                     return NotFound();
                 }
@@ -77,37 +73,37 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        // POST: api/Produktis
+        // POST: api/Vendbanimis
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Produkti>> PostProdukti(Produkti produkti)
+        public async Task<ActionResult<Vendbanimi>> PostVendbanimi(Vendbanimi vendbanimi)
         {
-            _context.Produktet.Add(produkti);
+            _context.Vendbanimi.Add(vendbanimi);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProdukti", new { id = produkti.ProduktiID }, produkti);
+            return CreatedAtAction("GetVendbanimi", new { id = vendbanimi.VendbanimiID }, vendbanimi);
         }
 
-        // DELETE: api/Produktis/5
+        // DELETE: api/Vendbanimis/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Produkti>> DeleteProdukti(int id)
+        public async Task<ActionResult<Vendbanimi>> DeleteVendbanimi(int id)
         {
-            var produkti = await _context.Produktet.FindAsync(id);
-            if (produkti == null)
+            var vendbanimi = await _context.Vendbanimi.FindAsync(id);
+            if (vendbanimi == null)
             {
                 return NotFound();
             }
 
-            _context.Produktet.Remove(produkti);
+            _context.Vendbanimi.Remove(vendbanimi);
             await _context.SaveChangesAsync();
 
-            return produkti;
+            return vendbanimi;
         }
 
-        private bool ProduktiExists(int id)
+        private bool VendbanimiExists(int id)
         {
-            return _context.Produktet.Any(e => e.ProduktiID == id);
+            return _context.Vendbanimi.Any(e => e.VendbanimiID == id);
         }
     }
 }

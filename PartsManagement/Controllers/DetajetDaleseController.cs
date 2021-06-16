@@ -24,7 +24,7 @@ namespace PartsManagement.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DetajetDalese>>> GetDetajetDalese()
         {
-            return await _context.DetajetDalese.ToListAsync();
+            return await _context.DetajetDalese.Include(p=>p.Prod).Include(p=>p.FaturimiDales).ToListAsync();
         }
 
         // GET: api/DetajetDalese/5
