@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, {useContext, useState} from "react";
-import { Redirect ,Router , useHistory, Link } from 'react-router-dom';
+import {  Link } from 'react-router-dom';
 import {
   BoldLink,
   BoxContainer,
@@ -14,7 +14,7 @@ import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 
 export function SignupForm(){
-    let history = useHistory();
+   
     const[errorState,setError] = useState({
       errValues:{
         emailExist : '',
