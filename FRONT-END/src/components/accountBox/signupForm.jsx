@@ -17,7 +17,7 @@ import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 
 export function SignupForm(){
-    let history = useHistory();
+   
     const[errorState,setError] = useState({
       errValues:{
         emailExist : '',
