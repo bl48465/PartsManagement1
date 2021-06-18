@@ -1,6 +1,9 @@
 import axios from 'axios'
 import React, {useContext, useState} from "react";
-import { Redirect ,Router , useHistory, Link } from 'react-router-dom';
+import { Select } from 'semantic-ui-react'
+import { useHistory, Link } from 'react-router-dom';
+import DropDown from './dropdownlist';
+import DropDownCities from './dropdownlistcities';
 import {
   BoldLink,
   BoxContainer,
@@ -26,6 +29,7 @@ export function SignupForm(){
         Emri: '',
         Mbiemri: '',
         Kompania: '',
+        Vendbanimi:'',
         Email: '',
         Password: '',
         Konfirmimi: '',
@@ -34,6 +38,7 @@ export function SignupForm(){
         Emri: '',
         Mbiemri: '',
         Kompania: '',
+        Vendbanimi:'',
         Email: '',
         Password: '',
         Konfirmimi: '',
@@ -42,6 +47,7 @@ export function SignupForm(){
         Emri: false,
         Mbiemri: false,
         Kompania: false,
+        Vendbanimi:false,
         Email: false,
         Password: false,
         Konfirmimi: false
@@ -104,7 +110,7 @@ export function SignupForm(){
       const { formValues, formValidity } = formState;
       const { errValues } = errorState;
       if (Object.values(formValidity).every(Boolean)) {
-        axios.post("http://localhost:44395/api/user/",formValues)
+        axios.post("http://localhost:44395/api/Auth/register",formValues)
         .catch((error)=> {
             if(error.response){
               console.log(error.response.status);
@@ -140,6 +146,11 @@ export function SignupForm(){
         <Input  type="text" placeholder="Mbiemri" name="Mbiemri" onChange={handleChange} value={formState.formValues.Mbiemri} />
         <ErrMessage>{formState.formErrors.Kompania}</ErrMessage>
         <Input  type="text" placeholder="Kompania" name="Kompania" onChange={handleChange} value={formState.formValues.Kompania} />
+        
+        <DropDown/>
+        <DropDownCities/>
+        {/* <ErrMessage>{formState.formErrors.Vendbanimi}</ErrMessage>
+        <Input  type="text" placeholder="Vendbanimi" name="Vendbanimi" onChange={handleChange} value={formState.formValues.Vendbanimi} /> */}
         
         <ErrMessage>{formState.formErrors.Email}
                     {errorState.errValues.emailExist}

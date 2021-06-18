@@ -22,9 +22,9 @@ namespace PartsManagement.Controllers
 
         // GET: api/Vendbanimis
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Vendbanimi>>> GetVendbanimi()
+        public async Task<ActionResult<IEnumerable<Vendbanimi>>> GetVendbanimin(int shtetiID)
         {
-            return await _context.Vendbanimi.ToListAsync();
+            return await _context.Vendbanimi.Where(s=>s.ShtetiID == shtetiID).ToListAsync();
         }
 
         // GET: api/Vendbanimis/5

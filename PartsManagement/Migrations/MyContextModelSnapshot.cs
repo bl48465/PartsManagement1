@@ -186,7 +186,7 @@ namespace PartsManagement.Migrations
                     b.Property<string>("EmriModelit")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MarkaID")
+                    b.Property<int>("MarkaID")
                         .HasColumnType("int");
 
                     b.HasKey("ModeliID");
@@ -336,6 +336,23 @@ namespace PartsManagement.Migrations
                     b.HasKey("ShtetiID");
 
                     b.ToTable("Shteti");
+
+                    b.HasData(
+                        new
+                        {
+                            ShtetiID = 1,
+                            EmriShtetit = "Kosovë"
+                        },
+                        new
+                        {
+                            ShtetiID = 2,
+                            EmriShtetit = "Shqipëri"
+                        },
+                        new
+                        {
+                            ShtetiID = 3,
+                            EmriShtetit = "Maqedoni"
+                        });
                 });
 
             modelBuilder.Entity("PartsManagement.Models.User", b =>
@@ -405,6 +422,404 @@ namespace PartsManagement.Migrations
                     b.HasIndex("ShtetiID");
 
                     b.ToTable("Vendbanimi");
+
+                    b.HasData(
+                        new
+                        {
+                            VendbanimiID = 1,
+                            EmriQytetit = "Artanë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 2,
+                            EmriQytetit = "Besianë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 3,
+                            EmriQytetit = "Burim",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 4,
+                            EmriQytetit = "Dardanë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 5,
+                            EmriQytetit = "Decan",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 6,
+                            EmriQytetit = "Dragash",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 7,
+                            EmriQytetit = "Drenas",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 8,
+                            EmriQytetit = "Ferizaj",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 9,
+                            EmriQytetit = "Fushë Kosovë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 10,
+                            EmriQytetit = "Gjakovë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 11,
+                            EmriQytetit = "Gjilan",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 12,
+                            EmriQytetit = "Kastriot",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 13,
+                            EmriQytetit = "Kaqanik",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 14,
+                            EmriQytetit = "Klinë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 15,
+                            EmriQytetit = "Leposaviq",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 16,
+                            EmriQytetit = "Lipjan",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 17,
+                            EmriQytetit = "Malishevë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 18,
+                            EmriQytetit = "Mitrovicë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 19,
+                            EmriQytetit = "Pejë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 20,
+                            EmriQytetit = "Prishtinë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 21,
+                            EmriQytetit = "Prizren",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 22,
+                            EmriQytetit = "Rahovec",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 23,
+                            EmriQytetit = "Skënderaj",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 24,
+                            EmriQytetit = "Shtërpcë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 25,
+                            EmriQytetit = "Shtime",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 26,
+                            EmriQytetit = "Therandë",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 27,
+                            EmriQytetit = "Viti",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 28,
+                            EmriQytetit = "Vushtrri",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 29,
+                            EmriQytetit = "Zubin Potok",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 30,
+                            EmriQytetit = "Zveqan",
+                            ShtetiID = 1
+                        },
+                        new
+                        {
+                            VendbanimiID = 31,
+                            EmriQytetit = "Berat",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 32,
+                            EmriQytetit = "Bulqizë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 33,
+                            EmriQytetit = "Delvinë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 34,
+                            EmriQytetit = "Devoll",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 35,
+                            EmriQytetit = "Dibër",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 36,
+                            EmriQytetit = "Durrës",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 37,
+                            EmriQytetit = "Elbasan",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 38,
+                            EmriQytetit = "Fier",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 39,
+                            EmriQytetit = "Gramsh",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 40,
+                            EmriQytetit = "Gjirokastër",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 41,
+                            EmriQytetit = "Has",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 42,
+                            EmriQytetit = "Kavajë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 43,
+                            EmriQytetit = "Kolonjë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 44,
+                            EmriQytetit = "Korcë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 45,
+                            EmriQytetit = "Krujë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 46,
+                            EmriQytetit = "Kucovë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 47,
+                            EmriQytetit = "Kukës",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 48,
+                            EmriQytetit = "Kurbin",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 49,
+                            EmriQytetit = "Lezhë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 50,
+                            EmriQytetit = "Librazhd",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 51,
+                            EmriQytetit = "Lushnjë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 52,
+                            EmriQytetit = "Malësi e madhe",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 53,
+                            EmriQytetit = "Mallakastër",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 54,
+                            EmriQytetit = "Mat",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 55,
+                            EmriQytetit = "Mirditë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 56,
+                            EmriQytetit = "Peqin",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 57,
+                            EmriQytetit = "Përmet",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 58,
+                            EmriQytetit = "Pogradec",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 59,
+                            EmriQytetit = "Pukë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 60,
+                            EmriQytetit = "Sarandë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 61,
+                            EmriQytetit = "Skrapar",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 62,
+                            EmriQytetit = "Shkodër",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 63,
+                            EmriQytetit = "Tepelenë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 64,
+                            EmriQytetit = "Tiranë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 65,
+                            EmriQytetit = "Tropojë",
+                            ShtetiID = 2
+                        },
+                        new
+                        {
+                            VendbanimiID = 66,
+                            EmriQytetit = "Vlorë",
+                            ShtetiID = 2
+                        });
                 });
 
             modelBuilder.Entity("PartsManagement.Models.DetajetDalese", b =>
@@ -455,7 +870,9 @@ namespace PartsManagement.Migrations
                 {
                     b.HasOne("PartsManagement.Models.Marka", "Marka")
                         .WithMany("Modelet")
-                        .HasForeignKey("MarkaID");
+                        .HasForeignKey("MarkaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PartsManagement.Models.PerkatesiaProduktit", b =>

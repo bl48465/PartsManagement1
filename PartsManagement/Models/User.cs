@@ -26,6 +26,9 @@ namespace PartsManagement.Models
         [MinLength(3)]
         public string Kompania { get; set; }
 
+        public int VendbanimiID { get; set; }
+        public Vendbanimi Vendbanimi { get; set; }
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -48,8 +51,7 @@ namespace PartsManagement.Models
         public string UpdatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
 
         private string _status = "Pending";
-        public int VendbanimiID { get; set; }
-        public Vendbanimi Vendbanimi { get; set; }
+       
         public string Status
         {
             get

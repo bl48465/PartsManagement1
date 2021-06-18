@@ -35,7 +35,7 @@ namespace PartsManagement.Controllers
             var token = _jwtservice.Verify(jwt);
             int userId = int.Parse(token.Issuer);
             var user = _repository.GetById(userId);
-            if (user == null || user.Roli != 0) return Unauthorized();
+            if (user == null) return Unauthorized();
 
             var users = await _context.Users
                 .Include(p => p.Komentet)
@@ -43,7 +43,6 @@ namespace PartsManagement.Controllers
                 .Include(p => p.Porosite)
                 .Include(p=>p.Vendbanimi)
                 .Include(p=>p.Vendbanimi.Shteti)
-          //      .Include(p=>p.Vendbanimi.EmriQytetit)
                 .Include(s => s.Sektoret)
                 .ThenInclude(p => p.Produktet)
                 .ThenInclude(p => p.DetajetHyrese)

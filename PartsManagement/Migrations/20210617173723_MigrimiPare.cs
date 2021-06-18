@@ -2,7 +2,7 @@
 
 namespace PartsManagement.Migrations
 {
-    public partial class initial : Migration
+    public partial class MigrimiPare : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -86,7 +86,7 @@ namespace PartsManagement.Migrations
                     ModeliID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmriModelit = table.Column<string>(nullable: true),
-                    MarkaID = table.Column<int>(nullable: true)
+                    MarkaID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,7 +96,7 @@ namespace PartsManagement.Migrations
                         column: x => x.MarkaID,
                         principalTable: "Marka",
                         principalColumn: "MarkaID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,11 +128,11 @@ namespace PartsManagement.Migrations
                     Emri = table.Column<string>(nullable: false),
                     Mbiemri = table.Column<string>(nullable: false),
                     Kompania = table.Column<string>(nullable: false),
+                    VendbanimiID = table.Column<int>(nullable: false),
                     Email = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
                     CreatedAt = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<string>(nullable: true),
-                    VendbanimiID = table.Column<int>(nullable: false),
                     Status = table.Column<string>(nullable: true),
                     Roli = table.Column<int>(nullable: false)
                 },
@@ -343,6 +343,94 @@ namespace PartsManagement.Migrations
                         principalTable: "Produktet",
                         principalColumn: "ProduktiID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Shteti",
+                columns: new[] { "ShtetiID", "EmriShtetit" },
+                values: new object[] { 1, "Kosovë" });
+
+            migrationBuilder.InsertData(
+                table: "Shteti",
+                columns: new[] { "ShtetiID", "EmriShtetit" },
+                values: new object[] { 2, "Shqipëri" });
+
+            migrationBuilder.InsertData(
+                table: "Shteti",
+                columns: new[] { "ShtetiID", "EmriShtetit" },
+                values: new object[] { 3, "Maqedoni" });
+
+            migrationBuilder.InsertData(
+                table: "Vendbanimi",
+                columns: new[] { "VendbanimiID", "EmriQytetit", "ShtetiID" },
+                values: new object[,]
+                {
+                    { 1, "Artanë", 1 },
+                    { 36, "Durrës", 2 },
+                    { 37, "Elbasan", 2 },
+                    { 38, "Fier", 2 },
+                    { 39, "Gramsh", 2 },
+                    { 40, "Gjirokastër", 2 },
+                    { 41, "Has", 2 },
+                    { 42, "Kavajë", 2 },
+                    { 43, "Kolonjë", 2 },
+                    { 44, "Korcë", 2 },
+                    { 45, "Krujë", 2 },
+                    { 46, "Kucovë", 2 },
+                    { 47, "Kukës", 2 },
+                    { 48, "Kurbin", 2 },
+                    { 49, "Lezhë", 2 },
+                    { 50, "Librazhd", 2 },
+                    { 51, "Lushnjë", 2 },
+                    { 52, "Malësi e madhe", 2 },
+                    { 53, "Mallakastër", 2 },
+                    { 54, "Mat", 2 },
+                    { 55, "Mirditë", 2 },
+                    { 56, "Peqin", 2 },
+                    { 57, "Përmet", 2 },
+                    { 58, "Pogradec", 2 },
+                    { 59, "Pukë", 2 },
+                    { 60, "Sarandë", 2 },
+                    { 61, "Skrapar", 2 },
+                    { 62, "Shkodër", 2 },
+                    { 63, "Tepelenë", 2 },
+                    { 64, "Tiranë", 2 },
+                    { 35, "Dibër", 2 },
+                    { 34, "Devoll", 2 },
+                    { 33, "Delvinë", 2 },
+                    { 32, "Bulqizë", 2 },
+                    { 2, "Besianë", 1 },
+                    { 3, "Burim", 1 },
+                    { 4, "Dardanë", 1 },
+                    { 5, "Decan", 1 },
+                    { 6, "Dragash", 1 },
+                    { 7, "Drenas", 1 },
+                    { 8, "Ferizaj", 1 },
+                    { 9, "Fushë Kosovë", 1 },
+                    { 10, "Gjakovë", 1 },
+                    { 11, "Gjilan", 1 },
+                    { 12, "Kastriot", 1 },
+                    { 13, "Kaqanik", 1 },
+                    { 14, "Klinë", 1 },
+                    { 15, "Leposaviq", 1 },
+                    { 65, "Tropojë", 2 },
+                    { 16, "Lipjan", 1 },
+                    { 18, "Mitrovicë", 1 },
+                    { 19, "Pejë", 1 },
+                    { 20, "Prishtinë", 1 },
+                    { 21, "Prizren", 1 },
+                    { 22, "Rahovec", 1 },
+                    { 23, "Skënderaj", 1 },
+                    { 24, "Shtërpcë", 1 },
+                    { 25, "Shtime", 1 },
+                    { 26, "Therandë", 1 },
+                    { 27, "Viti", 1 },
+                    { 28, "Vushtrri", 1 },
+                    { 29, "Zubin Potok", 1 },
+                    { 30, "Zveqan", 1 },
+                    { 31, "Berat", 2 },
+                    { 17, "Malishevë", 1 },
+                    { 66, "Vlorë", 2 }
                 });
 
             migrationBuilder.CreateIndex(
