@@ -31,22 +31,22 @@ namespace PartsManagement.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var jwt = Request.Cookies["jwt"];
-            var token = _jwtservice.Verify(jwt);
-            int userId = int.Parse(token.Issuer);
-            var user = _repository.GetById(userId);
-            if (user == null) return Unauthorized();
+            // var jwt = Request.Cookies["jwt"];
+            // var token = _jwtservice.Verify(jwt);
+            // int userId = int.Parse(token.Issuer);
+            // var user = _repository.GetById(userId);
+            // if (user == null) return Unauthorized();
 
-            var users = await _context.Users
-                .Include(p => p.Komentet)
-                .Include(p=>p.Shitjet)
-                .Include(p => p.Porosite)
-                .Include(p=>p.Vendbanimi)
-                .Include(p=>p.Vendbanimi.Shteti)
-                .Include(s => s.Sektoret)
-                .ThenInclude(p => p.Produktet)
-                .ThenInclude(p => p.DetajetHyrese)
-                .ThenInclude(p => p.Fatura).ToListAsync();
+            var users = await _context.Users.ToListAsync();
+                // .Include(p => p.Komentet)
+                // .Include(p=>p.Shitjet)
+                // .Include(p => p.Porosite)
+                // .Include(p=>p.Vendbanimi)
+                // .Include(p=>p.Vendbanimi.Shteti)
+                // .Include(s => s.Sektoret)
+                // .ThenInclude(p => p.Produktet)
+                // .ThenInclude(p => p.DetajetHyrese)
+                // .ThenInclude(p => p.Fatura).ToListAsync();
             return Ok(users);
         }
 

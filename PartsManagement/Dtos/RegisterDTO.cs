@@ -10,9 +10,10 @@ namespace PartsManagement.Dtos
         public string Emri { get; set; }
         public string Mbiemri { get; set; }
         public string Kompania { get; set; }
+        public int VendbanimiID { get;  set; }
         public string Email { get; set; }
         public string Password { get; set; } 
         public string Konfirmimi { get; set; }
-        public int VendbanimiID { get;  set; }
+ 
     }
 }

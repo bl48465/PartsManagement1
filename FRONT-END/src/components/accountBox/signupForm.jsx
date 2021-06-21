@@ -1,9 +1,6 @@
 import axios from 'axios'
 import React, {useContext, useState} from "react";
-import { Select } from 'semantic-ui-react'
-import { useHistory, Link } from 'react-router-dom';
-import DropDown from './dropdownlist';
-import DropDownCities from './dropdownlistcities';
+import { useEffect } from 'react';
 import {
   BoldLink,
   BoxContainer,
@@ -11,25 +8,34 @@ import {
   Input,
   MutedLink,
   SubmitButton,
-  ErrMessage
+  ErrMessage,
+  Select
 } from "./common";
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
+import { Modal, Button, Form } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.css";
 
 export function SignupForm(){
    
+
+  const [show, setShow] = useState(false);
+
     const[errorState,setError] = useState({
       errValues:{
         emailExist : '',
       }
     })
+    const[shtetet,setShtetet] = useState([]);
+    const[qytetet,setQytetet] = useState([]);
+    const[sh,setSh]= useState();
 
     const [formState, setFormState] = useState({
       formValues: {
         Emri: '',
         Mbiemri: '',
         Kompania: '',
-        Vendbanimi:'',
+        VendbanimiID:0,
         Email: '',
         Password: '',
         Konfirmimi: '',
@@ -38,7 +44,6 @@ export function SignupForm(){
         Emri: '',
         Mbiemri: '',
         Kompania: '',
-        Vendbanimi:'',
         Email: '',
         Password: '',
         Konfirmimi: '',
@@ -47,7 +52,6 @@ export function SignupForm(){
         Emri: false,
         Mbiemri: false,
         Kompania: false,
-        Vendbanimi:false,
         Email: false,
         Password: false,
         Konfirmimi: false
@@ -66,7 +70,7 @@ export function SignupForm(){
       const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
       const PasswordReg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   
-      validity[name] = value.length > 3 ;
+      validity[name] = value.length > 0 ;
       fieldValidationErrors[name] = validity[name]
         ? ""
         : `${name} duhet të ketë së paku 3 shkronja `;
@@ -103,26 +107,33 @@ export function SignupForm(){
       formValues[target.name] = target.value;
       setFormState({ formValues });
       handleValidation(target);
+     
     };
 
     const handleSubmit = event => {
       event.preventDefault();
       const { formValues, formValidity } = formState;
       const { errValues } = errorState;
-      if (Object.values(formValidity).every(Boolean)) {
-        axios.post("http://localhost:44395/api/Auth/register",formValues)
+
+      if (Object.values(formValidity).every(Boolean)){
+        
+        axios.post("http://localhost:5000/api/Auth/register",formValues)
         .catch((error)=> {
             if(error.response){
-              console.log(error.response.status);
-              if(error.response.status === 500){
-                errorState.errValues.emailExist = "Emaili është në përdorim";
+                errorState.errValues.emailExist = error.response.data.message;
                 setError({errValues});
+                setShow(false);
                 console.log(errorState.errValues.emailExist);
-              }
+            }
+            else{
+              setShow(true);
             }
         })
-        console.log(formValues);
+
+          
+        
       } else {
+        console.log(formValidity)
         for (let key in formValues) {
           let target = {
             name: key,
@@ -130,14 +141,38 @@ export function SignupForm(){
           };
           handleValidation(target);
         }
-        
       }
     };
 
+    useEffect(() => {
+      axios.get('http://localhost:5000/api/Shteti').then(response => {
+          setShtetet(response.data);
+      });
+    })
+
+    const ChangeteState = (e) => {
+      setSh({ sh: e.target.value });
+      axios.get('http://localhost:5000/api/Vendbanimi?shtetiId=' + e.target.value).then(response => {
+          setQytetet(response.data);
+      });
+  }
+    const handleClose = () => setShow(false);
     const { switchToSignin } = useContext(AccountContext);
 
   return (
     <BoxContainer>
+  
+      <Modal show={show}>
+        <Modal.Header closeButton>
+          <Modal.Title>Regjistrimi me sukses</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <></>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleClose} variant="secondary">Kyquni</Button>
+        </Modal.Footer>
+      </Modal>
       <FormContainer onSubmit={handleSubmit}>
         <ErrMessage>{errorState.errValues.sukses}</ErrMessage>
         <ErrMessage>{formState.formErrors.Emri}</ErrMessage>
@@ -145,13 +180,19 @@ export function SignupForm(){
         <ErrMessage>{formState.formErrors.Mbiemri}</ErrMessage>
         <Input  type="text" placeholder="Mbiemri" name="Mbiemri" onChange={handleChange} value={formState.formValues.Mbiemri} />
         <ErrMessage>{formState.formErrors.Kompania}</ErrMessage>
-        <Input  type="text" placeholder="Kompania" name="Kompania" onChange={handleChange} value={formState.formValues.Kompania} />
-        
-        <DropDown/>
-        <DropDownCities/>
-        {/* <ErrMessage>{formState.formErrors.Vendbanimi}</ErrMessage>
-        <Input  type="text" placeholder="Vendbanimi" name="Vendbanimi" onChange={handleChange} value={formState.formValues.Vendbanimi} /> */}
-        
+        <Input  type="text" placeholder="Kompania" name="Kompania" onChange={handleChange} value={formState.formValues.Kompania} /> 
+        <Select  onChange={ChangeteState} name="emriQytetit"  >  
+            <option>Shteti</option> 
+          {shtetet.map((e, key) => {  
+            return <option key={key} value={e.shtetiID}>{e.emriShtetit}</option>;  
+            })}  
+        </Select>
+        <Select name="VendbanimiID" onChange={handleChange}>  
+            <option>Qyteti</option> 
+            {qytetet.map((e, key) => {  
+            return <option  key={key} value={e.vendbanimiID}>{e.emriQytetit}</option>;  
+            })}  
+        </Select>  
         <ErrMessage>{formState.formErrors.Email}
                     {errorState.errValues.emailExist}
         </ErrMessage>
@@ -162,7 +203,7 @@ export function SignupForm(){
         <Input  type="password" placeholder="Fjalëkalimi" name="Konfirmimi" onChange={handleChange} value={formState.formValues.Konfirmimi}/>
       </FormContainer>
       <Marginer direction="vertical" margin={10} />
-      <SubmitButton type="submit"  onClick={handleSubmit} as={Link} to="/">Krijo</SubmitButton>
+      <SubmitButton type="submit"  onClick={handleSubmit}>Krijo</SubmitButton>
       <Marginer direction="vertical" margin="1em" />
       <MutedLink href="#">
         Jeni regjistruar më parë?

@@ -8,6 +8,39 @@ export const BoxContainer = styled.div`
   margin-top: px;
 `;
 
+export const Select = styled.select`
+  width: 100%;
+  height: 35px;
+  outline: none;
+  background: white;
+  color: rgba(200, 200, 200, 1);
+  border: 1px solid rgba(200, 200, 200, 0.3);
+  padding: 0px 10px;
+  font-size: 12px;
+  transition: all 200ms ease-in-out;
+  border-bottom: 1.4px solid transparent;
+  
+  &:not(:last-of-type) {
+    border-bottom: 1.5px solid rgba(200, 200, 200, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid #fc4747;
+  }
+
+
+       option {
+        color:gray;
+         background: white;
+         font-size: 12px;
+         display: flex;
+         white-space: pre;
+         min-height: 20px;
+         padding: 0px 2px 1px;
+       }
+`;
+
 export const ErrMessage = styled.p`
   color: red;
   font-weight: 500;

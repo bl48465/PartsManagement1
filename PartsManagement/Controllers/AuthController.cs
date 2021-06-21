@@ -33,10 +33,11 @@ namespace PartsManagement.Controllers
                 Emri = dto.Emri,
                 Mbiemri = dto.Mbiemri,
                 Kompania = dto.Kompania,
+                VendbanimiID = dto.VendbanimiID,
                 Email = dto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Konfirmimi = BCrypt.Net.BCrypt.HashPassword(dto.Konfirmimi),
-                VendbanimiID = dto.VendbanimiID
+               
             };
 
             var check = _repository.GetByEmail(dto.Email);
