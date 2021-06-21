@@ -50,6 +50,16 @@ export const ErrMessage = styled.p`
   margin-top: 5px;
 `;
 
+export const Success = styled.a`
+  text-decoration:none;
+  color: green;
+  font-weight: 500;
+  font-size: 12px;
+  z-index: 10;
+  margin: 0;
+  margin-top: 5px;
+`;
+
 export const FormContainer = styled.form`
   width: 100%;
   display: flex;

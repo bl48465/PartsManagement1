@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import {
   BoldLink,
@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom';
 
 
 export function LoginForm(props) {
+  const [user, setUser] = useState([]);
   const history = useHistory()
   const [error, setError] = useState(true);
   const [form, setForm] = useState({
@@ -25,6 +26,14 @@ export function LoginForm(props) {
     }
   });
 
+  const currentUser = async () => {
+    axios.get("http://localhost:5000/api/Auth/user", { withCredentials: true }).then((response) => {
+      setUser(response.data);
+      console.log(user)
+    })
+  }
+
+
   const handleChange = ({ target }) => {
     const { formValues } = form;
     formValues[target.name] = target.value;
@@ -33,15 +42,17 @@ export function LoginForm(props) {
 
   const initialSession = async () => {
     const { formValues } = form;
-
-
+    
     axios.post("http://localhost:5000/api/Auth/login", formValues, { withCredentials: true })
-      .then((response) => {     
-      history.push("/");
+      .then(() => {
+      
+        history.push("/");
       })
       .catch((error) => {
         setError(true);
       })
+    
+    
   }
 
 

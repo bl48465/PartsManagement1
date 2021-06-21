@@ -21,9 +21,7 @@ export const ModalExampleSize = () => {
 
   return (
     <>
-      <Button onClick={() => dispatch({ type: 'open', size: 'mini' })}>
-        Mini
-      </Button>
+    
       <Modal
         size={size}
         open={open}

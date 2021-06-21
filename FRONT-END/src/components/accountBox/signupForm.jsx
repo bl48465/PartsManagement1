@@ -9,21 +9,22 @@ import {
   MutedLink,
   SubmitButton,
   ErrMessage,
-  Select
+  Select,
+  Success
 } from "./common";
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
-import { Modal, Button, Form } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.css";
+import { Link } from 'react-router-dom';
+
 
 export function SignupForm(){
    
 
-  const [show, setShow] = useState(false);
-
+ 
     const[errorState,setError] = useState({
       errValues:{
         emailExist : '',
+        succes:''
       }
     })
     const[shtetet,setShtetet] = useState([]);
@@ -118,15 +119,14 @@ export function SignupForm(){
       if (Object.values(formValidity).every(Boolean)){
         
         axios.post("http://localhost:5000/api/Auth/register",formValues)
+        .then(errorState.errValues.succes='Jeni regjistruar me sukses! Ju lutem kycuni!')
         .catch((error)=> {
+         
+         
             if(error.response){
                 errorState.errValues.emailExist = error.response.data.message;
-                setError({errValues});
-                setShow(false);
+                setError({errValues});            
                 console.log(errorState.errValues.emailExist);
-            }
-            else{
-              setShow(true);
             }
         })
 
@@ -156,23 +156,12 @@ export function SignupForm(){
           setQytetet(response.data);
       });
   }
-    const handleClose = () => setShow(false);
+    
     const { switchToSignin } = useContext(AccountContext);
 
   return (
     <BoxContainer>
-  
-      <Modal show={show}>
-        <Modal.Header closeButton>
-          <Modal.Title>Regjistrimi me sukses</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <></>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={handleClose} variant="secondary">Kyquni</Button>
-        </Modal.Footer>
-      </Modal>
+      <Success onClick={switchToSignin}>{errorState.errValues.succes}</Success>
       <FormContainer onSubmit={handleSubmit}>
         <ErrMessage>{errorState.errValues.sukses}</ErrMessage>
         <ErrMessage>{formState.formErrors.Emri}</ErrMessage>
