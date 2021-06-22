@@ -20,14 +20,14 @@ namespace PartsManagement.Controllers
             _context = context;
         }
 
-        // GET: api/Modelis
+        // GET: api/Modeli
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Modeli>>> GetModeli()
         {
             return await _context.Modeli.ToListAsync();
         }
 
-        // GET: api/Modelis/5
+        // GET: api/Modeli/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Modeli>> GetModeli(int id)
         {
@@ -41,7 +41,7 @@ namespace PartsManagement.Controllers
             return modeli;
         }
 
-        // PUT: api/Modelis/5
+        // PUT: api/Modeli/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
@@ -73,7 +73,7 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        // POST: api/Modelis
+        // POST: api/Modeli
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
@@ -85,7 +85,7 @@ namespace PartsManagement.Controllers
             return CreatedAtAction("GetModeli", new { id = modeli.ModeliID }, modeli);
         }
 
-        // DELETE: api/Modelis/5
+        // DELETE: api/Modeli/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Modeli>> DeleteModeli(int id)
         {

@@ -20,14 +20,14 @@ namespace PartsManagement.Controllers
             _context = context;
         }
 
-        // GET: api/Marka
+        // GET: api/Markas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Marka>>> GetMarka()
         {
-            return await _context.Marka.Include(p=>p.Modelet).ToListAsync();
+            return await _context.Marka.ToListAsync();
         }
 
-        // GET: api/Marka/5
+        // GET: api/Markas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Marka>> GetMarka(int id)
         {
@@ -41,7 +41,7 @@ namespace PartsManagement.Controllers
             return marka;
         }
 
-        // PUT: api/Marka/5
+        // PUT: api/Markas/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
@@ -73,7 +73,7 @@ namespace PartsManagement.Controllers
             return NoContent();
         }
 
-        // POST: api/Marka
+        // POST: api/Markas
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
@@ -85,7 +85,7 @@ namespace PartsManagement.Controllers
             return CreatedAtAction("GetMarka", new { id = marka.MarkaID }, marka);
         }
 
-        // DELETE: api/Marka/5
+        // DELETE: api/Markas/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Marka>> DeleteMarka(int id)
         {

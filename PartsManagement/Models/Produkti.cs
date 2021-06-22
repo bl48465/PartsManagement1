@@ -25,9 +25,11 @@ namespace PartsManagement.Models
         public DetajetHyrese DetajetHyrese { get; set; }
         public DetajetDalese DetajetDalese { get; set; }
 
+        public Modeli Model { get;set;}
+
         public string CreatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
         public string UpdatedAt { get; set; } = DateTime.Now.ToString("dd/MM/yyyy H:mm");
-        public ICollection<PerkatesiaProduktit> ProduktetPerkatese { get; set; }
+        
     }
 
 }

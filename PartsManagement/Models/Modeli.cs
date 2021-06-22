@@ -14,6 +14,6 @@ namespace PartsManagement.Models
         public int MarkaID { get; set; }
         public Marka Marka { get; set; }
  
-        public ICollection<PerkatesiaProduktit> ProduktetPerkatese { get; set; }
+    
     }
 }

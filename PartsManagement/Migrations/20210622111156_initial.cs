@@ -2,7 +2,7 @@
 
 namespace PartsManagement.Migrations
 {
-    public partial class FirstMigration : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -251,12 +251,19 @@ namespace PartsManagement.Migrations
                     Emri = table.Column<string>(nullable: true),
                     OEnumber = table.Column<string>(nullable: true),
                     SektoriID = table.Column<int>(nullable: false),
+                    ModeliID = table.Column<int>(nullable: true),
                     CreatedAt = table.Column<string>(nullable: true),
                     UpdatedAt = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Produktet", x => x.ProduktiID);
+                    table.ForeignKey(
+                        name: "FK_Produktet_Modeli_ModeliID",
+                        column: x => x.ModeliID,
+                        principalTable: "Modeli",
+                        principalColumn: "ModeliID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Produktet_Sektoret_SektoriID",
                         column: x => x.SektoriID,
@@ -321,70 +328,75 @@ namespace PartsManagement.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "PerkatesiaProduktit",
-                columns: table => new
+            migrationBuilder.InsertData(
+                table: "Marka",
+                columns: new[] { "MarkaID", "EmriMarkes" },
+                values: new object[,]
                 {
-                    produktiID = table.Column<int>(nullable: false),
-                    modeliID = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PerkatesiaProduktit", x => new { x.modeliID, x.produktiID });
-                    table.ForeignKey(
-                        name: "FK_PerkatesiaProduktit_Modeli_modeliID",
-                        column: x => x.modeliID,
-                        principalTable: "Modeli",
-                        principalColumn: "ModeliID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PerkatesiaProduktit_Produktet_produktiID",
-                        column: x => x.produktiID,
-                        principalTable: "Produktet",
-                        principalColumn: "ProduktiID",
-                        onDelete: ReferentialAction.Cascade);
+                    { 1, "Ferrari" },
+                    { 2, "Audi" },
+                    { 3, "BMW" },
+                    { 4, "VolksWagen" },
+                    { 5, "Mercedes" },
+                    { 6, "Skoda" },
+                    { 7, "Volvo" },
+                    { 8, "Toyota" },
+                    { 9, "Mitsubishi" },
+                    { 10, "Porsche" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Shteti",
                 columns: new[] { "ShtetiID", "EmriShtetit" },
-                values: new object[] { 1, "Kosovë" });
+                values: new object[,]
+                {
+                    { 1, "Kosovë" },
+                    { 2, "Shqipëri" },
+                    { 3, "Maqedoni" }
+                });
 
             migrationBuilder.InsertData(
-                table: "Shteti",
-                columns: new[] { "ShtetiID", "EmriShtetit" },
-                values: new object[] { 2, "Shqipëri" });
-
-            migrationBuilder.InsertData(
-                table: "Shteti",
-                columns: new[] { "ShtetiID", "EmriShtetit" },
-                values: new object[] { 3, "Maqedoni" });
+                table: "Modeli",
+                columns: new[] { "ModeliID", "EmriModelit", "MarkaID" },
+                values: new object[,]
+                {
+                    { 1, "Ferrari Ri", 1 },
+                    { 2, "Audi A3", 2 },
+                    { 3, "BMW 5qe", 3 },
+                    { 4, "Golf 4shi Bajramit", 4 },
+                    { 5, "Mercedes e class", 5 },
+                    { 6, "Skoda octavia", 6 },
+                    { 7, "Volvo 3.0 tdi", 7 },
+                    { 8, "Toyota off-road", 8 },
+                    { 9, "Mitsubishi modeli 2t", 9 },
+                    { 10, "Porsche panamera", 10 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Vendbanimi",
                 columns: new[] { "VendbanimiID", "EmriQytetit", "ShtetiID" },
                 values: new object[,]
                 {
-                    { 1, "Artanë", 1 },
-                    { 36, "Durrës", 2 },
-                    { 37, "Elbasan", 2 },
-                    { 38, "Fier", 2 },
-                    { 39, "Gramsh", 2 },
-                    { 40, "Gjirokastër", 2 },
-                    { 41, "Has", 2 },
-                    { 42, "Kavajë", 2 },
-                    { 43, "Kolonjë", 2 },
-                    { 44, "Korcë", 2 },
-                    { 45, "Krujë", 2 },
-                    { 46, "Kucovë", 2 },
                     { 47, "Kukës", 2 },
+                    { 46, "Kucovë", 2 },
+                    { 45, "Krujë", 2 },
+                    { 44, "Korcë", 2 },
+                    { 43, "Kolonjë", 2 },
+                    { 42, "Kavajë", 2 },
+                    { 37, "Elbasan", 2 },
+                    { 40, "Gjirokastër", 2 },
+                    { 39, "Gramsh", 2 },
+                    { 38, "Fier", 2 },
                     { 48, "Kurbin", 2 },
+                    { 36, "Durrës", 2 },
+                    { 35, "Dibër", 2 },
+                    { 41, "Has", 2 },
                     { 49, "Lezhë", 2 },
-                    { 50, "Librazhd", 2 },
+                    { 54, "Mat", 2 },
                     { 51, "Lushnjë", 2 },
                     { 52, "Malësi e madhe", 2 },
                     { 53, "Mallakastër", 2 },
-                    { 54, "Mat", 2 },
+                    { 34, "Devoll", 2 },
                     { 55, "Mirditë", 2 },
                     { 56, "Peqin", 2 },
                     { 57, "Përmet", 2 },
@@ -395,10 +407,11 @@ namespace PartsManagement.Migrations
                     { 62, "Shkodër", 2 },
                     { 63, "Tepelenë", 2 },
                     { 64, "Tiranë", 2 },
-                    { 35, "Dibër", 2 },
-                    { 34, "Devoll", 2 },
+                    { 50, "Librazhd", 2 },
                     { 33, "Delvinë", 2 },
-                    { 32, "Bulqizë", 2 },
+                    { 28, "Vushtrri", 1 },
+                    { 31, "Berat", 2 },
+                    { 1, "Artanë", 1 },
                     { 2, "Besianë", 1 },
                     { 3, "Burim", 1 },
                     { 4, "Dardanë", 1 },
@@ -412,9 +425,9 @@ namespace PartsManagement.Migrations
                     { 12, "Kastriot", 1 },
                     { 13, "Kaqanik", 1 },
                     { 14, "Klinë", 1 },
+                    { 32, "Bulqizë", 2 },
                     { 15, "Leposaviq", 1 },
-                    { 65, "Tropojë", 2 },
-                    { 16, "Lipjan", 1 },
+                    { 17, "Malishevë", 1 },
                     { 18, "Mitrovicë", 1 },
                     { 19, "Pejë", 1 },
                     { 20, "Prishtinë", 1 },
@@ -425,11 +438,10 @@ namespace PartsManagement.Migrations
                     { 25, "Shtime", 1 },
                     { 26, "Therandë", 1 },
                     { 27, "Viti", 1 },
-                    { 28, "Vushtrri", 1 },
+                    { 65, "Tropojë", 2 },
                     { 29, "Zubin Potok", 1 },
                     { 30, "Zveqan", 1 },
-                    { 31, "Berat", 2 },
-                    { 17, "Malishevë", 1 },
+                    { 16, "Lipjan", 1 },
                     { 66, "Vlorë", 2 }
                 });
 
@@ -473,14 +485,14 @@ namespace PartsManagement.Migrations
                 column: "MarkaID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PerkatesiaProduktit_produktiID",
-                table: "PerkatesiaProduktit",
-                column: "produktiID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Porosite_UserID",
                 table: "Porosite",
                 column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Produktet_ModeliID",
+                table: "Produktet",
+                column: "ModeliID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Produktet_SektoriID",
@@ -529,31 +541,28 @@ namespace PartsManagement.Migrations
                 name: "Komentet");
 
             migrationBuilder.DropTable(
-                name: "PerkatesiaProduktit");
-
-            migrationBuilder.DropTable(
                 name: "Porosite");
 
             migrationBuilder.DropTable(
                 name: "Shitjet");
 
             migrationBuilder.DropTable(
-                name: "FaturaHyrese");
-
-            migrationBuilder.DropTable(
-                name: "Modeli");
-
-            migrationBuilder.DropTable(
                 name: "Produktet");
+
+            migrationBuilder.DropTable(
+                name: "FaturaHyrese");
 
             migrationBuilder.DropTable(
                 name: "FaturaDalese");
 
             migrationBuilder.DropTable(
-                name: "Marka");
+                name: "Modeli");
 
             migrationBuilder.DropTable(
                 name: "Sektoret");
+
+            migrationBuilder.DropTable(
+                name: "Marka");
 
             migrationBuilder.DropTable(
                 name: "Users");

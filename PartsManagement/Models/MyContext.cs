@@ -46,18 +46,6 @@ namespace PartsManagement.Models
                 .HasMany(p => p.Produktet)
                 .WithOne(s => s.Sektori);
 
-            model.Entity<PerkatesiaProduktit>()
-                .HasKey(b => new { b.modeliID, b.produktiID });
-
-            model.Entity<PerkatesiaProduktit>()
-                .HasOne(b => b.model)
-                .WithMany(bc => bc.ProduktetPerkatese)
-                .HasForeignKey(b => b.modeliID);
-
-            model.Entity<PerkatesiaProduktit>()
-               .HasOne(b => b.prod)
-               .WithMany(c => c.ProduktetPerkatese)
-               .HasForeignKey(b => b.produktiID);
 
             model.Entity<User>()
            .HasOne(s => s.Vendbanimi)
@@ -74,6 +62,34 @@ namespace PartsManagement.Models
             new Shteti() { ShtetiID = 1, EmriShtetit = "Kosovë" },
             new Shteti() { ShtetiID = 2, EmriShtetit = "Shqipëri" },
             new Shteti() { ShtetiID = 3, EmriShtetit = "Maqedoni" }
+            );
+
+            model.Entity<Marka>().HasData(
+            new Marka() { MarkaID = 1, EmriMarkes = "Ferrari" },
+            new Marka() { MarkaID = 2, EmriMarkes = "Audi" },
+            new Marka() { MarkaID = 3, EmriMarkes = "BMW" },
+            new Marka() { MarkaID = 4, EmriMarkes = "VolksWagen" },
+            new Marka() { MarkaID = 5, EmriMarkes = "Mercedes" },
+            new Marka() { MarkaID = 6, EmriMarkes = "Skoda" },
+            new Marka() { MarkaID = 7, EmriMarkes = "Volvo" },
+            new Marka() { MarkaID = 8, EmriMarkes = "Toyota" },                 
+            new Marka() { MarkaID = 9, EmriMarkes = "Mitsubishi" },
+            new Marka() { MarkaID = 10, EmriMarkes = "Porsche" }
+
+            );
+
+            model.Entity<Modeli>().HasData(
+            new Modeli() { ModeliID = 1, EmriModelit = "Ferrari Ri" , MarkaID=1},
+            new Modeli() { ModeliID = 2, EmriModelit = "Audi A3", MarkaID=2 },
+            new Modeli() { ModeliID = 3, EmriModelit = "BMW 5qe" , MarkaID=3},
+            new Modeli() { ModeliID = 4, EmriModelit = "Golf 4shi Bajramit", MarkaID=4 },
+            new Modeli() { ModeliID = 5, EmriModelit = "Mercedes e class", MarkaID=5 },
+            new Modeli() { ModeliID = 6, EmriModelit = "Skoda octavia" , MarkaID=6},
+            new Modeli() { ModeliID = 7, EmriModelit = "Volvo 3.0 tdi", MarkaID=7 },
+            new Modeli() { ModeliID = 8, EmriModelit = "Toyota off-road", MarkaID=8 },                 
+            new Modeli() { ModeliID = 9, EmriModelit = "Mitsubishi modeli 2t", MarkaID=9 },
+            new Modeli() { ModeliID = 10, EmriModelit = "Porsche panamera" , MarkaID=10}
+
             );
 
         model.Entity<Vendbanimi>().HasData(

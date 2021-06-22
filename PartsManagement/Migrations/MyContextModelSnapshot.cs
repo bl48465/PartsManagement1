@@ -174,6 +174,58 @@ namespace PartsManagement.Migrations
                     b.HasKey("MarkaID");
 
                     b.ToTable("Marka");
+
+                    b.HasData(
+                        new
+                        {
+                            MarkaID = 1,
+                            EmriMarkes = "Ferrari"
+                        },
+                        new
+                        {
+                            MarkaID = 2,
+                            EmriMarkes = "Audi"
+                        },
+                        new
+                        {
+                            MarkaID = 3,
+                            EmriMarkes = "BMW"
+                        },
+                        new
+                        {
+                            MarkaID = 4,
+                            EmriMarkes = "VolksWagen"
+                        },
+                        new
+                        {
+                            MarkaID = 5,
+                            EmriMarkes = "Mercedes"
+                        },
+                        new
+                        {
+                            MarkaID = 6,
+                            EmriMarkes = "Skoda"
+                        },
+                        new
+                        {
+                            MarkaID = 7,
+                            EmriMarkes = "Volvo"
+                        },
+                        new
+                        {
+                            MarkaID = 8,
+                            EmriMarkes = "Toyota"
+                        },
+                        new
+                        {
+                            MarkaID = 9,
+                            EmriMarkes = "Mitsubishi"
+                        },
+                        new
+                        {
+                            MarkaID = 10,
+                            EmriMarkes = "Porsche"
+                        });
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Modeli", b =>
@@ -194,21 +246,68 @@ namespace PartsManagement.Migrations
                     b.HasIndex("MarkaID");
 
                     b.ToTable("Modeli");
-                });
 
-            modelBuilder.Entity("PartsManagement.Models.PerkatesiaProduktit", b =>
-                {
-                    b.Property<int>("modeliID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("produktiID")
-                        .HasColumnType("int");
-
-                    b.HasKey("modeliID", "produktiID");
-
-                    b.HasIndex("produktiID");
-
-                    b.ToTable("PerkatesiaProduktit");
+                    b.HasData(
+                        new
+                        {
+                            ModeliID = 1,
+                            EmriModelit = "Ferrari Ri",
+                            MarkaID = 1
+                        },
+                        new
+                        {
+                            ModeliID = 2,
+                            EmriModelit = "Audi A3",
+                            MarkaID = 2
+                        },
+                        new
+                        {
+                            ModeliID = 3,
+                            EmriModelit = "BMW 5qe",
+                            MarkaID = 3
+                        },
+                        new
+                        {
+                            ModeliID = 4,
+                            EmriModelit = "Golf 4shi Bajramit",
+                            MarkaID = 4
+                        },
+                        new
+                        {
+                            ModeliID = 5,
+                            EmriModelit = "Mercedes e class",
+                            MarkaID = 5
+                        },
+                        new
+                        {
+                            ModeliID = 6,
+                            EmriModelit = "Skoda octavia",
+                            MarkaID = 6
+                        },
+                        new
+                        {
+                            ModeliID = 7,
+                            EmriModelit = "Volvo 3.0 tdi",
+                            MarkaID = 7
+                        },
+                        new
+                        {
+                            ModeliID = 8,
+                            EmriModelit = "Toyota off-road",
+                            MarkaID = 8
+                        },
+                        new
+                        {
+                            ModeliID = 9,
+                            EmriModelit = "Mitsubishi modeli 2t",
+                            MarkaID = 9
+                        },
+                        new
+                        {
+                            ModeliID = 10,
+                            EmriModelit = "Porsche panamera",
+                            MarkaID = 10
+                        });
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Porosia", b =>
@@ -254,6 +353,9 @@ namespace PartsManagement.Migrations
                     b.Property<string>("Emri")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ModeliID")
+                        .HasColumnType("int");
+
                     b.Property<string>("OEnumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -264,6 +366,8 @@ namespace PartsManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProduktiID");
+
+                    b.HasIndex("ModeliID");
 
                     b.HasIndex("SektoriID");
 
@@ -875,21 +979,6 @@ namespace PartsManagement.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PartsManagement.Models.PerkatesiaProduktit", b =>
-                {
-                    b.HasOne("PartsManagement.Models.Modeli", "model")
-                        .WithMany("ProduktetPerkatese")
-                        .HasForeignKey("modeliID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PartsManagement.Models.Produkti", "prod")
-                        .WithMany("ProduktetPerkatese")
-                        .HasForeignKey("produktiID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PartsManagement.Models.Porosia", b =>
                 {
                     b.HasOne("PartsManagement.Models.User", "User")
@@ -899,6 +988,10 @@ namespace PartsManagement.Migrations
 
             modelBuilder.Entity("PartsManagement.Models.Produkti", b =>
                 {
+                    b.HasOne("PartsManagement.Models.Modeli", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModeliID");
+
                     b.HasOne("PartsManagement.Models.Sektori", "Sektori")
                         .WithMany("Produktet")
                         .HasForeignKey("SektoriID")

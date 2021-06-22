@@ -28,7 +28,7 @@ namespace PartsManagement.Controllers
                 .Include(p=>p.Sektori)
                 .Include(p=>p.DetajetHyrese)
                 .Include(p=>p.DetajetDalese)
-                .Include(p=>p.ProduktetPerkatese).ToListAsync();
+                .ToListAsync();
         }
 
         // GET: api/Produktis/5
