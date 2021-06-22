@@ -3,6 +3,8 @@ import styled from "styled-components";
 import {BrowserRouter,Switch,Route} from 'react-router-dom';
 import { AccountBox } from './components/accountBox/index';
 import { Homepage } from './containers/homepage/index';
+import Home from "./components/accountBox/loginSuccess";
+
 
 const AppContainer = styled.div`
   width: 100%;
@@ -25,6 +27,9 @@ function App() {
           <AppContainer>
           <AccountBox />
           </AppContainer>
+          </Route>
+          <Route path="/Dashboard">
+          <Home />
           </Route>
         </Switch>
       </div> 
