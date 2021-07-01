@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PartsManagement.Models;
 
 namespace PartsManagement.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20210701223624_SecondMigration")]
+    partial class SecondMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,22 +50,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "82e2ec6f-7beb-42de-91d9-3d996f84c938",
-                            ConcurrencyStamp = "00f5aa54-4fbf-4572-a567-2740e785c518",
+                            Id = "8335fd9e-2627-43f9-bfd0-243d08a6ed27",
+                            ConcurrencyStamp = "55eb1d23-f171-488e-96bc-88821e301020",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "39d9e739-050c-489a-b3b2-e32f020d9a27",
-                            ConcurrencyStamp = "b0be86cf-4267-4150-b039-13f6a10e6dbe",
+                            Id = "cedb76e2-b1bb-40fe-b452-3c6919dabc5a",
+                            ConcurrencyStamp = "882262c7-1927-46be-a224-8d27cfbcca3d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "61f1d0e7-ee9e-45d6-85ca-b7ca442ff3f2",
-                            ConcurrencyStamp = "1214c191-7dc7-4025-9555-ea4c3ca2c354",
+                            Id = "ce299fbb-8760-4e78-9c80-957772cbe144",
+                            ConcurrencyStamp = "5711c11f-2d1e-47a4-bef1-87d1997e5d6c",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });
@@ -215,16 +217,12 @@ namespace PartsManagement.Migrations
                     b.Property<int>("Sasia")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShitjaId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Totali")
                         .HasColumnType("float");
 
                     b.HasKey("FaturaId");
 
-                    b.HasIndex("ShitjaId")
-                        .IsUnique();
+                    b.HasIndex("ProduktiId");
 
                     b.ToTable("FaturatOUT");
                 });
@@ -943,6 +941,9 @@ namespace PartsManagement.Migrations
 
                     b.HasKey("ShitjaId");
 
+                    b.HasIndex("FaturaId")
+                        .IsUnique();
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Shitjet");
@@ -1126,9 +1127,9 @@ namespace PartsManagement.Migrations
 
             modelBuilder.Entity("PartsManagement.Models.FaturaOUT", b =>
                 {
-                    b.HasOne("PartsManagement.Models.Shitja", "Shitja")
-                        .WithOne("Fatura")
-                        .HasForeignKey("PartsManagement.Models.FaturaOUT", "ShitjaId")
+                    b.HasOne("PartsManagement.Models.Produkti", "Produkti")
+                        .WithMany()
+                        .HasForeignKey("ProduktiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1196,6 +1197,12 @@ namespace PartsManagement.Migrations
 
             modelBuilder.Entity("PartsManagement.Models.Shitja", b =>
                 {
+                    b.HasOne("PartsManagement.Models.FaturaOUT", "Fatura")
+                        .WithOne("Shitja")
+                        .HasForeignKey("PartsManagement.Models.Shitja", "FaturaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PartsManagement.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

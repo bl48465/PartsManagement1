@@ -11,19 +11,19 @@ namespace PartsManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModeliController : ControllerBase
+    public class QytetiController : ControllerBase
     {
         private readonly MyContext _context;
 
-        public ModeliController(MyContext context)
+        public QytetiController(MyContext context)
         {
             _context = context;
         }
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Modeli>>> GetModeli(int markaId)
+        public async Task<ActionResult<IEnumerable<Qyteti>>> GetQytetet(int shtetiID)
         {
-            return await _context.Modelet.Where(a => a.MarkaId == markaId).ToListAsync();
+            return await _context.Qytetet.Where(s => s.ShtetiId == shtetiID).ToListAsync();
         }
+
     }
 }
