@@ -101,8 +101,8 @@ namespace PartsManagement.Controllers
         // POST: api/Koment
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("{id}")]
-        public async Task<ActionResult<Komenti>> PostKomenti(Komenti komenti, int id)
+        [HttpPost]
+        public async Task<ActionResult<Komenti>> PostKomenti(Komenti komenti)
         {
             var jwt = Request.Cookies["jwt"];
             var token = _jwtservice.Verify(jwt);

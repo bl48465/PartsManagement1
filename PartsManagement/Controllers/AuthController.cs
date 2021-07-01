@@ -66,7 +66,7 @@ namespace PartsManagement.Controllers
             Response.Cookies.Append("jwt", jwt, new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.Now.AddSeconds(10)
+                Expires = DateTime.Now.AddDays(1)
 
 
             }); 

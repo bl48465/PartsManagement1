@@ -37,7 +37,7 @@ namespace PartsManagement.Controllers
             var user = _repository.GetById(userId);
             if (user == null) return Unauthorized();
 
-            var sektoret = await _context.Users.Include(x=>x.Sektoret).Where(a=>a.UserID == user.UserID).ToListAsync();
+            var sektoret = await _context.Sektoret.Where(a=>a.User.UserID == user.UserID).ToListAsync();
 
             return Ok(sektoret);
         }
