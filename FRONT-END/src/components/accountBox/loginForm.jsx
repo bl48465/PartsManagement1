@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-
+import {Redirect} from 'react-router-dom';
 import {
   BoldLink,
   BoxContainer,
@@ -7,32 +7,22 @@ import {
   Input,
   MutedLink,
   SubmitButton,
+  ErrMessage
 } from "./common";
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import axios from "axios";
-import { useHistory } from 'react-router-dom';
-
-
 
 export function LoginForm(props) {
-  const [user, setUser] = useState([]);
-  const history = useHistory()
+  const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(true);
+  const[fail,setFail]= useState({message:''});
   const [form, setForm] = useState({
     formValues: {
       email: '',
       password: ''
     }
   });
-
-  const currentUser = async () => {
-    axios.get("http://localhost:5000/api/Auth/user", { withCredentials: true }).then((response) => {
-      setUser(response.data);
-      console.log(user)
-    })
-  }
-
 
   const handleChange = ({ target }) => {
     const { formValues } = form;
@@ -41,27 +31,28 @@ export function LoginForm(props) {
   };
 
   const initialSession = async () => {
+  
     const { formValues } = form;
-    
+
     axios.post("http://localhost:5000/api/Auth/login", formValues, { withCredentials: true })
-      .then(() => {
-      
-        history.push("/");
-      })
+    .then((response) =>{
+      if(response.data.status !== 400){
+        setRedirect(true);
+      }
+    })
       .catch((error) => {
         setError(true);
+        setFail({message:"Të dhënat gabim!"});
+        setRedirect(false)
       })
-    
-    
   }
-
-
-
   const { switchToSignup } = useContext(AccountContext);
-
+  if(redirect===true){
+    return <Redirect to="/Dashboard"/>;}
   return (
     <BoxContainer>
       <FormContainer>
+        <ErrMessage>{fail.message}</ErrMessage>
         <Input type="email" placeholder="Emaili" name="email" onChange={handleChange} />
         <Input type="password" name="password" placeholder="Fjalëkalimi" onChange={handleChange} />
       </FormContainer>

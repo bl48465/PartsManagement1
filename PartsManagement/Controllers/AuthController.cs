@@ -65,8 +65,11 @@ namespace PartsManagement.Controllers
 
             Response.Cookies.Append("jwt", jwt, new CookieOptions
             {
-                HttpOnly = true
-            });
+                HttpOnly = true,
+                Expires = DateTime.Now.AddDays(1)
+
+
+            }); 
 
             return Ok(new
             {
@@ -97,10 +100,23 @@ namespace PartsManagement.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("jwt");
+            //Response.Cookies.Delete("jwt");
+            //return Ok(new
+            //{
+            //    message = "Dalja nga profili me sukses"
+            //});
+         
+            var jwt = _jwtservice.generate(1213);
+            Response.Cookies.Append("jwt", jwt, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.Now.AddSeconds(1)
+
+
+            });
             return Ok(new
             {
-                message = "Dalja nga profili me sukses"
+                message = "success!"
             });
         }
 

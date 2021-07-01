@@ -14,13 +14,10 @@ import {
 } from "./common";
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
-import { Link } from 'react-router-dom';
 
 
 export function SignupForm(){
-   
 
- 
     const[errorState,setError] = useState({
       errValues:{
         emailExist : '',
