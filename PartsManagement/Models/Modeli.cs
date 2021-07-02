@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace PartsManagement.Models
 {
     public class Modeli
     {
-        public int ModeliID { get; set; }
-
-        public string EmriModelit { get; set; }
-
-        public int MarkaID { get; set; }
+        [Key]
+        public int ModelId { get; set; }
+        public string Emri { get; set; }
+        public int MarkaId { get; set; }
         public Marka Marka { get; set; }
  
-    
     }
 }

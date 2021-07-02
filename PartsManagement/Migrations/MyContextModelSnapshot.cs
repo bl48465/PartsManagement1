@@ -19,962 +19,1136 @@ namespace PartsManagement.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PartsManagement.Models.DetajetDalese", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
-                    b.Property<int>("DetajetDaleseID")
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "b39c3ac5-a875-4b00-a713-2f1866c98789",
+                            ConcurrencyStamp = "a97ede1b-eee1-4754-a5ce-1fb616d5d4d8",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "c7199846-474c-4409-8cdc-84ff75f1fbf6",
+                            ConcurrencyStamp = "02681209-49f7-4e74-be68-57305a022f39",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "efcaa32d-09e7-4f1b-bebb-51648724249a",
+                            ConcurrencyStamp = "33d94854-f08b-46ea-8981-f725c5f79851",
+                            Name = "Puntor",
+                            NormalizedName = "PUNTOR"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Cmimi")
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.FaturaIN", b =>
+                {
+                    b.Property<int>("FaturaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProduktiId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Qmimi")
                         .HasColumnType("float");
-
-                    b.Property<int>("FaturaDaleseID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProduktiID")
-                        .HasColumnType("int");
 
                     b.Property<int>("Sasia")
                         .HasColumnType("int");
 
-                    b.HasKey("DetajetDaleseID");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("FaturaDaleseID")
-                        .IsUnique();
+                    b.HasKey("FaturaId");
 
-                    b.HasIndex("ProduktiID")
-                        .IsUnique();
+                    b.HasIndex("ProduktiId");
 
-                    b.ToTable("DetajetDalese");
+                    b.ToTable("FaturatIN");
                 });
 
-            modelBuilder.Entity("PartsManagement.Models.DetajetHyrese", b =>
+            modelBuilder.Entity("PartsManagement.Models.FaturaOUT", b =>
                 {
-                    b.Property<int>("DetajetHyreseID")
+                    b.Property<int>("FaturaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Cmimi")
+                    b.Property<int>("ProduktiId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Qmimi")
                         .HasColumnType("float");
-
-                    b.Property<int>("FaturaHyreseID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProduktiID")
-                        .HasColumnType("int");
 
                     b.Property<int>("Sasia")
                         .HasColumnType("int");
 
-                    b.HasKey("DetajetHyreseID");
+                    b.Property<double>("Totali")
+                        .HasColumnType("float");
 
-                    b.HasIndex("FaturaHyreseID")
-                        .IsUnique();
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("ProduktiID")
-                        .IsUnique();
+                    b.HasKey("FaturaId");
 
-                    b.ToTable("DetajetHyrese");
-                });
+                    b.HasIndex("UserId");
 
-            modelBuilder.Entity("PartsManagement.Models.FaturaDalese", b =>
-                {
-                    b.Property<int>("FaturaDaleseID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("FaturaDaleseID");
-
-                    b.ToTable("FaturaDalese");
-                });
-
-            modelBuilder.Entity("PartsManagement.Models.FaturaHyrese", b =>
-                {
-                    b.Property<int>("FaturaHyreseID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmriFatures")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("FaturaHyreseID");
-
-                    b.ToTable("FaturaHyrese");
+                    b.ToTable("FaturatOUT");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Furnitori", b =>
                 {
-                    b.Property<int>("FurnitoriID")
+                    b.Property<int>("FurnitoriId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EmriFurnitorit")
+                    b.Property<string>("Emri")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FaturimiFaturaHyreseID")
-                        .HasColumnType("int");
+                    b.Property<string>("Lokacioni")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FurnitoriID");
+                    b.Property<string>("Mbiemri")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("FaturimiFaturaHyreseID");
+                    b.Property<string>("Telefoni")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FurnitoriId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Furnitoret");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Komenti", b =>
                 {
-                    b.Property<int>("KomentiID")
+                    b.Property<int>("KomentiId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CreatedAt")
+                    b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Mesazhi")
+                    b.Property<string>("PuntoriId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Titulli")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
+                    b.HasKey("KomentiId");
 
-                    b.HasKey("KomentiID");
-
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Komentet");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Marka", b =>
                 {
-                    b.Property<int>("MarkaID")
+                    b.Property<int>("MarkaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EmriMarkes")
+                    b.Property<string>("Emri")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("MarkaID");
+                    b.HasKey("MarkaId");
 
-                    b.ToTable("Marka");
+                    b.ToTable("Markat");
 
                     b.HasData(
                         new
                         {
-                            MarkaID = 1,
-                            EmriMarkes = "Ferrari"
+                            MarkaId = 1,
+                            Emri = "Ferrari"
                         },
                         new
                         {
-                            MarkaID = 2,
-                            EmriMarkes = "Audi"
+                            MarkaId = 2,
+                            Emri = "Audi"
                         },
                         new
                         {
-                            MarkaID = 3,
-                            EmriMarkes = "BMW"
+                            MarkaId = 3,
+                            Emri = "BMW"
                         },
                         new
                         {
-                            MarkaID = 4,
-                            EmriMarkes = "VolksWagen"
+                            MarkaId = 4,
+                            Emri = "VolksWagen"
                         },
                         new
                         {
-                            MarkaID = 5,
-                            EmriMarkes = "Mercedes"
+                            MarkaId = 5,
+                            Emri = "Mercedes"
                         },
                         new
                         {
-                            MarkaID = 6,
-                            EmriMarkes = "Skoda"
+                            MarkaId = 6,
+                            Emri = "Skoda"
                         },
                         new
                         {
-                            MarkaID = 7,
-                            EmriMarkes = "Volvo"
+                            MarkaId = 7,
+                            Emri = "Volvo"
                         },
                         new
                         {
-                            MarkaID = 8,
-                            EmriMarkes = "Toyota"
+                            MarkaId = 8,
+                            Emri = "Toyota"
                         },
                         new
                         {
-                            MarkaID = 9,
-                            EmriMarkes = "Mitsubishi"
+                            MarkaId = 9,
+                            Emri = "Mitsubishi"
                         },
                         new
                         {
-                            MarkaID = 10,
-                            EmriMarkes = "Porsche"
+                            MarkaId = 10,
+                            Emri = "Porsche"
                         });
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Modeli", b =>
                 {
-                    b.Property<int>("ModeliID")
+                    b.Property<int>("ModelId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EmriModelit")
+                    b.Property<string>("Emri")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MarkaID")
+                    b.Property<int>("MarkaId")
                         .HasColumnType("int");
 
-                    b.HasKey("ModeliID");
+                    b.HasKey("ModelId");
 
-                    b.HasIndex("MarkaID");
+                    b.HasIndex("MarkaId");
 
-                    b.ToTable("Modeli");
+                    b.ToTable("Modelet");
 
                     b.HasData(
                         new
                         {
-                            ModeliID = 1,
-                            EmriModelit = "Ferrari Ri",
-                            MarkaID = 1
+                            ModelId = 1,
+                            Emri = "Ferrari Ri",
+                            MarkaId = 1
                         },
                         new
                         {
-                            ModeliID = 2,
-                            EmriModelit = "Audi A3",
-                            MarkaID = 2
+                            ModelId = 2,
+                            Emri = "Audi A3",
+                            MarkaId = 2
                         },
                         new
                         {
-                            ModeliID = 3,
-                            EmriModelit = "BMW 5qe",
-                            MarkaID = 3
+                            ModelId = 3,
+                            Emri = "BMW 5qe",
+                            MarkaId = 3
                         },
                         new
                         {
-                            ModeliID = 4,
-                            EmriModelit = "Golf 4shi Bajramit",
-                            MarkaID = 4
+                            ModelId = 4,
+                            Emri = "Golf 4shi Bajramit",
+                            MarkaId = 4
                         },
                         new
                         {
-                            ModeliID = 5,
-                            EmriModelit = "Mercedes e class",
-                            MarkaID = 5
+                            ModelId = 5,
+                            Emri = "Mercedes e class",
+                            MarkaId = 5
                         },
                         new
                         {
-                            ModeliID = 6,
-                            EmriModelit = "Skoda octavia",
-                            MarkaID = 6
+                            ModelId = 6,
+                            Emri = "Skoda octavia",
+                            MarkaId = 6
                         },
                         new
                         {
-                            ModeliID = 7,
-                            EmriModelit = "Volvo 3.0 tdi",
-                            MarkaID = 7
+                            ModelId = 7,
+                            Emri = "Volvo 3.0 tdi",
+                            MarkaId = 7
                         },
                         new
                         {
-                            ModeliID = 8,
-                            EmriModelit = "Toyota off-road",
-                            MarkaID = 8
+                            ModelId = 8,
+                            Emri = "Toyota off-road",
+                            MarkaId = 8
                         },
                         new
                         {
-                            ModeliID = 9,
-                            EmriModelit = "Mitsubishi modeli 2t",
-                            MarkaID = 9
+                            ModelId = 9,
+                            Emri = "Mitsubishi modeli 2t",
+                            MarkaId = 9
                         },
                         new
                         {
-                            ModeliID = 10,
-                            EmriModelit = "Porsche panamera",
-                            MarkaID = 10
+                            ModelId = 10,
+                            Emri = "Porsche panamera",
+                            MarkaId = 10
                         });
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Porosia", b =>
                 {
-                    b.Property<int>("PorosiaID")
+                    b.Property<int>("PorosiaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Emri")
-                        .IsRequired()
+                    b.Property<string>("Klienti")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Sasia")
                         .HasColumnType("int");
 
-                    b.Property<string>("UpdatedAt")
+                    b.Property<string>("Telefoni")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
+                    b.Property<string>("Titulli")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PorosiaID");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("UserID");
+                    b.HasKey("PorosiaId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Porosite");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Produkti", b =>
                 {
-                    b.Property<int>("ProduktiID")
+                    b.Property<int>("ProduktiId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Emri")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ModeliID")
+                    b.Property<int>("MarkaId")
                         .HasColumnType("int");
 
-                    b.Property<string>("OEnumber")
+                    b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SektoriID")
+                    b.Property<int>("SektoriId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("ProduktiId");
 
-                    b.HasKey("ProduktiID");
+                    b.HasIndex("MarkaId");
 
-                    b.HasIndex("ModeliID");
-
-                    b.HasIndex("SektoriID");
+                    b.HasIndex("SektoriId");
 
                     b.ToTable("Produktet");
                 });
 
-            modelBuilder.Entity("PartsManagement.Models.Sektori", b =>
+            modelBuilder.Entity("PartsManagement.Models.Qyteti", b =>
                 {
-                    b.Property<int>("SektoriID")
+                    b.Property<int>("QytetiId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Emri")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserID")
+                    b.Property<int>("ShtetiId")
                         .HasColumnType("int");
 
-                    b.HasKey("SektoriID");
+                    b.HasKey("QytetiId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("ShtetiId");
+
+                    b.ToTable("Qytetet");
+
+                    b.HasData(
+                        new
+                        {
+                            QytetiId = 1,
+                            Emri = "Artanë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 2,
+                            Emri = "Besianë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 3,
+                            Emri = "Burim",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 4,
+                            Emri = "Dardanë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 5,
+                            Emri = "Decan",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 6,
+                            Emri = "Dragash",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 7,
+                            Emri = "Drenas",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 8,
+                            Emri = "Ferizaj",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 9,
+                            Emri = "Fushë Kosovë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 10,
+                            Emri = "Gjakovë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 11,
+                            Emri = "Gjilan",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 12,
+                            Emri = "Kastriot",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 13,
+                            Emri = "Kaqanik",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 14,
+                            Emri = "Klinë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 15,
+                            Emri = "Leposaviq",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 16,
+                            Emri = "Lipjan",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 17,
+                            Emri = "Malishevë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 18,
+                            Emri = "Mitrovicë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 19,
+                            Emri = "Pejë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 20,
+                            Emri = "Prishtinë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 21,
+                            Emri = "Prizren",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 22,
+                            Emri = "Rahovec",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 23,
+                            Emri = "Skënderaj",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 24,
+                            Emri = "Shtërpcë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 25,
+                            Emri = "Shtime",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 26,
+                            Emri = "Therandë",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 27,
+                            Emri = "Viti",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 28,
+                            Emri = "Vushtrri",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 29,
+                            Emri = "Zubin Potok",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 30,
+                            Emri = "Zveqan",
+                            ShtetiId = 1
+                        },
+                        new
+                        {
+                            QytetiId = 31,
+                            Emri = "Berat",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 32,
+                            Emri = "Bulqizë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 33,
+                            Emri = "Delvinë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 34,
+                            Emri = "Devoll",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 35,
+                            Emri = "Dibër",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 36,
+                            Emri = "Durrës",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 37,
+                            Emri = "Elbasan",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 38,
+                            Emri = "Fier",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 39,
+                            Emri = "Gramsh",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 40,
+                            Emri = "Gjirokastër",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 41,
+                            Emri = "Has",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 42,
+                            Emri = "Kavajë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 43,
+                            Emri = "Kolonjë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 44,
+                            Emri = "Korcë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 45,
+                            Emri = "Krujë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 46,
+                            Emri = "Kucovë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 47,
+                            Emri = "Kukës",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 48,
+                            Emri = "Kurbin",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 49,
+                            Emri = "Lezhë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 50,
+                            Emri = "Librazhd",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 51,
+                            Emri = "Lushnjë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 52,
+                            Emri = "Malësi e madhe",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 53,
+                            Emri = "Mallakastër",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 54,
+                            Emri = "Mat",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 55,
+                            Emri = "Mirditë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 56,
+                            Emri = "Peqin",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 57,
+                            Emri = "Përmet",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 58,
+                            Emri = "Pogradec",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 59,
+                            Emri = "Pukë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 60,
+                            Emri = "Sarandë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 61,
+                            Emri = "Skrapar",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 62,
+                            Emri = "Shkodër",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 63,
+                            Emri = "Tepelenë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 64,
+                            Emri = "Tiranë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 65,
+                            Emri = "Tropojë",
+                            ShtetiId = 2
+                        },
+                        new
+                        {
+                            QytetiId = 66,
+                            Emri = "Vlorë",
+                            ShtetiId = 2
+                        });
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.Sektori", b =>
+                {
+                    b.Property<int>("SektoriId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Emri")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("SektoriId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Sektoret");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Shitja", b =>
                 {
-                    b.Property<int>("ShitjaID")
+                    b.Property<int>("ShitjaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CreatedAt")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FaturaDaleseID")
+                    b.Property<int>("FaturaId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Komenti")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("ShitjaId");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ShitjaID");
-
-                    b.HasIndex("FaturaDaleseID")
-                        .IsUnique();
-
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Shitjet");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Shteti", b =>
                 {
-                    b.Property<int>("ShtetiID")
+                    b.Property<int>("ShtetiId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EmriShtetit")
+                    b.Property<string>("Emri")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ShtetiID");
+                    b.HasKey("ShtetiId");
 
-                    b.ToTable("Shteti");
+                    b.ToTable("Shtetet");
 
                     b.HasData(
                         new
                         {
-                            ShtetiID = 1,
-                            EmriShtetit = "Kosovë"
+                            ShtetiId = 1,
+                            Emri = "Kosovë"
                         },
                         new
                         {
-                            ShtetiID = 2,
-                            EmriShtetit = "Shqipëri"
+                            ShtetiId = 2,
+                            Emri = "Shqipëri"
                         },
                         new
                         {
-                            ShtetiID = 3,
-                            EmriShtetit = "Maqedoni"
+                            ShtetiId = 3,
+                            Emri = "Maqedoni"
                         });
                 });
 
             modelBuilder.Entity("PartsManagement.Models.User", b =>
                 {
-                    b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CreatedAt")
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Emri")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Kompania")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Mbiemri")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Roli")
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QytetiId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UpdatedAt")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("ShefiId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("VendbanimiID")
-                        .HasColumnType("int");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
 
-                    b.HasKey("UserID");
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
-                    b.HasIndex("VendbanimiID");
+                    b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("QytetiId");
+
+                    b.HasIndex("ShefiId");
+
+                    b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("PartsManagement.Models.Vendbanimi", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.Property<int>("VendbanimiID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("EmriQytetit")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShtetiID")
-                        .HasColumnType("int");
-
-                    b.HasKey("VendbanimiID");
-
-                    b.HasIndex("ShtetiID");
-
-                    b.ToTable("Vendbanimi");
-
-                    b.HasData(
-                        new
-                        {
-                            VendbanimiID = 1,
-                            EmriQytetit = "Artanë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 2,
-                            EmriQytetit = "Besianë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 3,
-                            EmriQytetit = "Burim",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 4,
-                            EmriQytetit = "Dardanë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 5,
-                            EmriQytetit = "Decan",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 6,
-                            EmriQytetit = "Dragash",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 7,
-                            EmriQytetit = "Drenas",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 8,
-                            EmriQytetit = "Ferizaj",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 9,
-                            EmriQytetit = "Fushë Kosovë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 10,
-                            EmriQytetit = "Gjakovë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 11,
-                            EmriQytetit = "Gjilan",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 12,
-                            EmriQytetit = "Kastriot",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 13,
-                            EmriQytetit = "Kaqanik",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 14,
-                            EmriQytetit = "Klinë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 15,
-                            EmriQytetit = "Leposaviq",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 16,
-                            EmriQytetit = "Lipjan",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 17,
-                            EmriQytetit = "Malishevë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 18,
-                            EmriQytetit = "Mitrovicë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 19,
-                            EmriQytetit = "Pejë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 20,
-                            EmriQytetit = "Prishtinë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 21,
-                            EmriQytetit = "Prizren",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 22,
-                            EmriQytetit = "Rahovec",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 23,
-                            EmriQytetit = "Skënderaj",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 24,
-                            EmriQytetit = "Shtërpcë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 25,
-                            EmriQytetit = "Shtime",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 26,
-                            EmriQytetit = "Therandë",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 27,
-                            EmriQytetit = "Viti",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 28,
-                            EmriQytetit = "Vushtrri",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 29,
-                            EmriQytetit = "Zubin Potok",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 30,
-                            EmriQytetit = "Zveqan",
-                            ShtetiID = 1
-                        },
-                        new
-                        {
-                            VendbanimiID = 31,
-                            EmriQytetit = "Berat",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 32,
-                            EmriQytetit = "Bulqizë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 33,
-                            EmriQytetit = "Delvinë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 34,
-                            EmriQytetit = "Devoll",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 35,
-                            EmriQytetit = "Dibër",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 36,
-                            EmriQytetit = "Durrës",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 37,
-                            EmriQytetit = "Elbasan",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 38,
-                            EmriQytetit = "Fier",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 39,
-                            EmriQytetit = "Gramsh",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 40,
-                            EmriQytetit = "Gjirokastër",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 41,
-                            EmriQytetit = "Has",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 42,
-                            EmriQytetit = "Kavajë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 43,
-                            EmriQytetit = "Kolonjë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 44,
-                            EmriQytetit = "Korcë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 45,
-                            EmriQytetit = "Krujë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 46,
-                            EmriQytetit = "Kucovë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 47,
-                            EmriQytetit = "Kukës",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 48,
-                            EmriQytetit = "Kurbin",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 49,
-                            EmriQytetit = "Lezhë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 50,
-                            EmriQytetit = "Librazhd",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 51,
-                            EmriQytetit = "Lushnjë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 52,
-                            EmriQytetit = "Malësi e madhe",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 53,
-                            EmriQytetit = "Mallakastër",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 54,
-                            EmriQytetit = "Mat",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 55,
-                            EmriQytetit = "Mirditë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 56,
-                            EmriQytetit = "Peqin",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 57,
-                            EmriQytetit = "Përmet",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 58,
-                            EmriQytetit = "Pogradec",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 59,
-                            EmriQytetit = "Pukë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 60,
-                            EmriQytetit = "Sarandë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 61,
-                            EmriQytetit = "Skrapar",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 62,
-                            EmriQytetit = "Shkodër",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 63,
-                            EmriQytetit = "Tepelenë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 64,
-                            EmriQytetit = "Tiranë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 65,
-                            EmriQytetit = "Tropojë",
-                            ShtetiID = 2
-                        },
-                        new
-                        {
-                            VendbanimiID = 66,
-                            EmriQytetit = "Vlorë",
-                            ShtetiID = 2
-                        });
-                });
-
-            modelBuilder.Entity("PartsManagement.Models.DetajetDalese", b =>
-                {
-                    b.HasOne("PartsManagement.Models.FaturaDalese", "FaturimiDales")
-                        .WithOne("DetajetDalese")
-                        .HasForeignKey("PartsManagement.Models.DetajetDalese", "FaturaDaleseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PartsManagement.Models.Produkti", "Prod")
-                        .WithOne("DetajetDalese")
-                        .HasForeignKey("PartsManagement.Models.DetajetDalese", "ProduktiID")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PartsManagement.Models.DetajetHyrese", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("PartsManagement.Models.FaturaHyrese", "Fatura")
-                        .WithOne("Detajet")
-                        .HasForeignKey("PartsManagement.Models.DetajetHyrese", "FaturaHyreseID")
+                    b.HasOne("PartsManagement.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("PartsManagement.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PartsManagement.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("PartsManagement.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.FaturaIN", b =>
+                {
                     b.HasOne("PartsManagement.Models.Produkti", "Produkti")
-                        .WithOne("DetajetHyrese")
-                        .HasForeignKey("PartsManagement.Models.DetajetHyrese", "ProduktiID")
+                        .WithMany("Faturat")
+                        .HasForeignKey("ProduktiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.FaturaOUT", b =>
+                {
+                    b.HasOne("PartsManagement.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Furnitori", b =>
                 {
-                    b.HasOne("PartsManagement.Models.FaturaHyrese", "Faturimi")
-                        .WithMany()
-                        .HasForeignKey("FaturimiFaturaHyreseID");
+                    b.HasOne("PartsManagement.Models.User", "User")
+                        .WithMany("Furnitoret")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Komenti", b =>
                 {
                     b.HasOne("PartsManagement.Models.User", "User")
                         .WithMany("Komentet")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Modeli", b =>
                 {
                     b.HasOne("PartsManagement.Models.Marka", "Marka")
                         .WithMany("Modelet")
-                        .HasForeignKey("MarkaID")
+                        .HasForeignKey("MarkaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -983,60 +1157,58 @@ namespace PartsManagement.Migrations
                 {
                     b.HasOne("PartsManagement.Models.User", "User")
                         .WithMany("Porosite")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Produkti", b =>
                 {
-                    b.HasOne("PartsManagement.Models.Modeli", "Model")
+                    b.HasOne("PartsManagement.Models.Marka", "Marka")
                         .WithMany()
-                        .HasForeignKey("ModeliID");
+                        .HasForeignKey("MarkaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PartsManagement.Models.Sektori", "Sektori")
                         .WithMany("Produktet")
-                        .HasForeignKey("SektoriID")
+                        .HasForeignKey("SektoriId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.Qyteti", b =>
+                {
+                    b.HasOne("PartsManagement.Models.Shteti", "Shteti")
+                        .WithMany("Qyteti")
+                        .HasForeignKey("ShtetiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Sektori", b =>
                 {
-                    b.HasOne("PartsManagement.Models.User", "User")
+                    b.HasOne("PartsManagement.Models.User", null)
                         .WithMany("Sektoret")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Shitja", b =>
                 {
-                    b.HasOne("PartsManagement.Models.FaturaDalese", "FaturimiDales")
-                        .WithOne("Shitja")
-                        .HasForeignKey("PartsManagement.Models.Shitja", "FaturaDaleseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PartsManagement.Models.User", "User")
-                        .WithMany("Shitjet")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.User", b =>
                 {
-                    b.HasOne("PartsManagement.Models.Vendbanimi", "Vendbanimi")
+                    b.HasOne("PartsManagement.Models.Qyteti", "Qyteti")
                         .WithMany("Users")
-                        .HasForeignKey("VendbanimiID")
+                        .HasForeignKey("QytetiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("PartsManagement.Models.Vendbanimi", b =>
-                {
-                    b.HasOne("PartsManagement.Models.Shteti", "Shteti")
-                        .WithMany("Qyteti")
-                        .HasForeignKey("ShtetiID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("PartsManagement.Models.User", "Shefi")
+                        .WithMany("Puntoret")
+                        .HasForeignKey("ShefiId");
                 });
 #pragma warning restore 612, 618
         }

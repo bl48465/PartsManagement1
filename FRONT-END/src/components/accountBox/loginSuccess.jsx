@@ -2,6 +2,8 @@ import React, { useState, useEffect,useCookies } from "react";
 import axios from 'axios';
 import {SubmitButton} from './common';
 import {Cookies} from 'react-cookie';
+import { Navbari } from "../navbar/Navbar";
+
 
 export const Home = () =>{
   const cookie = new Cookies();
@@ -32,11 +34,7 @@ export const Home = () =>{
 
   const logOutSession = async() => {
   
-  
-   cookie.set('jwt',1,{maxAge:1});
-  
-  
-    axios.post("http://localhost:5000/api/Auth/logout",{ withCredentials: true })
+    await axios.post("http://localhost:5000/api/Auth/logout",{ withCredentials: true })
     .then((response)=>{
     console.log(response.data.message)
     })
@@ -48,20 +46,7 @@ export const Home = () =>{
 
 return(
 
-      <div>
-        <h1>Welcome {userInfo.emri}</h1>
-        <h3>Your ID: {userInfo.userID}</h3>
-        <h3>Your email: {userInfo.email}</h3>
-        <h3>Your password: {userInfo.password}</h3>
-        <h3>Your Company: {userInfo.kompania}</h3>
-
-        
-        <SubmitButton type="submit" onClick={logOutSession}>Log out</SubmitButton>
-
-      </div>
-
-
- 
+  <Navbari data={userInfo}/>
 );
 };
 export default Home;

@@ -1,137 +1,175 @@
-﻿using System;
+﻿using AutoMapper;
+using PartsManagement.Dtos;
+using PartsManagement.Models;
+using PartsManagement.Services;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using PartsManagement.IRepository;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PartsManagement.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
-using PartsManagement.Helpers;
-using PartsManagement.Data;
 
 namespace PartsManagement.Controllers
-{
+{   
+    [Authorize(Roles="User")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly UserManager<User> _userManager;
         private readonly MyContext _context;
-        private readonly IUserRepository _repository;
-        private readonly JwtService _jwtservice;
+        private readonly ILogger<AccountController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IAuthManager _authManager;
 
-        public UserController(MyContext context, IUserRepository repository, JwtService jwtService)
+        public UserController(UserManager<User> userManager,
+            ILogger<AccountController> logger,
+            IMapper mapper,
+            IAuthManager authManager,
+            MyContext context,
+            SignInManager<User> signInManager,
+            IUnitOfWork unitOfWork)
         {
+            _userManager = userManager;
+            _logger = logger;
+            _mapper = mapper;
+            _authManager = authManager;
             _context = context;
-            _repository = repository;
-            _jwtservice = jwtService;
+            _signInManager = signInManager;
+            _unitOfWork = unitOfWork;
+        }
+        [HttpGet("puntoret")]
+        public async Task<ActionResult<IEnumerable<User>>> GetAllPuntort(){
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var puntoret = await _userManager.Users.Where(a => a.ShefiId == userId).ToListAsync();
+
+            return Ok(puntoret);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        [HttpPost]
+        [Route("register/puntor")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
         {
-            // var jwt = Request.Cookies["jwt"];
-            // var token = _jwtservice.Verify(jwt);
-            // int userId = int.Parse(token.Issuer);
-            // var user = _repository.GetById(userId);
-            // if (user == null) return Unauthorized();
-
-            var users = await _context.Users.ToListAsync();
-                // .Include(p => p.Komentet)
-                // .Include(p=>p.Shitjet)
-                // .Include(p => p.Porosite)
-                // .Include(p=>p.Vendbanimi)
-                // .Include(p=>p.Vendbanimi.Shteti)
-                // .Include(s => s.Sektoret)
-                // .ThenInclude(p => p.Produktet)
-                // .ThenInclude(p => p.DetajetHyrese)
-                // .ThenInclude(p => p.Fatura).ToListAsync();
-            return Ok(users);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
-        {
-            var jwt = Request.Cookies["jwt"];
-            var token = _jwtservice.Verify(jwt);
-            int userId = int.Parse(token.Issuer);
-            var user = _repository.GetById(userId);
-            if (user == null || user.Roli != 0) return Unauthorized();
-
-            var usr = await _context.Users.Include(s => s.Sektoret).Where(u => u.UserID == id).ToListAsync(); 
-
-            if (usr == null)
+            _logger.LogInformation($"Registration Attempt for {userDTO.Email} ");
+            if (!ModelState.IsValid)
             {
-                return NotFound(new { 
-                message = "Përdoruesi nuk u gjet."
-                });
+                return BadRequest(ModelState);
             }
-            return Ok(user);
-        }
-
-        
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
-        {
-            var jwt = Request.Cookies["jwt"];
-            var token = _jwtservice.Verify(jwt);
-            int userId = int.Parse(token.Issuer);
-            var usr = _repository.GetById(userId);
-            if (usr == null || usr.Roli != 0) return Unauthorized();
-
-            if (id != user.UserID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                
+                var shefiId = _context.Users.Where(a=>a.Id == userId); 
 
-            return NoContent();
+                var shefi = shefiId.FirstOrDefault(); 
+
+                var user = _mapper.Map<User>(userDTO);
+
+                user.ShefiId = userId;
+                user.UserName = userDTO.Email;
+                user.Kompania = shefi.Kompania;
+                userDTO.Roles = new string[] {"Puntor"};
+               
+                var result = await _userManager.CreateAsync(user, userDTO.Password);
+
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(error.Code, error.Description);
+                    }
+                    return BadRequest(ModelState);
+                }
+
+                await _userManager.AddToRolesAsync(user, userDTO.Roles);
+                
+                return Accepted();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something Went Wrong in the {nameof(Register)}");
+                return Problem($"Something Went Wrong in the {nameof(Register)}", statusCode: 500);
+            }
         }
 
- 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(int id)
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdatePuntori(string id, [FromBody] UserDTO userDTO)
         {
-            var jwt = Request.Cookies["jwt"];
-            var token = _jwtservice.Verify(jwt);
-            int userId = int.Parse(token.Issuer);
-            var usr = _repository.GetById(userId);
-            if (usr == null || usr.Roli != 0) return Unauthorized();
-
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            
+            if (!ModelState.IsValid || id.Length < 1)
             {
-                return NotFound();
+                _logger.LogError($"Invalid UPDATE attempt in {nameof(UpdatePuntori)}");
+                return BadRequest(ModelState);
             }
 
-            _context.Users.Remove(user);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var puntori = _context.Users.Where(a => a.Id.Equals(id) && a.ShefiId.Equals(userId));
+
+            var p = puntori.FirstOrDefault(); 
+
+            if (p == null)
+            {
+                _logger.LogError($"Invalid UPDATE attempt in {nameof(UpdatePuntori)}");
+                return BadRequest("Submitted data is invalid");
+            }
+
+            _mapper.Map(userDTO, p);
+            p.UserName = p.Email;
+            _context.Users.Update(p);
             await _context.SaveChangesAsync();
 
-            return user;
+            return Ok("Puntori u përditësua me sukses!");
+
         }
 
-        private bool UserExists(int id)
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeletePuntori(string id)
         {
+            if (id.Length < 1)
+            {
+                _logger.LogError($"Invalid DELETE attempt in {nameof(DeletePuntori)}");
+                return BadRequest();
+            }
 
-            return _context.Users.Any(e => e.UserID == id);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var puntori = _context.Users.Where(a => a.Id.Equals(id) && a.ShefiId.Equals(userId));
+
+            var p = puntori.FirstOrDefault(); 
+
+            if (p == null)
+            {
+                _logger.LogError($"Invalid DELETE attempt in {nameof(DeletePuntori)}");
+                return BadRequest("Submitted data is invalid");
+            }
+
+             _context.Users.Remove(p);
+            await _context.SaveChangesAsync();
+
+            return Ok($"Puntori {p.Emri} {p.Mbiemri} u fshi me sukses!");
+
         }
     }
 }
