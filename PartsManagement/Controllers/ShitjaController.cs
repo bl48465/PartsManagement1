@@ -66,7 +66,8 @@ namespace PartsManagement.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var shitjet = await _context.FaturatOUT.Where(s => s.UserId.Equals(userId)).ToListAsync();
+            var shitjet = await _context.Produktet.Include(a => a.FaturatOut)
+                .Where(s => s.Sektori.UserId.Equals(userId) && s.FaturatOut.Any(k=>k.FaturaId != 0)).ToListAsync();
             return Ok(shitjet);
         }
 
@@ -118,11 +119,14 @@ namespace PartsManagement.Controllers
 
               
 
-                if (u.Sasia == 0 || u.Sasia < 0)
+               
+                u.Sasia -= fatura.Sasia;
+
+                if ( u.Sasia < 0)
                 {
                     return BadRequest("Nuk ke sasi të mjaftueshme");
                 }
-                u.Sasia -= fatura.Sasia;
+
                 _context.FaturatIN.Update(u);
                 _context.FaturatOUT.Add(fati);
                 await _context.SaveChangesAsync();
@@ -151,11 +155,15 @@ namespace PartsManagement.Controllers
 
              
 
-                if (u.Sasia == 0 || u.Sasia < 0) {
-       
-                    return BadRequest("Nuk ke sasi të mjaftueshme"); 
-                }
                 u.Sasia -= fatura.Sasia;
+
+
+                if (u.Sasia < 0)
+                {
+
+                    return BadRequest("Nuk ke sasi të mjaftueshme");
+                }
+
                 _context.FaturatIN.Update(u);
                 _context.FaturatOUT.Add(fati);
                 await _context.SaveChangesAsync();

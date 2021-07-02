@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PartsManagement.Migrations
 {
-    public partial class FirstMigration : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -236,6 +236,29 @@ namespace PartsManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FaturatOUT",
+                columns: table => new
+                {
+                    FaturaId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Sasia = table.Column<int>(nullable: false),
+                    Qmimi = table.Column<double>(nullable: false),
+                    Totali = table.Column<double>(nullable: false),
+                    ProduktiId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FaturatOUT", x => x.FaturaId);
+                    table.ForeignKey(
+                        name: "FK_FaturatOUT_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Furnitoret",
                 columns: table => new
                 {
@@ -372,30 +395,6 @@ namespace PartsManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FaturatOUT",
-                columns: table => new
-                {
-                    FaturaId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Sasia = table.Column<int>(nullable: false),
-                    Qmimi = table.Column<double>(nullable: false),
-                    Totali = table.Column<double>(nullable: false),
-                    ProduktiId = table.Column<int>(nullable: false),
-                    ShitjaId = table.Column<int>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FaturatOUT", x => x.FaturaId);
-                    table.ForeignKey(
-                        name: "FK_FaturatOUT_Shitjet_ShitjaId",
-                        column: x => x.ShitjaId,
-                        principalTable: "Shitjet",
-                        principalColumn: "ShitjaId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "FaturatIN",
                 columns: table => new
                 {
@@ -403,7 +402,7 @@ namespace PartsManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Sasia = table.Column<int>(nullable: false),
                     Qmimi = table.Column<double>(nullable: false),
-                    ProduktiId = table.Column<int>(nullable: true),
+                    ProduktiId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -422,9 +421,9 @@ namespace PartsManagement.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "df606594-ecd7-44c3-bf33-edbb8dd5f867", "15df4e21-c513-4447-9546-78e2889dc38b", "User", "USER" },
-                    { "0cb8bf8c-3639-4e5c-ae7e-180a5360f33a", "e86f2037-9147-4513-a0e4-67b74ea4070e", "Admin", "ADMIN" },
-                    { "9c051226-3bbf-4032-8919-24311c87290e", "5191156e-7498-423e-9b30-e2980baa1c61", "Puntor", "PUNTOR" }
+                    { "9f672ad5-1895-41fe-ba42-cd945c68057f", "31b27f05-a90d-4479-a85f-4d5301c1c16a", "User", "USER" },
+                    { "6a4d8f40-4100-4702-b159-e3d519f2a2b4", "b0554823-db30-4e03-ad6a-622adf9b4e49", "Admin", "ADMIN" },
+                    { "f79efbb1-054c-452f-a561-55ea37f90542", "82d39428-3e90-458f-93d1-ef511ea410e1", "Puntor", "PUNTOR" }
                 });
 
             migrationBuilder.InsertData(
@@ -599,10 +598,9 @@ namespace PartsManagement.Migrations
                 column: "ProduktiId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FaturatOUT_ShitjaId",
+                name: "IX_FaturatOUT_UserId",
                 table: "FaturatOUT",
-                column: "ShitjaId",
-                unique: true);
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Furnitoret_UserId",
@@ -686,13 +684,13 @@ namespace PartsManagement.Migrations
                 name: "Porosite");
 
             migrationBuilder.DropTable(
+                name: "Shitjet");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Produktet");
-
-            migrationBuilder.DropTable(
-                name: "Shitjet");
 
             migrationBuilder.DropTable(
                 name: "Markat");
