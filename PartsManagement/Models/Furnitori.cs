@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PartsManagement.Models
 {
     public class Furnitori
-    {   
-        public int FurnitoriId { get; set; }
-        public string Emri { get; set; }
-        public string Mbiemri { get; set; }
-        public string Lokacioni { get; set; }
-        public string Telefoni { get; set;}
+    {
+        public int FurnitoriID { get; set; }
+        public string EmriFurnitorit { get; set; }
 
-        public string UserId {get; set;}
-        public User User { get; set; } 
+        public FaturaHyrese Faturimi { get; set; }
+
     }
 }

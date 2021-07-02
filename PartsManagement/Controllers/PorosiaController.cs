@@ -1,223 +1,158 @@
-﻿using AutoMapper;
-using PartsManagement.Models;
-using PartsManagement.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Security.Claims;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PartsManagement.IRepository;
-using PartsManagement.Dtos;
-
+using PartsManagement.Models;
+using PartsManagement.Helpers;
+using PartsManagement.Data;
 
 namespace PartsManagement.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class PorosiaController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
         private readonly MyContext _context;
-        private readonly ILogger<AccountController> _logger;
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IAuthManager _authManager;
+        private readonly IUserRepository _repository;
+        private readonly JwtService _jwtservice;
 
-        public PorosiaController(UserManager<User> userManager,
-             ILogger<AccountController> logger,
-             IMapper mapper,
-             IAuthManager authManager,
-             MyContext context,
-             IUnitOfWork unitOfWork)
+        public PorosiaController(MyContext context, IUserRepository repository, JwtService jwtService)
         {
-            _userManager = userManager;
-            _logger = logger;
-            _mapper = mapper;
-            _authManager = authManager;
             _context = context;
-            _unitOfWork = unitOfWork;
+            _repository = repository;
+            _jwtservice = jwtService;
         }
-
-        [Authorize]
-        [HttpGet("user")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetFurnitoretAsUser()
+        //Metoda 
+        // GET: api/Porosia
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Porosia>>> GetPorosite()
         {
-            var role = User.FindFirstValue(ClaimTypes.Role);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
 
-            if (role.Equals("Puntor"))
-            {
-                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
-                var p = puntori.FirstOrDefault();
+            var porosia = await _context.Porosite.ToListAsync();
 
-                var porosia = await _context.Porosite.Where(x => x.UserId == p.ShefiId).ToListAsync();
-                if (porosia == null) { return NotFound($"Porositë nuk u gjetën!"); }
-                return Ok(porosia);
-            }
-            else
-            {
-                var porosiauserit = await _unitOfWork.Porosite.GetAll(a => a.UserId == userId);
-                if (porosiauserit == null) { return NotFound($"Porositë nuk u gjetën!"); }
-                return Ok(porosiauserit);
-            }
-
+            return Ok(porosia);
         }
 
-        [Authorize]
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreatePorosia([FromBody] CreatePorosiaDTO porosiaDTO)
+        // GET: api/Porosia/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Porosia>> GetPorosia(int id)
         {
-            var role = User.FindFirstValue(ClaimTypes.Role);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!ModelState.IsValid)
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
+
+            var porosia = await _context.Porosite.Include(s => s.PorosiaID).Where(p => p.PorosiaID == id).ToListAsync();
+
+
+            if (porosia == null)
             {
-                _logger.LogError($"Invalid POST attempt in {nameof(CreatePorosia)}");
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            if (role.Equals("Puntor"))
-            {
-                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
-                var p = puntori.FirstOrDefault();
-
-                var shefi = _context.Users.Where(a => a.Id == p.ShefiId);
-                var sh = shefi.FirstOrDefault();
-
-                var checkExist = await _unitOfWork.Porosite.Get(a => a.UserId == p.ShefiId && a.Titulli.Equals(porosiaDTO.Titulli));
-                if (checkExist != null) { return BadRequest($"Porosia ekziston!"); }
-
-                var porosia = _mapper.Map<Porosia>(porosiaDTO);
-                await _unitOfWork.Porosite.Insert(porosia);
-                await _unitOfWork.Save();
-
-                return Ok($"Porosia { porosia.Titulli } u shtua me sukses");
-            }
-            else
-            {
-                var checkExist = await _unitOfWork.Porosite.Get(a => a.UserId == userId && a.Titulli.Equals(porosiaDTO.Titulli));
-                if (checkExist != null) { return BadRequest($"Porosia ekziston!"); }
-
-                var porosia = _mapper.Map<Porosia>(porosiaDTO);
-                await _unitOfWork.Porosite.Insert(porosia);
-                await _unitOfWork.Save();
-                return Ok($"Porosia { porosia.Titulli } u shtua me sukses");
-            }
+            return Ok(porosia);
         }
 
-        [Authorize]
+        // PUT: api/Porosia/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdatePorosia(int id, [FromBody] UpdatePorosiaDTO porosiaDTO)
+        public async Task<IActionResult> PutPorosia(int id, Porosia porosia)
         {
-            if (!ModelState.IsValid || id < 1)
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
+
+            if (id != porosia.PorosiaID)
             {
-                _logger.LogError($"Invalid UPDATE attempt in {nameof(UpdatePorosia)}");
-                return BadRequest(ModelState);
-            }
-
-            var role = User.FindFirstValue(ClaimTypes.Role);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (role.Equals("Puntor"))
-            {
-                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
-                var p = puntori.FirstOrDefault();
-                var porosia = await _unitOfWork.Porosite.Get(a => a.UserId == p.ShefiId && a.PorosiaId == id);
-
-                if (porosia == null)
-                {
-                    _logger.LogError($"Invalid UPDATE attempt in {nameof(UpdatePorosia)}");
-                    return BadRequest("Submitted data is invalid");
-                }
-         
-                _mapper.Map(porosiaDTO, porosia);
-                _unitOfWork.Porosite.Update(porosia);
-                await _unitOfWork.Save();
-                return Ok(porosia);
-            }
-            else
-            {
-                var porosia = await _unitOfWork.Porosite.Get(a => a.UserId == userId && a.PorosiaId == id);
-
-                if (porosia == null)
-                {
-                    _logger.LogError($"Invalid UPDATE attempt in {nameof(UpdatePorosia)}");
-                    return BadRequest("Submitted data is invalid");
-                }
-
-                _mapper.Map(porosiaDTO, porosia);
-                _unitOfWork.Porosite.Update(porosia);
-                await _unitOfWork.Save();
-
-
-                return Ok("Porosia u përditësua me sukses!");
-            }
-
-        }
-
-        [Authorize]
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeletePorosia(int id)
-        {
-            if (id < 1)
-            {
-                _logger.LogError($"Invalid DELETE attempt in {nameof(DeletePorosia)}");
                 return BadRequest();
             }
 
-            var role = User.FindFirstValue(ClaimTypes.Role);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _context.Entry(porosia).State = EntityState.Modified;
 
-            if (role.Equals("Puntor"))
+            try
             {
-                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
-                var p = puntori.FirstOrDefault();
-
-                var porosia = await _unitOfWork.Porosite.Get(a => a.UserId == p.ShefiId && a.PorosiaId == id);
-
-                if (porosia == null)
-                {
-                    _logger.LogError($"Invalid UPDATE attempt in {nameof(DeletePorosia)}");
-                    return BadRequest("Submitted data is invalid");
-                }
-
-                await _unitOfWork.Porosite.Delete(porosia.PorosiaId);
-                await _unitOfWork.Save();
-                return Ok($"Produkti {porosia.Titulli} u fshij me sukses! ");
+                await _context.SaveChangesAsync();
             }
-            else
+            catch (DbUpdateConcurrencyException)
             {
-                var porosia = await _unitOfWork.Porosite.Get(a => a.UserId == userId && a.PorosiaId == id);
-
-                if (porosia == null)
+                if (!PorosiaExists(id))
                 {
-                    _logger.LogError($"Invalid UPDATE attempt in {nameof(DeletePorosia)}");
-                    return BadRequest("Submitted data is invalid");
+                    return NotFound();
                 }
-
-                await _unitOfWork.Porosite.Delete(porosia.PorosiaId);
-                await _unitOfWork.Save();
-                return Ok($"Porosia {porosia.Titulli} u fshij me sukses! ");
-
+                else
+                {
+                    throw;
+                }
             }
+
+            return NoContent();
         }
 
+        // POST: api/Porosia
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost("{id}")]
+        public async Task<ActionResult<Porosia>> PostPorosia(Porosia porosia)
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
+
+            Porosia s = new Porosia
+            {
+                Emri = porosia.Emri,
+                Sasia = porosia.Sasia,
+                User = user
+
+            };
+
+            _context.Porosite.Add(s);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPorosia", new { id = porosia.PorosiaID }, porosia);
+        }
+
+        // DELETE: api/Porosia/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Porosia>> DeletePorosia(int id)
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
+
+            var porosia = await _context.Porosite.FindAsync(id);
+
+            if (porosia == null)
+            {
+                return NotFound();
+            }
+
+            _context.Porosite.Remove(porosia);
+            await _context.SaveChangesAsync();
+
+            return porosia;
+        }
+
+        private bool PorosiaExists(int id)
+        {
+            return _context.Porosite.Any(e => e.PorosiaID == id);
+        }
     }
 }

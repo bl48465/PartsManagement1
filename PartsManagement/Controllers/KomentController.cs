@@ -1,166 +1,155 @@
-﻿using AutoMapper;
-using System.Net.Http;
-using PartsManagement.Models;
-using PartsManagement.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Security.Claims;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PartsManagement.IRepository;
-using PartsManagement.Dtos;
+using PartsManagement.Models;
+
+using PartsManagement.Helpers;
+using PartsManagement.Data;
 
 
 namespace PartsManagement.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
-    public class KomentiController : ControllerBase
+    public class KomentController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
+
+
         private readonly MyContext _context;
-        private readonly ILogger<AccountController> _logger;
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IAuthManager _authManager;
+        private readonly IUserRepository _repository;
+        private readonly JwtService _jwtservice;
 
-        public KomentiController(UserManager<User> userManager,
-             ILogger<AccountController> logger,
-             IMapper mapper,
-             IAuthManager authManager,
-             MyContext context,
-             IUnitOfWork unitOfWork)
+        public KomentController(MyContext context, IUserRepository repository, JwtService jwtService)
         {
-            _userManager = userManager;
-            _logger = logger;
-            _mapper = mapper;
-            _authManager = authManager;
             _context = context;
-            _unitOfWork = unitOfWork;
+            _repository = repository;
+            _jwtservice = jwtService;
         }
 
-
+        // GET: api/Koment
         [HttpGet]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetKomentet()
+        public async Task<ActionResult<IEnumerable<Komenti>>> GetKomentet()
         {
-            var role = User.FindFirstValue(ClaimTypes.Role);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (role.Equals("Puntor"))
-            {
-                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
-                var p = puntori.FirstOrDefault();
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
 
-                var komenti = await _context.Komentet.Where(x => x.UserId == p.ShefiId).ToListAsync();
-                if (komenti == null) { return NotFound($"Komentet nuk u gjetën!"); }
-                return Ok(komenti);
-            }
-            else
-            {
-                var komentetuserit = await _unitOfWork.Komentet.Get(a => a.UserId == userId);
-                if (komentetuserit == null) { return NotFound($"Komentet nuk u gjetën!"); }
-                return Ok(komentetuserit);
-            }
+            var komentet = await _context.Komentet.ToListAsync();
+
+            return Ok(komentet);
         }
 
-        [HttpPost]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateKomenti([FromBody] CreateKomentiDTO komentiDTO)
+        // GET: api/Koment/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Komenti>> GetKomenti(int id)
         {
-            var role = User.FindFirstValue(ClaimTypes.Role);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var komenti = await _context.Komentet.FindAsync(id);
 
-            if (!ModelState.IsValid)
+            if (komenti == null)
             {
-                _logger.LogError($"Invalid POST attempt in {nameof(CreateKomenti)}");
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            if (role.Equals("Puntor"))
-            {
-                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
-                var p = puntori.FirstOrDefault();
-
-                komentiDTO.PuntoriId = userId;
-                komentiDTO.UserId = p.ShefiId;
-                var komenti = _mapper.Map<Komenti>(komentiDTO);
-                await _unitOfWork.Komentet.Insert(komenti);
-                await _unitOfWork.Save();
-
-                return Ok($"Komenti me titull { komenti.Titulli } u shtua me sukses");
-            }
-            else
-            {
-                komentiDTO.UserId = userId;
-                var komenti = _mapper.Map<Komenti>(komentiDTO);
-                await _unitOfWork.Komentet.Insert(komenti);
-                await _unitOfWork.Save();
-                return Ok($"Komenti me titull { komenti.Titulli } u shtua me sukses");
-            }
-
+            return komenti;
         }
 
-        [Authorize]
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteKomenti(int id)
+        // PUT: api/Koment/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutKomenti(int id, Komenti komenti)
         {
-            if (id < 1)
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
+
+            if (id != komenti.KomentiID)
             {
-                _logger.LogError($"Invalid DELETE attempt in {nameof(DeleteKomenti)}");
                 return BadRequest();
             }
 
-            var role = User.FindFirstValue(ClaimTypes.Role);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _context.Entry(komenti).State = EntityState.Modified;
 
-            if (role.Equals("Puntor"))
+            try
             {
-                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
-                var p = puntori.FirstOrDefault();
-
-                var komenti = await _unitOfWork.Komentet.Get(a => a.PuntoriId == p.Id && a.KomentiId == id);
-
-                if (komenti == null)
-                {
-                    _logger.LogError($"Invalid UPDATE attempt in {nameof(DeleteKomenti)}");
-                    return BadRequest("Submitted data is invalid");
-                }
-
-                await _unitOfWork.Komentet.Delete(komenti.KomentiId);
-                await _unitOfWork.Save();
-                return Ok($"Komenti u fshij me sukses! ");
+                await _context.SaveChangesAsync();
             }
-            else
+            catch (DbUpdateConcurrencyException)
             {
-                var komenti = await _unitOfWork.Komentet.Get(a => a.UserId == userId && a.KomentiId == id);
-
-                if (komenti == null)
+                if (!KomentiExists(id))
                 {
-                    _logger.LogError($"Invalid UPDATE attempt in {nameof(DeleteKomenti)}");
-                    return BadRequest("Submitted data is invalid");
+                    return NotFound();
                 }
-
-                await _unitOfWork.Komentet.Delete(komenti.KomentiId);
-                await _unitOfWork.Save();
-                return Ok($"Komenti u fshij me sukses! ");
-
+                else
+                {
+                    throw;
+                }
             }
+
+            return NoContent();
+        }
+
+        // POST: api/Koment
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost("{id}")]
+        public async Task<ActionResult<Komenti>> PostKomenti(Komenti komenti, int id)
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
+
+            Komenti k = new Komenti
+            {
+                Titulli = komenti.Titulli,
+                Mesazhi = komenti.Mesazhi,
+                User = user
+
+            };
+            
+
+            _context.Komentet.Add(k);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetKomenti", new { id = komenti.KomentiID }, komenti);
+        }
+
+        // DELETE: api/Koment/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Komenti>> DeleteKomenti(int id)
+        {
+            var jwt = Request.Cookies["jwt"];
+            var token = _jwtservice.Verify(jwt);
+            int userId = int.Parse(token.Issuer);
+            var user = _repository.GetById(userId);
+            if (user == null) return Unauthorized();
+
+            var komenti = await _context.Komentet.FindAsync(id);
+            if (komenti == null)
+            {
+                return NotFound();
+            }
+
+            _context.Komentet.Remove(komenti);
+            await _context.SaveChangesAsync();
+
+            return komenti;
+        }
+
+        private bool KomentiExists(int id)
+        {
+            return _context.Komentet.Any(e => e.KomentiID == id);
         }
     }
 }
