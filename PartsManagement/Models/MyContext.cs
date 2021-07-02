@@ -51,10 +51,10 @@ namespace PartsManagement.Models
 
             );
 
-            //model.Entity<Shitja>()
-            //.HasOne(a => a.Fatura)
-            //.WithOne(a => a.Shitja)
-            //.HasForeignKey<FaturaOUT>(c => c.ShitjaId);
+            model.Entity<Shitja>()
+            .HasOne(a => a.Fatura)
+            .WithOne(a => a.Shitja)
+            .HasForeignKey<FaturaOUT>(c => c.ShitjaId);
 
             model.Entity<IdentityRole>().HasData(
                 new IdentityRole

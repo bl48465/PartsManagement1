@@ -58,30 +58,6 @@ namespace PartsManagement.Controllers
             return Ok(shitjet);
         }
 
-        [Authorize(Roles = "User")]
-        [HttpGet("fatura")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetFaturaDalese()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var shitjet = await _context.FaturatOUT.Where(s => s.UserId.Equals(userId)).ToListAsync();
-            return Ok(shitjet);
-        }
-
-        [Authorize(Roles = "User")]
-        [HttpGet("fatura/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetFaturaDaleseId(int id)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var shitjet = await _context.FaturatOUT.Where(s => s.UserId.Equals(userId) && s.ProduktiId == id).ToListAsync();
-            return Ok(shitjet);
-        }
-
         [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -105,73 +81,70 @@ namespace PartsManagement.Controllers
             {
                 var puntori = _context.Users.Where(a => a.Id.Equals(userId));
                 var p = puntori.FirstOrDefault();
-                
-                if(pr == null) { return BadRequest("Produkti nuk ekziston në depon tuaj");}
 
-                fatura.ProduktiId = prodId;
-                fatura.UserId = p.ShefiId;
-                fatura.Totali = fatura.Qmimi * fatura.Sasia;
-                var fati = _mapper.Map<FaturaOUT>(fatura);
+                var shefi = _context.Users.Where(a => a.Id == p.ShefiId);
+                var sh = shefi.FirstOrDefault();
 
-                var updatestock = _context.FaturatIN.Where(x => x.ProduktiId == prodId);
-                var u = updatestock.FirstOrDefault();
-
-              
-
-                if (u.Sasia == 0 || u.Sasia < 0)
+                var fati = new CreateFaturaOUTDTO
                 {
-                    return BadRequest("Nuk ke sasi të mjaftueshme");
-                }
-                u.Sasia -= fatura.Sasia;
-                _context.FaturatIN.Update(u);
-                _context.FaturatOUT.Add(fati);
-                await _context.SaveChangesAsync();
-
-                var sell = new Shitja
-                {
-                    UserId = p.ShefiId,
-                    FaturaId = fati.FaturaId
+                    ProduktiId = prodId
                 };
 
-                _context.Shitjet.Add(sell);
+                var faturap =  _mapper.Map<FaturaOUT>(fati);
+
+                var sell = new CreateShitjaDTO
+                {
+                    UserId = p.ShefiId,
+                    FaturaId = faturap.FaturaId
+                };
+
+                var sellp = _mapper.Map<Shitja>(sell);
+
+
+                //var updatestock = _context.FaturatIN.Where(x => x.ProduktiId == prodId);
+                //var u = updatestock.FirstOrDefault();
+
+                //u.Sasia -= sasia;
+
+                //if(u.Sasia < 0) { return BadRequest("Nuk ke sasi"); }
+
+                //_context.FaturatIN.Update(u);
+                _context.FaturatOUT.Add(faturap);
+                _context.Shitjet.Add(sellp);
                 await _context.SaveChangesAsync();
             }
             else
             {
-                if (pr == null) { return BadRequest("Produkti nuk ekziston në depon tuaj"); }
-
-                fatura.ProduktiId = prodId;
-                fatura.UserId = userId;
-                fatura.Totali = fatura.Qmimi * fatura.Sasia;
-                var fati = _mapper.Map<FaturaOUT>(fatura);
-
-
-                var updatestock = _context.FaturatIN.Where(x => x.ProduktiId == prodId);
-                var u = updatestock.FirstOrDefault();
-
-             
-
-                if (u.Sasia == 0 || u.Sasia < 0) {
-       
-                    return BadRequest("Nuk ke sasi të mjaftueshme"); 
-                }
-                u.Sasia -= fatura.Sasia;
-                _context.FaturatIN.Update(u);
-                _context.FaturatOUT.Add(fati);
-                await _context.SaveChangesAsync();
-
-                var sell = new Shitja
+                var fati = new CreateFaturaOUTDTO
                 {
-                    UserId = userId,
-                    FaturaId = fati.FaturaId
+                    ProduktiId = prodId
                 };
 
-                _context.Shitjet.Add(sell);
+                var faturap = _mapper.Map<FaturaOUT>(fati);
+
+                //var sell = new CreateShitjaDTO
+                //{
+                //    UserId = userId,
+                //    FaturaId = faturap.FaturaId
+                //};
+
+                //var sellp = _mapper.Map<Shitja>(sell);
+
+                //var updatestock = _context.FaturatIN.Where(x => x.ProduktiId == prodId);
+                //var u = updatestock.FirstOrDefault();
+
+                //u.Sasia -= sasia; 
+
+                //if (u.Sasia < 0) { return BadRequest("Nuk ke sasi"); }
+
+                //_context.FaturatIN.Update(u);
+                _context.FaturatOUT.Add(faturap);
+                //_context.Shitjet.Add(sellp);
                 await _context.SaveChangesAsync();
 
             }
 
-            return Ok($"Fatura u shtua me sukses");
+            return Ok($"Produkti {pr.Emri} u shit me sukses");
 
         }
 

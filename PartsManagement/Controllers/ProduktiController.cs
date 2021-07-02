@@ -77,14 +77,14 @@ namespace PartsManagement.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateProdukti([FromBody] CreateProduktiDTO produktiDTO)
+        public async Task<IActionResult> CreateSektor([FromBody] CreateProduktiDTO produktiDTO)
         {
             var role = User.FindFirstValue(ClaimTypes.Role);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!ModelState.IsValid)
             {
-                _logger.LogError($"Invalid POST attempt in {nameof(CreateProdukti)}");
+                _logger.LogError($"Invalid POST attempt in {nameof(CreateSektor)}");
                 return BadRequest(ModelState);
             }
   
@@ -93,7 +93,10 @@ namespace PartsManagement.Controllers
                 var puntori = _context.Users.Where(a => a.Id.Equals(userId));
                 var p = puntori.FirstOrDefault();
 
-                var checkExist = await _unitOfWork.Produktet.Get(a => a.SektoriId == produktiDTO.SektoriId && a.Number.Equals(produktiDTO.Number));
+                var shefi = _context.Users.Where(a => a.Id == p.ShefiId);
+                var sh = shefi.FirstOrDefault();
+
+                var checkExist = await _unitOfWork.Produktet.Get(a => a.Sektori.SektoriId == produktiDTO.SektoriId && a.Emri.Equals(produktiDTO.Emri));
                 if (checkExist != null) { return BadRequest($"Produkti ekziston!"); }
                
                 var produkti = _mapper.Map<Produkti>(produktiDTO);
@@ -104,7 +107,7 @@ namespace PartsManagement.Controllers
             }
             else
             {
-                var checkExist = await _unitOfWork.Produktet.Get(a => a.SektoriId == produktiDTO.SektoriId && a.Number.Equals(produktiDTO.Number));
+                var checkExist = await _unitOfWork.Produktet.Get(a => a.Sektori.UserId == userId);
                 if (checkExist != null) { return BadRequest($"Produkti ekziston!"); }
 
                 var produkti = _mapper.Map<Produkti>(produktiDTO);

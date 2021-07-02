@@ -18,6 +18,9 @@ namespace PartsManagement.Models
         [JsonIgnore]
         public User User { get; set; }
 
+
+        [JsonIgnore]
+        public FaturaOUT Fatura { get; set; }
      
     }
 }

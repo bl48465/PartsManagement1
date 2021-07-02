@@ -12,7 +12,6 @@ namespace PartsManagement.Models
         public string Number { get; set; }
 
         public int SektoriId { get; set; }
-
         public Sektori Sektori { get; set; }
         public virtual ICollection<FaturaIN> Faturat { get; set; }
         public int MarkaId { get;set; }
