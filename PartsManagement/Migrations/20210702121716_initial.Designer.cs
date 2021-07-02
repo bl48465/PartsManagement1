@@ -10,8 +10,8 @@ using PartsManagement.Models;
 namespace PartsManagement.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20210630113148_firstmigration")]
-    partial class firstmigration
+    [Migration("20210702121716_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,22 +50,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "31ad45b4-f977-4ada-b5eb-0c31a98f36b1",
-                            ConcurrencyStamp = "1e30ff45-f0cd-46f4-bee5-789753a69ab2",
+                            Id = "9f672ad5-1895-41fe-ba42-cd945c68057f",
+                            ConcurrencyStamp = "31b27f05-a90d-4479-a85f-4d5301c1c16a",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "4650f874-ed91-464d-9fa0-1646e218822b",
-                            ConcurrencyStamp = "0fd4c925-88f0-456b-82c8-ffc1d10b0fc9",
+                            Id = "6a4d8f40-4100-4702-b159-e3d519f2a2b4",
+                            ConcurrencyStamp = "b0554823-db30-4e03-ad6a-622adf9b4e49",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1bb37926-b87e-4e85-ba9e-57a0b3c3ed27",
-                            ConcurrencyStamp = "166d08be-a6ae-454d-b03c-b8f69e24d2c1",
+                            Id = "f79efbb1-054c-452f-a561-55ea37f90542",
+                            ConcurrencyStamp = "82d39428-3e90-458f-93d1-ef511ea410e1",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });
@@ -175,6 +175,61 @@ namespace PartsManagement.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("PartsManagement.Models.FaturaIN", b =>
+                {
+                    b.Property<int>("FaturaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProduktiId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Qmimi")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Sasia")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FaturaId");
+
+                    b.HasIndex("ProduktiId");
+
+                    b.ToTable("FaturatIN");
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.FaturaOUT", b =>
+                {
+                    b.Property<int>("FaturaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProduktiId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Qmimi")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Sasia")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Totali")
+                        .HasColumnType("float");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FaturaId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FaturatOUT");
+                });
+
             modelBuilder.Entity("PartsManagement.Models.Furnitori", b =>
                 {
                     b.Property<int>("FurnitoriId")
@@ -212,6 +267,9 @@ namespace PartsManagement.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PuntoriId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Titulli")
@@ -420,9 +478,6 @@ namespace PartsManagement.Migrations
 
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Qmimi")
-                        .HasColumnType("float");
 
                     b.Property<int>("SektoriId")
                         .HasColumnType("int");
@@ -874,6 +929,26 @@ namespace PartsManagement.Migrations
                     b.ToTable("Sektoret");
                 });
 
+            modelBuilder.Entity("PartsManagement.Models.Shitja", b =>
+                {
+                    b.Property<int>("ShitjaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FaturaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ShitjaId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Shitjet");
+                });
+
             modelBuilder.Entity("PartsManagement.Models.Shteti", b =>
                 {
                     b.Property<int>("ShtetiId")
@@ -1041,6 +1116,22 @@ namespace PartsManagement.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PartsManagement.Models.FaturaIN", b =>
+                {
+                    b.HasOne("PartsManagement.Models.Produkti", "Produkti")
+                        .WithMany("Faturat")
+                        .HasForeignKey("ProduktiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.FaturaOUT", b =>
+                {
+                    b.HasOne("PartsManagement.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("PartsManagement.Models.Furnitori", b =>
                 {
                     b.HasOne("PartsManagement.Models.User", "User")
@@ -1099,6 +1190,13 @@ namespace PartsManagement.Migrations
                 {
                     b.HasOne("PartsManagement.Models.User", null)
                         .WithMany("Sektoret")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.Shitja", b =>
+                {
+                    b.HasOne("PartsManagement.Models.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId");
                 });
 
