@@ -12,9 +12,11 @@ import {
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 export function LoginForm(props) {
   const [redirect, setRedirect] = useState(false);
+  const [token,setToken] = useState('');
   const [error, setError] = useState(true);
   const[fail,setFail]= useState({message:''});
   const [form, setForm] = useState({
@@ -24,29 +26,41 @@ export function LoginForm(props) {
     }
   });
 
+
+
   const handleChange = ({ target }) => {
     const { formValues } = form;
     formValues[target.name] = target.value;
     setForm({ formValues });
   };
-
   const initialSession = async () => {
   
     const { formValues } = form;
 
-    axios.post("http://localhost:5000/api/Auth/login", formValues, { withCredentials: true })
+    await axios.post("http://localhost:5000/api/Account/login",formValues,{ withCredentials: false })
     .then((response) =>{
-      if(response.data.status !== 400){
-        setRedirect(true);
-      }
+      if(response.data.token){
+        localStorage.setItem('token',JSON.stringify(response.data))
+      }  
+      setRedirect(true);
+        
     })
       .catch((error) => {
+        console.log(formValues);
         setError(true);
         setFail({message:"Të dhënat gabim!"});
         setRedirect(false)
+        console.log(error);
       })
   }
+
+    const logout = async () => {
+    localStorage.removeItem('token');
+  }
+
   const { switchToSignup } = useContext(AccountContext);
+
+
   if(redirect===true){
     return <Redirect to="/Dashboard"/>;}
   return (

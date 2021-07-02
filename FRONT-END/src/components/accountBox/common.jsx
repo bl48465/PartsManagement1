@@ -54,7 +54,7 @@ export const Success = styled.a`
   text-decoration:none;
   color: green;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 11px;
   z-index: 10;
   margin: 0;
   margin-top: 5px;

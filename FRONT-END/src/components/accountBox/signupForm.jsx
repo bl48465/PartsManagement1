@@ -30,21 +30,20 @@ export function SignupForm(){
 
     const [formState, setFormState] = useState({
       formValues: {
-        Emri: '',
-        Mbiemri: '',
-        Kompania: '',
-        VendbanimiID:0,
         Email: '',
         Password: '',
-        Konfirmimi: '',
+        Emri: '',
+        Mbiemri:'',
+        Kompania: '',
+        QytetiId:0,
+        Roles:['User']
       },
       formErrors: {
-        Emri: '',
-        Mbiemri: '',
-        Kompania: '',
         Email: '',
         Password: '',
-        Konfirmimi: '',
+        Emri: '',
+        Mbiemri:'',
+        Kompania: '',
       },
       formValidity: {
         Emri: false,
@@ -52,7 +51,6 @@ export function SignupForm(){
         Kompania: false,
         Email: false,
         Password: false,
-        Konfirmimi: false
       }
     });
 
@@ -64,7 +62,6 @@ export function SignupForm(){
 
       const isEmail = name === "Email";
       const isPassword = name === "Password";
-      const isKonfirmimi = name === "Konfirmimi";
       const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
       const PasswordReg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   
@@ -84,12 +81,6 @@ export function SignupForm(){
           fieldValidationErrors[name] = validity[name]
             ? ""
             : `Fjalëkalimi duhet të përmbajë së paku 8 shkronja (1 numër, 1 shkronjë të madhe)`;
-        }
-        if (isKonfirmimi) {
-          validity[name] = formState.formValues.Konfirmimi === formState.formValues.Password
-          fieldValidationErrors[name] = validity[name]
-            ? ""
-            : `Fjalëkalimet nuk përputhen`;
         }
       }
 
@@ -115,10 +106,9 @@ export function SignupForm(){
 
       if (Object.values(formValidity).every(Boolean)){
         
-        axios.post("http://localhost:5000/api/Auth/register",formValues)
+        axios.post("http://localhost:5000/api/Account/register",formValues)
         .then(errorState.errValues.succes='Jeni regjistruar me sukses! Ju lutem kycuni!')
         .catch((error)=> {
-         
          
             if(error.response){
                 errorState.errValues.emailExist = error.response.data.message;
@@ -126,7 +116,7 @@ export function SignupForm(){
                 console.log(errorState.errValues.emailExist);
             }
         })
-
+        console.log(formValues)
           
         
       } else {
@@ -149,7 +139,7 @@ export function SignupForm(){
 
     const ChangeteState = (e) => {
       setSh({ sh: e.target.value });
-      axios.get('http://localhost:5000/api/Vendbanimi?shtetiId=' + e.target.value).then(response => {
+      axios.get('http://localhost:5000/api/Qyteti?shtetiId=' + e.target.value).then(response => {
           setQytetet(response.data);
       });
   }
@@ -170,13 +160,13 @@ export function SignupForm(){
         <Select  onChange={ChangeteState} name="emriQytetit"  >  
             <option>Shteti</option> 
           {shtetet.map((e, key) => {  
-            return <option key={key} value={e.shtetiID}>{e.emriShtetit}</option>;  
+            return <option key={key} value={e.shtetiId}>{e.emri}</option>;  
             })}  
         </Select>
-        <Select name="VendbanimiID" onChange={handleChange}>  
+        <Select name="QytetiId" onChange={handleChange}>  
             <option>Qyteti</option> 
             {qytetet.map((e, key) => {  
-            return <option  key={key} value={e.vendbanimiID}>{e.emriQytetit}</option>;  
+            return <option  key={key} value={e.qytetiId}>{e.emri}</option>;  
             })}  
         </Select>  
         <ErrMessage>{formState.formErrors.Email}
@@ -185,8 +175,6 @@ export function SignupForm(){
         <Input  type="email" placeholder="Emaili" name="Email" onChange={handleChange} value={formState.formValues.Email}/>
         <ErrMessage>{formState.formErrors.Password}</ErrMessage>
         <Input  type="password" placeholder="Fjalëkalimi" name="Password" onChange={handleChange} value={formState.formValues.Password}/>
-        <ErrMessage>{formState.formErrors.Konfirmimi}</ErrMessage>
-        <Input  type="password" placeholder="Fjalëkalimi" name="Konfirmimi" onChange={handleChange} value={formState.formValues.Konfirmimi}/>
       </FormContainer>
       <Marginer direction="vertical" margin={10} />
       <SubmitButton type="submit"  onClick={handleSubmit}>Krijo</SubmitButton>
