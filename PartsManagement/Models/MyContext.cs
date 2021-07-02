@@ -4,85 +4,57 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PartsManagement.Models;
-
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace PartsManagement.Models
 {
-    public class MyContext : DbContext
+    public class MyContext : IdentityDbContext<User>
     {
         public MyContext(DbContextOptions options) : base(options) { }
-        public DbSet<User> Users { get; set; }
+   
         public DbSet<Komenti> Komentet { get; set; }
         public DbSet<Produkti> Produktet { get; set; }
         public DbSet<Porosia> Porosite { get; set; }
         public DbSet<Sektori> Sektoret { get; set; }
-        public DbSet<Shitja> Shitjet { get; set; }
-
+        public DbSet<FaturaIN> FaturatIN { get; set; }
+        public DbSet<FaturaOUT> FaturatOUT { get; set; }
         public DbSet<Furnitori> Furnitoret { get; set; }
+        public DbSet<Modeli> Modelet { get; set; }
+        public DbSet<Marka> Markat { get; set; }
+        public DbSet<Shteti> Shtetet { get; set; }
+        public DbSet<Qyteti> Qytetet { get; set; }
+        public DbSet<Shitja> Shitjet { get; set; }
 
         protected override void OnModelCreating(ModelBuilder model)
         {
-            model.Entity<User>()
-                 .HasMany(s => s.Sektoret)
-                 .WithOne(u => u.User);
-
-            model.Entity<User>()
-                 .HasMany(s => s.Shitjet)
-                 .WithOne(u => u.User);
-
-            model.Entity<User>()
-                 .HasMany(s => s.Komentet)
-                 .WithOne(u => u.User);
-
-            model.Entity<User>()
-                 .HasMany(s => s.Porosite)
-                 .WithOne(u => u.User);
-
-            model.Entity<User>()
-                 .HasMany(s => s.Sektoret)
-                 .WithOne(u => u.User);
-
-            model.Entity<Sektori>()
-                .HasMany(p => p.Produktet)
-                .WithOne(s => s.Sektori);
-
-
-            model.Entity<User>()
-           .HasOne(s => s.Vendbanimi)
-           .WithMany(g => g.Users)
-           .HasForeignKey(s => s.VendbanimiID);
-
-            model.Entity<Vendbanimi>()
-         .HasOne(s => s.Shteti)
-         .WithMany(g => g.Qyteti)
-         .HasForeignKey(s => s.ShtetiID);
-
-
-        model.Entity<Shteti>().HasData(
-            new Shteti() { ShtetiID = 1, EmriShtetit = "Kosovë" },
-            new Shteti() { ShtetiID = 2, EmriShtetit = "Shqipëri" },
-            new Shteti() { ShtetiID = 3, EmriShtetit = "Maqedoni" }
+          base.OnModelCreating(model);
+          
+          
+          model.Entity<Shteti>().HasData(
+            new Shteti() { ShtetiId = 1, Emri = "Kosovë" },
+            new Shteti() { ShtetiId = 2, Emri = "Shqipëri" },         
+            new Shteti() { ShtetiId = 3, Emri = "Maqedoni" }
             );
 
             model.Entity<Marka>().HasData(
-            new Marka() { MarkaID = 1, EmriMarkes = "Ferrari" },
-            new Marka() { MarkaID = 2, EmriMarkes = "Audi" },
-            new Marka() { MarkaID = 3, EmriMarkes = "BMW" },
-            new Marka() { MarkaID = 4, EmriMarkes = "VolksWagen" },
-            new Marka() { MarkaID = 5, EmriMarkes = "Mercedes" },
-            new Marka() { MarkaID = 6, EmriMarkes = "Skoda" },
-            new Marka() { MarkaID = 7, EmriMarkes = "Volvo" },
-            new Marka() { MarkaID = 8, EmriMarkes = "Toyota" },                 
-            new Marka() { MarkaID = 9, EmriMarkes = "Mitsubishi" },
-            new Marka() { MarkaID = 10, EmriMarkes = "Porsche" }
+            new Marka() { MarkaId = 1, Emri = "Ferrari" },
+            new Marka() { MarkaId = 2, Emri = "Audi" },
+            new Marka() { MarkaId = 3, Emri = "BMW" },
+            new Marka() { MarkaId = 4, Emri = "VolksWagen" },
+            new Marka() { MarkaId = 5, Emri = "Mercedes" },
+            new Marka() { MarkaId = 6, Emri = "Skoda" },
+            new Marka() { MarkaId = 7, Emri = "Volvo" },
+            new Marka() { MarkaId = 8, Emri = "Toyota" },                 
+            new Marka() { MarkaId = 9, Emri = "Mitsubishi" },
+            new Marka() { MarkaId = 10, Emri = "Porsche" }
 
             );
 
-<<<<<<< HEAD
-            model.Entity<Shitja>()
-            .HasOne(a => a.Fatura)
-            .WithOne(a => a.Shitja)
-            .HasForeignKey<FaturaOUT>(c => c.ShitjaId);
+            //model.Entity<Shitja>()
+            //.HasOne(a => a.Fatura)
+            //.WithOne(a => a.Shitja)
+            //.HasForeignKey<FaturaOUT>(c => c.ShitjaId);
 
             model.Entity<IdentityRole>().HasData(
                 new IdentityRole
@@ -102,114 +74,93 @@ namespace PartsManagement.Models
                 }
                 );
 
-=======
->>>>>>> parent of bf1934f (Backend Refactor Completed - Final ?)
             model.Entity<Modeli>().HasData(
-            new Modeli() { ModeliID = 1, EmriModelit = "Ferrari Ri" , MarkaID=1},
-            new Modeli() { ModeliID = 2, EmriModelit = "Audi A3", MarkaID=2 },
-            new Modeli() { ModeliID = 3, EmriModelit = "BMW 5qe" , MarkaID=3},
-            new Modeli() { ModeliID = 4, EmriModelit = "Golf 4shi Bajramit", MarkaID=4 },
-            new Modeli() { ModeliID = 5, EmriModelit = "Mercedes e class", MarkaID=5 },
-            new Modeli() { ModeliID = 6, EmriModelit = "Skoda octavia" , MarkaID=6},
-            new Modeli() { ModeliID = 7, EmriModelit = "Volvo 3.0 tdi", MarkaID=7 },
-            new Modeli() { ModeliID = 8, EmriModelit = "Toyota off-road", MarkaID=8 },                 
-            new Modeli() { ModeliID = 9, EmriModelit = "Mitsubishi modeli 2t", MarkaID=9 },
-            new Modeli() { ModeliID = 10, EmriModelit = "Porsche panamera" , MarkaID=10}
+            new Modeli() { ModelId = 1, Emri = "Ferrari Ri" , MarkaId=1},
+            new Modeli() { ModelId = 2, Emri = "Audi A3", MarkaId=2 },
+            new Modeli() { ModelId = 3, Emri = "BMW 5qe" , MarkaId=3},
+            new Modeli() { ModelId = 4, Emri = "Golf 4shi Bajramit", MarkaId=4 },
+            new Modeli() { ModelId = 5, Emri = "Mercedes e class", MarkaId=5 },
+            new Modeli() { ModelId = 6, Emri = "Skoda octavia" , MarkaId=6},
+            new Modeli() { ModelId = 7, Emri = "Volvo 3.0 tdi", MarkaId=7 },
+            new Modeli() { ModelId = 8, Emri = "Toyota off-road", MarkaId=8 },                 
+            new Modeli() { ModelId = 9, Emri = "Mitsubishi modeli 2t", MarkaId=9 },
+            new Modeli() { ModelId = 10, Emri = "Porsche panamera" , MarkaId=10}
 
             );
 
-        model.Entity<Vendbanimi>().HasData(
+        model.Entity<Qyteti>().HasData(
 
-             new Vendbanimi() { VendbanimiID = 1, ShtetiID = 1, EmriQytetit = "Artanë" },
-             new Vendbanimi() { VendbanimiID = 2, ShtetiID = 1, EmriQytetit = "Besianë" },
-             new Vendbanimi() { VendbanimiID = 3, ShtetiID = 1, EmriQytetit = "Burim" },
-             new Vendbanimi() { VendbanimiID = 4, ShtetiID = 1, EmriQytetit = "Dardanë" },
-             new Vendbanimi() { VendbanimiID = 5, ShtetiID = 1, EmriQytetit = "Decan" },
-             new Vendbanimi() { VendbanimiID = 6, ShtetiID = 1, EmriQytetit = "Dragash" },
-             new Vendbanimi() { VendbanimiID = 7, ShtetiID = 1, EmriQytetit = "Drenas" },
-             new Vendbanimi() { VendbanimiID = 8, ShtetiID = 1, EmriQytetit = "Ferizaj" },
-             new Vendbanimi() { VendbanimiID = 9, ShtetiID = 1, EmriQytetit = "Fushë Kosovë" },
-             new Vendbanimi() { VendbanimiID = 10, ShtetiID = 1, EmriQytetit = "Gjakovë" },
-             new Vendbanimi() { VendbanimiID = 11, ShtetiID = 1, EmriQytetit = "Gjilan" },
-             new Vendbanimi() { VendbanimiID = 12, ShtetiID = 1, EmriQytetit = "Kastriot" },
-             new Vendbanimi() { VendbanimiID = 13, ShtetiID = 1, EmriQytetit = "Kaqanik" },
-             new Vendbanimi() { VendbanimiID = 14, ShtetiID = 1, EmriQytetit = "Klinë" },
-             new Vendbanimi() { VendbanimiID = 15, ShtetiID = 1, EmriQytetit = "Leposaviq" },
-             new Vendbanimi() { VendbanimiID = 16, ShtetiID = 1, EmriQytetit = "Lipjan" },
-             new Vendbanimi() { VendbanimiID = 17, ShtetiID = 1, EmriQytetit = "Malishevë" },
-             new Vendbanimi() { VendbanimiID = 18, ShtetiID = 1, EmriQytetit = "Mitrovicë" },
-             new Vendbanimi() { VendbanimiID = 19, ShtetiID = 1, EmriQytetit = "Pejë" },
-             new Vendbanimi() { VendbanimiID = 20, ShtetiID = 1, EmriQytetit = "Prishtinë" },
-             new Vendbanimi() { VendbanimiID = 21, ShtetiID = 1, EmriQytetit = "Prizren" },
-             new Vendbanimi() { VendbanimiID = 22, ShtetiID = 1, EmriQytetit = "Rahovec" },
-             new Vendbanimi() { VendbanimiID = 23, ShtetiID = 1, EmriQytetit = "Skënderaj" },
-             new Vendbanimi() { VendbanimiID = 24, ShtetiID = 1, EmriQytetit = "Shtërpcë" },
-             new Vendbanimi() { VendbanimiID = 25, ShtetiID = 1, EmriQytetit = "Shtime" },
-             new Vendbanimi() { VendbanimiID = 26, ShtetiID = 1, EmriQytetit = "Therandë" },
-             new Vendbanimi() { VendbanimiID = 27, ShtetiID = 1, EmriQytetit = "Viti" },
-             new Vendbanimi() { VendbanimiID = 28, ShtetiID = 1, EmriQytetit = "Vushtrri" },
-             new Vendbanimi() { VendbanimiID = 29, ShtetiID = 1, EmriQytetit = "Zubin Potok" },
-             new Vendbanimi() { VendbanimiID = 30, ShtetiID = 1, EmriQytetit = "Zveqan" },
+             new Qyteti() { QytetiId = 1, ShtetiId = 1, Emri = "Artanë" },
+             new Qyteti() { QytetiId = 2, ShtetiId = 1, Emri = "Besianë" },
+             new Qyteti() { QytetiId = 3, ShtetiId = 1, Emri = "Burim" },
+             new Qyteti() { QytetiId = 4, ShtetiId = 1, Emri = "Dardanë" },
+             new Qyteti() { QytetiId = 5, ShtetiId = 1, Emri = "Decan" },
+             new Qyteti() { QytetiId = 6, ShtetiId = 1, Emri = "Dragash" },
+             new Qyteti() { QytetiId = 7, ShtetiId = 1, Emri = "Drenas" },
+             new Qyteti() { QytetiId = 8, ShtetiId = 1, Emri = "Ferizaj" },
+             new Qyteti() { QytetiId = 9, ShtetiId = 1, Emri = "Fushë Kosovë" },
+             new Qyteti() { QytetiId = 10, ShtetiId = 1, Emri = "Gjakovë" },
+             new Qyteti() { QytetiId = 11, ShtetiId = 1, Emri = "Gjilan" },
+             new Qyteti() { QytetiId = 12, ShtetiId = 1, Emri = "Kastriot" },
+             new Qyteti() { QytetiId = 13, ShtetiId = 1, Emri = "Kaqanik" },
+             new Qyteti() { QytetiId = 14, ShtetiId = 1, Emri = "Klinë" },
+             new Qyteti() { QytetiId = 15, ShtetiId = 1, Emri = "Leposaviq" },
+             new Qyteti() { QytetiId = 16, ShtetiId = 1, Emri = "Lipjan" },
+             new Qyteti() { QytetiId = 17, ShtetiId = 1, Emri = "Malishevë" },
+             new Qyteti() { QytetiId = 18, ShtetiId = 1, Emri = "Mitrovicë" },
+             new Qyteti() { QytetiId = 19, ShtetiId = 1, Emri = "Pejë" },
+             new Qyteti() { QytetiId = 20, ShtetiId = 1, Emri = "Prishtinë" },
+             new Qyteti() { QytetiId = 21, ShtetiId = 1, Emri = "Prizren" },
+             new Qyteti() { QytetiId = 22, ShtetiId = 1, Emri = "Rahovec" },
+             new Qyteti() { QytetiId = 23, ShtetiId = 1, Emri = "Skënderaj" },
+             new Qyteti() { QytetiId = 24, ShtetiId = 1, Emri = "Shtërpcë" },
+             new Qyteti() { QytetiId = 25, ShtetiId = 1, Emri = "Shtime" },
+             new Qyteti() { QytetiId = 26, ShtetiId = 1, Emri = "Therandë" },
+             new Qyteti() { QytetiId = 27, ShtetiId = 1, Emri = "Viti" },
+             new Qyteti() { QytetiId = 28, ShtetiId = 1, Emri = "Vushtrri" },
+             new Qyteti() { QytetiId = 29, ShtetiId = 1, Emri = "Zubin Potok" },
+             new Qyteti() { QytetiId = 30, ShtetiId = 1, Emri = "Zveqan" },
 
 
-             new Vendbanimi() { VendbanimiID = 31, ShtetiID = 2, EmriQytetit = "Berat" },
-             new Vendbanimi() { VendbanimiID = 32, ShtetiID = 2, EmriQytetit = "Bulqizë" },
-             new Vendbanimi() { VendbanimiID = 33, ShtetiID = 2, EmriQytetit = "Delvinë" },
-             new Vendbanimi() { VendbanimiID = 34, ShtetiID = 2, EmriQytetit = "Devoll" },
-             new Vendbanimi() { VendbanimiID = 35, ShtetiID = 2, EmriQytetit = "Dibër" },
-             new Vendbanimi() { VendbanimiID = 36, ShtetiID = 2, EmriQytetit = "Durrës" },
-             new Vendbanimi() { VendbanimiID = 37, ShtetiID = 2, EmriQytetit = "Elbasan" },
-             new Vendbanimi() { VendbanimiID = 38, ShtetiID = 2, EmriQytetit = "Fier" },
-             new Vendbanimi() { VendbanimiID = 39, ShtetiID = 2, EmriQytetit = "Gramsh" },
-             new Vendbanimi() { VendbanimiID = 40, ShtetiID = 2, EmriQytetit = "Gjirokastër" },
-             new Vendbanimi() { VendbanimiID = 41, ShtetiID = 2, EmriQytetit = "Has" },
-             new Vendbanimi() { VendbanimiID = 42, ShtetiID = 2, EmriQytetit = "Kavajë" },
-             new Vendbanimi() { VendbanimiID = 43, ShtetiID = 2, EmriQytetit = "Kolonjë" },
-             new Vendbanimi() { VendbanimiID = 44, ShtetiID = 2, EmriQytetit = "Korcë" },
-             new Vendbanimi() { VendbanimiID = 45, ShtetiID = 2, EmriQytetit = "Krujë" },
-             new Vendbanimi() { VendbanimiID = 46, ShtetiID = 2, EmriQytetit = "Kucovë" },
-             new Vendbanimi() { VendbanimiID = 47, ShtetiID = 2, EmriQytetit = "Kukës" },
-             new Vendbanimi() { VendbanimiID = 48, ShtetiID = 2, EmriQytetit = "Kurbin" },
-             new Vendbanimi() { VendbanimiID = 49, ShtetiID = 2, EmriQytetit = "Lezhë" },
-             new Vendbanimi() { VendbanimiID = 50, ShtetiID = 2, EmriQytetit = "Librazhd" },
-             new Vendbanimi() { VendbanimiID = 51, ShtetiID = 2, EmriQytetit = "Lushnjë" },
-             new Vendbanimi() { VendbanimiID = 52, ShtetiID = 2, EmriQytetit = "Malësi e madhe" },
-             new Vendbanimi() { VendbanimiID = 53, ShtetiID = 2, EmriQytetit = "Mallakastër" },
-             new Vendbanimi() { VendbanimiID = 54, ShtetiID = 2, EmriQytetit = "Mat" },
-             new Vendbanimi() { VendbanimiID = 55, ShtetiID = 2, EmriQytetit = "Mirditë" },
-             new Vendbanimi() { VendbanimiID = 56, ShtetiID = 2, EmriQytetit = "Peqin" },
-             new Vendbanimi() { VendbanimiID = 57, ShtetiID = 2, EmriQytetit = "Përmet" },
-             new Vendbanimi() { VendbanimiID = 58, ShtetiID = 2, EmriQytetit = "Pogradec" },
-             new Vendbanimi() { VendbanimiID = 59, ShtetiID = 2, EmriQytetit = "Pukë" },
-             new Vendbanimi() { VendbanimiID = 60, ShtetiID = 2, EmriQytetit = "Sarandë" },
-             new Vendbanimi() { VendbanimiID = 61, ShtetiID = 2, EmriQytetit = "Skrapar" },
-             new Vendbanimi() { VendbanimiID = 62, ShtetiID = 2, EmriQytetit = "Shkodër" },
-             new Vendbanimi() { VendbanimiID = 63, ShtetiID = 2, EmriQytetit = "Tepelenë" },
-             new Vendbanimi() { VendbanimiID = 64, ShtetiID = 2, EmriQytetit = "Tiranë" },
-             new Vendbanimi() { VendbanimiID = 65, ShtetiID = 2, EmriQytetit = "Tropojë" },
-             new Vendbanimi() { VendbanimiID = 66, ShtetiID = 2, EmriQytetit = "Vlorë" }
+             new Qyteti() { QytetiId = 31, ShtetiId = 2, Emri = "Berat" },
+             new Qyteti() { QytetiId = 32, ShtetiId = 2, Emri = "Bulqizë" },
+             new Qyteti() { QytetiId = 33, ShtetiId = 2, Emri = "Delvinë" },
+             new Qyteti() { QytetiId = 34, ShtetiId = 2, Emri = "Devoll" },
+             new Qyteti() { QytetiId = 35, ShtetiId = 2, Emri = "Dibër" },
+             new Qyteti() { QytetiId = 36, ShtetiId = 2, Emri = "Durrës" },
+             new Qyteti() { QytetiId = 37, ShtetiId = 2, Emri = "Elbasan" },
+             new Qyteti() { QytetiId = 38, ShtetiId = 2, Emri = "Fier" },
+             new Qyteti() { QytetiId = 39, ShtetiId = 2, Emri = "Gramsh" },
+             new Qyteti() { QytetiId = 40, ShtetiId = 2, Emri = "Gjirokastër" },
+             new Qyteti() { QytetiId = 41, ShtetiId = 2, Emri = "Has" },
+             new Qyteti() { QytetiId = 42, ShtetiId = 2, Emri = "Kavajë" },
+             new Qyteti() { QytetiId = 43, ShtetiId = 2, Emri = "Kolonjë" },
+             new Qyteti() { QytetiId = 44, ShtetiId = 2, Emri = "Korcë" },
+             new Qyteti() { QytetiId = 45, ShtetiId = 2, Emri = "Krujë" },
+             new Qyteti() { QytetiId = 46, ShtetiId = 2, Emri = "Kucovë" },
+             new Qyteti() { QytetiId = 47, ShtetiId = 2, Emri = "Kukës" },
+             new Qyteti() { QytetiId = 48, ShtetiId = 2, Emri = "Kurbin" },
+             new Qyteti() { QytetiId = 49, ShtetiId = 2, Emri = "Lezhë" },
+             new Qyteti() { QytetiId = 50, ShtetiId = 2, Emri = "Librazhd" },
+             new Qyteti() { QytetiId = 51, ShtetiId = 2, Emri = "Lushnjë" },
+             new Qyteti() { QytetiId = 52, ShtetiId = 2, Emri = "Malësi e madhe" },
+             new Qyteti() { QytetiId = 53, ShtetiId = 2, Emri = "Mallakastër" },
+             new Qyteti() { QytetiId = 54, ShtetiId = 2, Emri = "Mat" },
+             new Qyteti() { QytetiId = 55, ShtetiId = 2, Emri = "Mirditë" },
+             new Qyteti() { QytetiId = 56, ShtetiId = 2, Emri = "Peqin" },
+             new Qyteti() { QytetiId = 57, ShtetiId = 2, Emri = "Përmet" },
+             new Qyteti() { QytetiId = 58, ShtetiId = 2, Emri = "Pogradec" },
+             new Qyteti() { QytetiId = 59, ShtetiId = 2, Emri = "Pukë" },
+             new Qyteti() { QytetiId = 60, ShtetiId = 2, Emri = "Sarandë" },
+             new Qyteti() { QytetiId = 61, ShtetiId = 2, Emri = "Skrapar" },
+             new Qyteti() { QytetiId = 62, ShtetiId = 2, Emri = "Shkodër" },
+             new Qyteti() { QytetiId = 63, ShtetiId = 2, Emri = "Tepelenë" },
+             new Qyteti() { QytetiId = 64, ShtetiId = 2, Emri = "Tiranë" },
+             new Qyteti() { QytetiId = 65, ShtetiId = 2, Emri = "Tropojë" },
+             new Qyteti() { QytetiId = 66, ShtetiId = 2, Emri = "Vlorë" }
         );
     }
-
-    
-
-        public DbSet<PartsManagement.Models.FaturaDalese> FaturaDalese { get; set; }
-
-        public DbSet<PartsManagement.Models.FaturaHyrese> FaturaHyrese { get; set; }
-
-        public DbSet<PartsManagement.Models.DetajetDalese> DetajetDalese { get; set; }
-
-        public DbSet<PartsManagement.Models.DetajetHyrese> DetajetHyrese { get; set; }
-
-        public DbSet<PartsManagement.Models.Modeli> Modeli { get; set; }
-
-        public DbSet<PartsManagement.Models.Marka> Marka { get; set; }
-
-        public DbSet<PartsManagement.Models.Shteti> Shteti { get; set; }
-
-        public DbSet<PartsManagement.Models.Vendbanimi> Vendbanimi { get; set; }
-
-    }
+  }
 }
 
 

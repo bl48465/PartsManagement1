@@ -19,7 +19,8 @@ namespace PartsManagement.Dtos
 
         public int ProduktiId { get; set; }
 
-        public int ShitjaId { get; set; }
+        public string UserId { get; set; }
+
     }
     public class UpdateFaturaOUTDTO : CreateFaturaOUTDTO { }
 

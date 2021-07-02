@@ -10,8 +10,8 @@ using PartsManagement.Models;
 namespace PartsManagement.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20210701223624_SecondMigration")]
-    partial class SecondMigration
+    [Migration("20210702075654_Second")]
+    partial class Second
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,22 +50,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8335fd9e-2627-43f9-bfd0-243d08a6ed27",
-                            ConcurrencyStamp = "55eb1d23-f171-488e-96bc-88821e301020",
+                            Id = "fd31816a-dce6-48d6-b4a6-28b766876606",
+                            ConcurrencyStamp = "48ab7587-b471-44af-8fb6-a191e248cb11",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "cedb76e2-b1bb-40fe-b452-3c6919dabc5a",
-                            ConcurrencyStamp = "882262c7-1927-46be-a224-8d27cfbcca3d",
+                            Id = "cf1e1f55-4f95-41d5-a7ed-ed6134390907",
+                            ConcurrencyStamp = "a6f1a3d6-3d57-4065-8d44-7e372db301d8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "ce299fbb-8760-4e78-9c80-957772cbe144",
-                            ConcurrencyStamp = "5711c11f-2d1e-47a4-bef1-87d1997e5d6c",
+                            Id = "64260b39-67f3-4f1c-a0ae-54cbe014d840",
+                            ConcurrencyStamp = "094aaa5d-5f4b-4ebd-bd27-5eb07f2ef950",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });
@@ -217,12 +217,18 @@ namespace PartsManagement.Migrations
                     b.Property<int>("Sasia")
                         .HasColumnType("int");
 
+                    b.Property<int>("ShitjaId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Totali")
                         .HasColumnType("float");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("FaturaId");
 
-                    b.HasIndex("ProduktiId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("FaturatOUT");
                 });
@@ -941,9 +947,6 @@ namespace PartsManagement.Migrations
 
                     b.HasKey("ShitjaId");
 
-                    b.HasIndex("FaturaId")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Shitjet");
@@ -1127,11 +1130,9 @@ namespace PartsManagement.Migrations
 
             modelBuilder.Entity("PartsManagement.Models.FaturaOUT", b =>
                 {
-                    b.HasOne("PartsManagement.Models.Produkti", "Produkti")
+                    b.HasOne("PartsManagement.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("ProduktiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Furnitori", b =>
@@ -1197,12 +1198,6 @@ namespace PartsManagement.Migrations
 
             modelBuilder.Entity("PartsManagement.Models.Shitja", b =>
                 {
-                    b.HasOne("PartsManagement.Models.FaturaOUT", "Fatura")
-                        .WithOne("Shitja")
-                        .HasForeignKey("PartsManagement.Models.Shitja", "FaturaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PartsManagement.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

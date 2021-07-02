@@ -10,8 +10,8 @@ using PartsManagement.Models;
 namespace PartsManagement.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20210701225109_ThirdMigration")]
-    partial class ThirdMigration
+    [Migration("20210702074202_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,22 +50,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "82e2ec6f-7beb-42de-91d9-3d996f84c938",
-                            ConcurrencyStamp = "00f5aa54-4fbf-4572-a567-2740e785c518",
+                            Id = "df606594-ecd7-44c3-bf33-edbb8dd5f867",
+                            ConcurrencyStamp = "15df4e21-c513-4447-9546-78e2889dc38b",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "39d9e739-050c-489a-b3b2-e32f020d9a27",
-                            ConcurrencyStamp = "b0be86cf-4267-4150-b039-13f6a10e6dbe",
+                            Id = "0cb8bf8c-3639-4e5c-ae7e-180a5360f33a",
+                            ConcurrencyStamp = "e86f2037-9147-4513-a0e4-67b74ea4070e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "61f1d0e7-ee9e-45d6-85ca-b7ca442ff3f2",
-                            ConcurrencyStamp = "1214c191-7dc7-4025-9555-ea4c3ca2c354",
+                            Id = "9c051226-3bbf-4032-8919-24311c87290e",
+                            ConcurrencyStamp = "5191156e-7498-423e-9b30-e2980baa1c61",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });
@@ -222,6 +222,9 @@ namespace PartsManagement.Migrations
 
                     b.Property<double>("Totali")
                         .HasColumnType("float");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FaturaId");
 

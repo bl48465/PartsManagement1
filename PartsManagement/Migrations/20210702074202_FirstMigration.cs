@@ -324,6 +324,26 @@ namespace PartsManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Shitjet",
+                columns: table => new
+                {
+                    ShitjaId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(nullable: true),
+                    FaturaId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shitjet", x => x.ShitjaId);
+                    table.ForeignKey(
+                        name: "FK_Shitjet_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Produktet",
                 columns: table => new
                 {
@@ -352,6 +372,30 @@ namespace PartsManagement.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FaturatOUT",
+                columns: table => new
+                {
+                    FaturaId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Sasia = table.Column<int>(nullable: false),
+                    Qmimi = table.Column<double>(nullable: false),
+                    Totali = table.Column<double>(nullable: false),
+                    ProduktiId = table.Column<int>(nullable: false),
+                    ShitjaId = table.Column<int>(nullable: true),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FaturatOUT", x => x.FaturaId);
+                    table.ForeignKey(
+                        name: "FK_FaturatOUT_Shitjet_ShitjaId",
+                        column: x => x.ShitjaId,
+                        principalTable: "Shitjet",
+                        principalColumn: "ShitjaId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FaturatIN",
                 columns: table => new
                 {
@@ -359,7 +403,7 @@ namespace PartsManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Sasia = table.Column<int>(nullable: false),
                     Qmimi = table.Column<double>(nullable: false),
-                    ProduktiId = table.Column<int>(nullable: false),
+                    ProduktiId = table.Column<int>(nullable: true),
                     UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -373,62 +417,14 @@ namespace PartsManagement.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "FaturatOUT",
-                columns: table => new
-                {
-                    FaturaId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Sasia = table.Column<int>(nullable: false),
-                    Qmimi = table.Column<double>(nullable: false),
-                    Totali = table.Column<double>(nullable: false),
-                    ProduktiId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FaturatOUT", x => x.FaturaId);
-                    table.ForeignKey(
-                        name: "FK_FaturatOUT_Produktet_ProduktiId",
-                        column: x => x.ProduktiId,
-                        principalTable: "Produktet",
-                        principalColumn: "ProduktiId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Shitjet",
-                columns: table => new
-                {
-                    ShitjaId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(nullable: true),
-                    FaturaOUTId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Shitjet", x => x.ShitjaId);
-                    table.ForeignKey(
-                        name: "FK_Shitjet_FaturatOUT_FaturaOUTId",
-                        column: x => x.FaturaOUTId,
-                        principalTable: "FaturatOUT",
-                        principalColumn: "FaturaId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Shitjet_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "6bcd7be0-317b-4c77-9273-6d811f472c41", "ef74d01a-e7d1-4ca2-9670-85d9b30e24a0", "User", "USER" },
-                    { "06af1abb-55fb-4dcf-b255-3e0bd97313bf", "b75e1951-cb7d-4c14-9342-5f2050fdbd0f", "Admin", "ADMIN" },
-                    { "f9c335ff-edeb-4615-bcc9-d63331d53611", "6889a567-e3a9-4939-b817-1a5eb2d4f29a", "Puntor", "PUNTOR" }
+                    { "df606594-ecd7-44c3-bf33-edbb8dd5f867", "15df4e21-c513-4447-9546-78e2889dc38b", "User", "USER" },
+                    { "0cb8bf8c-3639-4e5c-ae7e-180a5360f33a", "e86f2037-9147-4513-a0e4-67b74ea4070e", "Admin", "ADMIN" },
+                    { "9c051226-3bbf-4032-8919-24311c87290e", "5191156e-7498-423e-9b30-e2980baa1c61", "Puntor", "PUNTOR" }
                 });
 
             migrationBuilder.InsertData(
@@ -603,9 +599,10 @@ namespace PartsManagement.Migrations
                 column: "ProduktiId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FaturatOUT_ProduktiId",
+                name: "IX_FaturatOUT_ShitjaId",
                 table: "FaturatOUT",
-                column: "ProduktiId");
+                column: "ShitjaId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Furnitoret_UserId",
@@ -648,11 +645,6 @@ namespace PartsManagement.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shitjet_FaturaOUTId",
-                table: "Shitjet",
-                column: "FaturaOUTId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Shitjet_UserId",
                 table: "Shitjet",
                 column: "UserId");
@@ -679,6 +671,9 @@ namespace PartsManagement.Migrations
                 name: "FaturatIN");
 
             migrationBuilder.DropTable(
+                name: "FaturatOUT");
+
+            migrationBuilder.DropTable(
                 name: "Furnitoret");
 
             migrationBuilder.DropTable(
@@ -691,16 +686,13 @@ namespace PartsManagement.Migrations
                 name: "Porosite");
 
             migrationBuilder.DropTable(
-                name: "Shitjet");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "FaturatOUT");
+                name: "Produktet");
 
             migrationBuilder.DropTable(
-                name: "Produktet");
+                name: "Shitjet");
 
             migrationBuilder.DropTable(
                 name: "Markat");

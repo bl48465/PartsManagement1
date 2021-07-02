@@ -15,10 +15,8 @@ namespace PartsManagement.Models
         public int Sasia { get; set; }
         public double Qmimi { get; set; }
         public double Totali { get; set; }
-
         public int ProduktiId { get; set; }
-
-        public Shitja Shitja { get; set; }
-        public int ShitjaId { get; set; }
+        public string UserId { get; set; }
+        public User User { get; set; }
     }
 }
