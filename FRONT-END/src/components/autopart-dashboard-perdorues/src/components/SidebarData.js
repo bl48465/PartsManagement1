@@ -7,8 +7,14 @@ import * as RiIcons from 'react-icons/ri';
 export const SidebarData = [
   {
     title: 'Shtëpia',
-    path: '/',
+    path: '/UserPanel',
     icon: <AiIcons.AiFillHome className="iconn" />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Punëtorët',
+    path: '/Punetoret',
+    icon: <FaIcons.FaUser className="iconn"/>,
     cName: 'nav-text'
   },
   {
@@ -24,6 +30,18 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
+    title: 'Furnitorët',
+    path: '/Furnitori',
+    icon: <FaIcons.FaShuttleVan className="iconn"/>,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Sektorët',
+    path: '/Sektoret',
+    icon: <AiIcons.AiFillDatabase className="iconn"/>,
+    cName: 'nav-text'
+  },
+  {
     title: 'Produktet',
     path: '/Produktet',
     icon: <AiIcons.AiOutlineDropbox className="iconn"/>,
@@ -31,7 +49,7 @@ export const SidebarData = [
   },
   
   {
-    title: 'Shitjet',
+    title: 'Shto Shitje',
     path: '/Shitjet',
     icon: <RiIcons.RiMoneyEuroCircleFill className="iconn"/>,
     cName: 'nav-text'
@@ -39,7 +57,7 @@ export const SidebarData = [
 
   {
     title: 'Ndihma',
-    path: '/Support',
+    path: '/Ndihma',
     icon: <IoIcons.IoMdHelpCircle className="iconn"/>,
     cName: 'nav-text'
   },
@@ -48,5 +66,6 @@ export const SidebarData = [
     path: '/Kerkesa',
     icon: <IoIcons.IoMdHelpCircle className="iconn"/>,
     cName: 'nav-text'
-  }
+  },
+  
 ];

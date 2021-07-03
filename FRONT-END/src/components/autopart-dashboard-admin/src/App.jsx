@@ -9,13 +9,13 @@ import Messages from './pages/Messages';
 import Users from './pages/Users';
 
 
-function App() {
+function AppJs() {
   return (
     <>
       <Router>
         <Navbar />
         <Switch>
-          <Route path='/' exact component={Home} />
+          <Route path='/AdminPanel' exact component={Home} />
           <Route path='/support' component={Support} />
           <Route path='/settings' component={Settings} />
           <Route path='/Mesazhet' component={Messages} />
@@ -26,4 +26,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppJs;

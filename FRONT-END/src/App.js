@@ -4,6 +4,9 @@ import {BrowserRouter,Switch,Route} from 'react-router-dom';
 import { AccountBox } from './components/accountBox/index';
 import { Homepage } from './containers/homepage/index';
 import Home from "./components/accountBox/loginSuccess";
+import AppJs from "./components/autopart-dashboard-admin/src/App";
+import UserApp from "./components/autopart-dashboard-perdorues/src/App";
+import PuntoriApp from "./components/autopart-profile-puntore/src/App";
 
 
 const AppContainer = styled.div`
@@ -30,6 +33,15 @@ function App() {
           </Route>
           <Route path="/Dashboard">
           <Home />
+          </Route>
+          <Route path="/AdminPanel">
+          <AppJs />
+          </Route>
+          <Route path="/UserPanel">
+          <UserApp />
+          </Route>
+          <Route path="/PuntoriPanel">
+          <PuntoriApp />
           </Route>
         </Switch>
       </div> 

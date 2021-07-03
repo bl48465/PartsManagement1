@@ -3,7 +3,6 @@ import "./featuredInfo.css";
 import { Centirimi } from "../StyledComponents";
 import axios from 'axios';
 import { Icon, Image, Statistic } from 'semantic-ui-react';
-import furnitori from '../../images/furnitori.jpg';
 
 
 
@@ -29,7 +28,7 @@ export default function FeaturedInfo() {
   
     <Statistic>
     <Statistic.Value>
-        <Image src={furnitori} inline circular />
+        {/* <Image src={furnitori} inline circular /> */}
         {count}
       </Statistic.Value>
       <Statistic.Label>Furnitor Te Regjistruar</Statistic.Label>

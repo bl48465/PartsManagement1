@@ -6,13 +6,21 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import axios from 'axios'
-import { Header, Icon, Modal,Input,Transition } from 'semantic-ui-react'
+import { Header, Icon, Modal,Input } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import SearchBar from '../SearchBar';
 import {BoxContainer,Flexirimi} from '../StyledComponents';
 
 
 export default function FurnitoriTable() {
+    var token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxlcmltQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiYWEwZWJmNi1lZGFjLTQxYjMtOTRiMS04NjRmMzM3MzE3NjUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJibGVyaW1AZXhhbXBsZS5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNjI1NDEyMTQ1LCJpc3MiOiJQYXJ0c01hbmFnZW1lbnRBUEkifQ.iZfbepc_1eYBZ5i9Q-RCzjWWUQiLP5TCtAW2GSDFWAgVudYiALmJpmiD_5TjtiynmfGh9v2YoyYBIG4Cy6lzpA";
+    var userId= "baa0ebf6-edac-41b3-94b1-864f33731765";
+    
+    const config = {
+        headers: {
+          Authorization: 'Bearer ' + token}
+      };
+
     const[data,setData]=useState("");
     const[SearchField,setSearchField]=useState('');
     const[furnitorii,setfurnitoret] = useState([]);
@@ -42,16 +50,18 @@ export default function FurnitoriTable() {
 
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/Furnitoris').then(response => {
+        axios.get('http://localhost:5000/api/Furnitori/user',config).then(response => {
             setfurnitoret(response.data);
+            console.log(furnitorii + "kujebe");
+            console.log(response.data);
         });
 
-    }, [furnitorii])
+    }, [])
 
     const removeFurnitor = async () => {
 
         setModal({open:false})
-        axios.delete("http://localhost:5000/api/Furnitoris/" + modali.currentID, { withCredentials: true })
+        axios.delete("http://localhost:5000/api/Furnitori/" + modali.currentID,config)
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -70,7 +80,7 @@ export default function FurnitoriTable() {
         console.log(Editmodal.currentID);
         console.log(data);
         setEditModal({open:false})
-        axios.put("http://localhost:5000/api/Furnitoris/" + Editmodal.currentID, {furnitoriID:Editmodal.currentID,emriFurnitorit:data}, { withCredentials: true })
+        axios.put("http://localhost:5000/api/Furnitori/" + Editmodal.currentID, {furnitoriID:Editmodal.currentID,emriFurnitorit:data},config)
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -83,7 +93,7 @@ export default function FurnitoriTable() {
     const ShtoFurnitor = async () => {
      
         setAddModal({open:false})
-        axios.post("http://localhost:5000/api/Furnitoris", {emriFurnitorit:data}, { withCredentials: true })
+        axios.post("http://localhost:5000/api/Furnitori", {emriFurnitorit:data}, config)
             .then((response) => {
                 console.log(response.data.message)
             })

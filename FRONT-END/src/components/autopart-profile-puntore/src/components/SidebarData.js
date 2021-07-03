@@ -7,14 +7,8 @@ import * as RiIcons from 'react-icons/ri';
 export const SidebarData = [
   {
     title: 'Shtëpia',
-    path: '/',
+    path: '/PuntoriPanel',
     icon: <AiIcons.AiFillHome className="iconn" />,
-    cName: 'nav-text'
-  },
-  {
-    title: 'Punëtorët',
-    path: '/Punetoret',
-    icon: <FaIcons.FaUser className="iconn"/>,
     cName: 'nav-text'
   },
   {
@@ -27,18 +21,6 @@ export const SidebarData = [
     title: 'Porositë',
     path: '/Porosite',
     icon: <FaIcons.FaShoppingBasket className="iconn" />,
-    cName: 'nav-text'
-  },
-  {
-    title: 'Furnitorët',
-    path: '/Furnitori',
-    icon: <FaIcons.FaShuttleVan className="iconn"/>,
-    cName: 'nav-text'
-  },
-  {
-    title: 'Sektorët',
-    path: '/Sektoret',
-    icon: <AiIcons.AiFillDatabase className="iconn"/>,
     cName: 'nav-text'
   },
   {
@@ -57,7 +39,7 @@ export const SidebarData = [
 
   {
     title: 'Ndihma',
-    path: '/Ndihma',
+    path: '/Support',
     icon: <IoIcons.IoMdHelpCircle className="iconn"/>,
     cName: 'nav-text'
   },
@@ -66,6 +48,5 @@ export const SidebarData = [
     path: '/Kerkesa',
     icon: <IoIcons.IoMdHelpCircle className="iconn"/>,
     cName: 'nav-text'
-  },
-  
+  }
 ];

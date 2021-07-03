@@ -14,13 +14,13 @@ import Produktet from './pages/Produktet';
 import AddKerkesaTable from './components/Tables/AddKerkesaT';
 import Punetoret from './pages/Punetoret';
 
-function App() {
+function UserApp() {
   return (
     <>
       <Router>
         <Navbar />
         <Switch>
-          <Route path='/' exact component={Home} />
+          <Route path='/UserPanel' exact component={Home} />
           <Route path='/Komente' component={Komente} />
           <Route path='/Porosite' component={Porosite} />
           <Route path='/Furnitori' component={Furnitori} />
@@ -37,4 +37,4 @@ function App() {
   );
 }
 
-export default App;
+export default UserApp;

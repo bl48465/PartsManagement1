@@ -6,7 +6,7 @@ import * as IoIcons from 'react-icons/io';
 export const SidebarData = [
   {
     title: 'Shtëpia',
-    path: '/',
+    path: '/AdminPanel',
     icon: <AiIcons.AiFillHome className="iconn" />,
     cName: 'nav-text'
   },

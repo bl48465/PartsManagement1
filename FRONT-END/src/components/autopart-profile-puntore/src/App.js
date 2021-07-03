@@ -11,13 +11,13 @@ import Shitjet from './pages/Shitjet';
 import Produktet from './pages/Produktet';
 import AddKerkesaTable from './components/Tables/AddKerkesaT';
 
-function App() {
+function PuntoriApp() {
   return (
     <>
       <Router>
         <Navbar />
         <Switch>
-          <Route path='/' exact component={Home} />
+          <Route path='/PuntoriPanel' exact component={Home} />
           <Route path='/Komente' component={Komente} />
           <Route path='/Porosite' component={Porosite} />
           <Route path='/Support' component={Support} />
@@ -31,4 +31,4 @@ function App() {
   );
 }
 
-export default App;
+export default PuntoriApp;
