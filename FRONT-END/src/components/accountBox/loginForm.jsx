@@ -12,13 +12,13 @@ import {
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+
 
 export function LoginForm(props) {
   const [redirect, setRedirect] = useState(false);
-  const [token,setToken] = useState('');
   const [error, setError] = useState(true);
   const[fail,setFail]= useState({message:''});
+  
   const [form, setForm] = useState({
     formValues: {
       email: '',
@@ -26,24 +26,21 @@ export function LoginForm(props) {
     }
   });
 
-
-
   const handleChange = ({ target }) => {
     const { formValues } = form;
     formValues[target.name] = target.value;
     setForm({ formValues });
   };
-  const initialSession = async () => {
-  
-    const { formValues } = form;
 
-    await axios.post("http://localhost:5000/api/Account/login",formValues,{ withCredentials: false })
+  const initialSession = async () => {
+    const { formValues } = form;
+    await axios.post("http://localhost:5000/api/Account/login",formValues)
     .then((response) =>{
-      if(response.data.token){
-        localStorage.setItem('token',JSON.stringify(response.data))
-      }  
-      setRedirect(true);
-        
+      if(response.data){
+        window.localStorage.setItem('token',response.data.token);
+        window.localStorage.setItem('userId',response.data.userId);
+        setRedirect(true);
+      }
     })
       .catch((error) => {
         console.log(formValues);
@@ -54,15 +51,12 @@ export function LoginForm(props) {
       })
   }
 
-    const logout = async () => {
-    localStorage.removeItem('token');
-  }
-
   const { switchToSignup } = useContext(AccountContext);
 
 
   if(redirect===true){
     return <Redirect to="/Dashboard"/>;}
+
   return (
     <BoxContainer>
       <FormContainer>

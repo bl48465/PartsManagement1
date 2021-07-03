@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
@@ -80,7 +81,7 @@ namespace PartsManagement.Controllers
                 return Problem($"Something Went Wrong in the {nameof(Register)}", statusCode: 500);
             }
         }
-
+        [AllowAnonymous]
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO userDTO)
@@ -95,10 +96,15 @@ namespace PartsManagement.Controllers
             {
                 if (!await _authManager.ValidateUser(userDTO))
                 {
-                    return Unauthorized();
+                    return Unauthorized("Të dhënat gabim!");
                 }
 
-                return Accepted(new { Token = await _authManager.CreateToken() });
+                var Token = await _authManager.CreateToken();
+                var userId = _authManager.GetCurrentUser();
+                var emri = _authManager.GetCurrentEmri();
+          
+                return Accepted(new { Token , userId , emri });
+
             }
             catch (Exception ex)
             {

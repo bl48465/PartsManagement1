@@ -66,8 +66,8 @@ namespace PartsManagement.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var shitjet = await _context.Produktet.Include(a => a.FaturatOut)
-                .Where(s => s.Sektori.UserId.Equals(userId) && s.FaturatOut.Any(k=>k.FaturaId != 0)).ToListAsync();
+            var shitjet = await _context.Produktet.Include(a => a.FaturatOUT)
+                .Where(s => s.Sektori.UserId.Equals(userId) && s.FaturatOUT.Any(k=>k.FaturaId != 0)).ToListAsync();
             return Ok(shitjet);
         }
 

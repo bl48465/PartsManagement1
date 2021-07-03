@@ -16,8 +16,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace PartsManagement.Controllers
-{   
-    [Authorize(Roles="User")]
+{
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -46,8 +46,9 @@ namespace PartsManagement.Controllers
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
         }
+        [Authorize(Roles = "User")]
         [HttpGet("puntoret")]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllPuntort(){
+        public async Task<ActionResult<IEnumerable<User>>> GetAllPuntort() {
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -56,7 +57,17 @@ namespace PartsManagement.Controllers
             return Ok(puntoret);
         }
 
+        [Authorize]
+        [HttpGet("current/{id}")]
+        public async Task<ActionResult<IEnumerable<User>>> GetCurrentUser(string id)
+        {
+
+            var user = await _userManager.Users.Where(a => a.Id == id).ToListAsync();
+
+            return Ok(user);
+        }
         [HttpPost]
+        [Authorize(Roles = "User")]
         [Route("register/puntor")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -107,6 +118,7 @@ namespace PartsManagement.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -139,7 +151,7 @@ namespace PartsManagement.Controllers
             return Ok("Puntori u përditësua me sukses!");
 
         }
-
+        [Authorize(Roles = "User")]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

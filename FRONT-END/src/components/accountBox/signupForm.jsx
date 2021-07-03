@@ -24,6 +24,7 @@ export function SignupForm(){
         succes:''
       }
     })
+
     const[shtetet,setShtetet] = useState([]);
     const[qytetet,setQytetet] = useState([]);
     const[sh,setSh]= useState();
@@ -96,7 +97,7 @@ export function SignupForm(){
       formValues[target.name] = target.value;
       setFormState({ formValues });
       handleValidation(target);
-     
+    
     };
 
     const handleSubmit = event => {
@@ -109,7 +110,7 @@ export function SignupForm(){
         axios.post("http://localhost:5000/api/Account/register",formValues)
         .then(errorState.errValues.succes='Jeni regjistruar me sukses! Ju lutem kycuni!')
         .catch((error)=> {
-         
+        
             if(error.response){
                 errorState.errValues.emailExist = error.response.data.message;
                 setError({errValues});            

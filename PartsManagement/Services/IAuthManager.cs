@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using PartsManagement.Models;
 
 namespace PartsManagement.Services
@@ -11,6 +12,8 @@ namespace PartsManagement.Services
     {
         Task<bool> ValidateUser(LoginDTO userDTO);
         Task<string> CreateToken();
-        User GetCurrentUser();
+        string GetCurrentUser();
+        string GetCurrentEmri();
     }
+
 }

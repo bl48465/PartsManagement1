@@ -15,7 +15,7 @@ namespace PartsManagement.Models
 
         public Sektori Sektori { get; set; }
         public virtual ICollection<FaturaIN> Faturat { get; set; }
-
+        public virtual ICollection<FaturaOUT> FaturatOUT { get; set; }
         public int MarkaId { get;set; }
         public Marka Marka { get; set; }
 

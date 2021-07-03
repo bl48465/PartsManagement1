@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PartsManagement.Controllers
 {   
-    [Authorize(Roles="Admin")]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -46,12 +46,14 @@ namespace PartsManagement.Controllers
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet("users")]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(){
             var userat = await _context.Users.Where(a => !(a.Kompania.Equals("BeliTECH"))).ToListAsync();
             return Ok(userat);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -83,7 +85,7 @@ namespace PartsManagement.Controllers
             return Ok("Përdoruesi u përditësua me sukses!");
 
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

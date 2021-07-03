@@ -88,9 +88,14 @@ namespace PartsManagement.Services
             return (_user != null && validPassword);
         }
 
-        public User GetCurrentUser()
+        public string GetCurrentUser()
         {
-            return _user;
+            return _user.Id;
+        }
+
+        public string GetCurrentEmri()
+        {
+            return $"{_user.Emri} {_user.Mbiemri}";
         }
     }
 }
