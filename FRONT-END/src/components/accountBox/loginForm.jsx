@@ -13,10 +13,12 @@ import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import axios from "axios";
 
+
 export function LoginForm(props) {
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(true);
   const[fail,setFail]= useState({message:''});
+  
   const [form, setForm] = useState({
     formValues: {
       email: '',
@@ -31,24 +33,30 @@ export function LoginForm(props) {
   };
 
   const initialSession = async () => {
-  
     const { formValues } = form;
-
-    axios.post("http://localhost:5000/api/Auth/login", formValues, { withCredentials: true })
+    await axios.post("http://localhost:5000/api/Account/login",formValues)
     .then((response) =>{
-      if(response.data.status !== 400){
+      if(response.data){
+        window.localStorage.setItem('token',response.data.token);
+        window.localStorage.setItem('userId',response.data.userId);
         setRedirect(true);
       }
     })
       .catch((error) => {
+        console.log(formValues);
         setError(true);
         setFail({message:"Të dhënat gabim!"});
         setRedirect(false)
+        console.log(error);
       })
   }
+
   const { switchToSignup } = useContext(AccountContext);
+
+
   if(redirect===true){
     return <Redirect to="/Dashboard"/>;}
+
   return (
     <BoxContainer>
       <FormContainer>

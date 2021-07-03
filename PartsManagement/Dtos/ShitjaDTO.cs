@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 
 namespace PartsManagement.Dtos
 {
+    public class CreateShitjaDTO
+    {
+        public string UserId { get; set; }
+        public int FaturaId { get; set; }
+
+    }
     public class ShitjaDTO
     {
-        public string Emri { get; set; }
-        public double Qmimi { get; set; }
-        public int Sasia { get; set; }  
-        public string OEnumber { get; set; }
+        public int ShitjaId { get; set; }
     }
 }

@@ -1,109 +1,217 @@
-﻿using System;
+﻿using AutoMapper;
+using System.Net.Http;
+using PartsManagement.Models;
+using PartsManagement.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PartsManagement.Models;
+using PartsManagement.IRepository;
+using PartsManagement.Dtos;
+
 
 namespace PartsManagement.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class ShitjaController : ControllerBase
     {
+        private readonly UserManager<User> _userManager;
         private readonly MyContext _context;
+        private readonly ILogger<AccountController> _logger;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAuthManager _authManager;
 
-        public ShitjaController(MyContext context)
+        public ShitjaController(UserManager<User> userManager,
+             ILogger<AccountController> logger,
+             IMapper mapper,
+             IAuthManager authManager,
+             MyContext context,
+             IUnitOfWork unitOfWork)
         {
+            _userManager = userManager;
+            _logger = logger;
+            _mapper = mapper;
+            _authManager = authManager;
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        // GET: api/Shitja
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shitja>>> GetShitjet()
+        [Authorize(Roles = "User")]
+        [HttpGet("user")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> GetShitjet()
         {
-            return await _context.Shitjet.ToListAsync();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var shitjet = await _context.Shitjet.Where(s => s.UserId.Equals(userId)).ToListAsync();
+            return Ok(shitjet);
         }
 
-        // GET: api/Shitja/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Shitja>> GetShitja(int id)
+        [Authorize(Roles = "User")]
+        [HttpGet("fatura")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> GetFaturaDalese()
         {
-            var shitja = await _context.Shitjet.FindAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (shitja == null)
+            var shitjet = await _context.Produktet.Include(a => a.FaturatOUT)
+                .Where(s => s.Sektori.UserId.Equals(userId) && s.FaturatOUT.Any(k=>k.FaturaId != 0)).ToListAsync();
+            return Ok(shitjet);
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("fatura/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> GetFaturaDaleseId(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var shitjet = await _context.FaturatOUT.Where(s => s.UserId.Equals(userId) && s.ProduktiId == id).ToListAsync();
+            return Ok(shitjet);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateShitja([FromBody] CreateFaturaOUTDTO fatura, int prodId)
+        {
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                _logger.LogError($"Invalid POST attempt in {nameof(CreateShitja)}");
+                return BadRequest(ModelState);
             }
 
-            return shitja;
+            var produkti = _context.Produktet.Where(a => a.ProduktiId == prodId);
+            var pr = produkti.FirstOrDefault();
+
+            if (role.Equals("Puntor"))
+            {
+                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
+                var p = puntori.FirstOrDefault();
+                
+                if(pr == null) { return BadRequest("Produkti nuk ekziston në depon tuaj");}
+
+                fatura.ProduktiId = prodId;
+                fatura.UserId = p.ShefiId;
+                fatura.Totali = fatura.Qmimi * fatura.Sasia;
+                var fati = _mapper.Map<FaturaOUT>(fatura);
+
+                var updatestock = _context.FaturatIN.Where(x => x.ProduktiId == prodId);
+                var u = updatestock.FirstOrDefault();
+
+              
+
+               
+                u.Sasia -= fatura.Sasia;
+
+                if ( u.Sasia < 0)
+                {
+                    return BadRequest("Nuk ke sasi të mjaftueshme");
+                }
+
+                _context.FaturatIN.Update(u);
+                _context.FaturatOUT.Add(fati);
+                await _context.SaveChangesAsync();
+
+                var sell = new Shitja
+                {
+                    UserId = p.ShefiId,
+                    FaturaId = fati.FaturaId
+                };
+
+                _context.Shitjet.Add(sell);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                if (pr == null) { return BadRequest("Produkti nuk ekziston në depon tuaj"); }
+
+                fatura.ProduktiId = prodId;
+                fatura.UserId = userId;
+                fatura.Totali = fatura.Qmimi * fatura.Sasia;
+                var fati = _mapper.Map<FaturaOUT>(fatura);
+
+
+                var updatestock = _context.FaturatIN.Where(x => x.ProduktiId == prodId);
+                var u = updatestock.FirstOrDefault();
+
+             
+
+                u.Sasia -= fatura.Sasia;
+
+
+                if (u.Sasia < 0)
+                {
+
+                    return BadRequest("Nuk ke sasi të mjaftueshme");
+                }
+
+                _context.FaturatIN.Update(u);
+                _context.FaturatOUT.Add(fati);
+                await _context.SaveChangesAsync();
+
+                var sell = new Shitja
+                {
+                    UserId = userId,
+                    FaturaId = fati.FaturaId
+                };
+
+                _context.Shitjet.Add(sell);
+                await _context.SaveChangesAsync();
+
+            }
+
+            return Ok($"Fatura u shtua me sukses");
+
         }
 
-        // PUT: api/Shitja/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutShitja(int id, Shitja shitja)
+        [Authorize(Roles = "User")]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteShitja(int id)
         {
-            if (id != shitja.ShitjaID)
+            if (id < 1)
             {
+                _logger.LogError($"Invalid DELETE attempt in {nameof(DeleteShitja)}");
                 return BadRequest();
             }
 
-            _context.Entry(shitja).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ShitjaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var shitja =  _context.Shitjet.Where(a => a.UserId == userId && a.ShitjaId == id);
+            var sh = shitja.FirstOrDefault();
 
-            return NoContent();
-        }
-
-        // POST: api/Shitja
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Shitja>> PostShitja(Shitja shitja)
-        {
-            _context.Shitjet.Add(shitja);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetShitja", new { id = shitja.ShitjaID }, shitja);
-        }
-
-        // DELETE: api/Shitja/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Shitja>> DeleteShitja(int id)
-        {
-            var shitja = await _context.Shitjet.FindAsync(id);
             if (shitja == null)
             {
-                return NotFound();
+                _logger.LogError($"Invalid DELETE attempt in {nameof(DeleteShitja)}");
+                return BadRequest("Submitted data is invalid");
             }
 
-            _context.Shitjet.Remove(shitja);
+            _context.Shitjet.Remove(sh);
             await _context.SaveChangesAsync();
 
-            return shitja;
-        }
+            return Ok($"Shitja me ID {sh.ShitjaId} u fshij me sukses! ");
 
-        private bool ShitjaExists(int id)
-        {
-            return _context.Shitjet.Any(e => e.ShitjaID == id);
         }
     }
 }
