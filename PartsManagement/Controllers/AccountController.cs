@@ -100,10 +100,18 @@ namespace PartsManagement.Controllers
                 }
 
                 var Token = await _authManager.CreateToken();
+
                 var userId = _authManager.GetCurrentUser();
+
                 var emri = _authManager.GetCurrentEmri();
-          
-                return Accepted(new { Token , userId , emri });
+
+                var user = await _userManager.FindByIdAsync(userId);
+
+                var roles = await _userManager.GetRolesAsync(user);
+
+                var roli = roles[0];
+
+                return Accepted(new { Token , userId , emri , roli});
 
             }
             catch (Exception ex)

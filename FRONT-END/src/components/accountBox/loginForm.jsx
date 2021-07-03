@@ -13,7 +13,6 @@ import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import axios from "axios";
 
-
 export function LoginForm(props) {
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(true);
@@ -39,6 +38,8 @@ export function LoginForm(props) {
       if(response.data){
         window.localStorage.setItem('token',response.data.token);
         window.localStorage.setItem('userId',response.data.userId);
+        window.localStorage.setItem('emri',response.data.emri);
+        window.localStorage.setItem('roli',response.data.roli);
         setRedirect(true);
       }
     })
@@ -52,7 +53,6 @@ export function LoginForm(props) {
   }
 
   const { switchToSignup } = useContext(AccountContext);
-
 
   if(redirect===true){
     return <Redirect to="/Dashboard"/>;}
