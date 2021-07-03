@@ -38,8 +38,19 @@ export const SidebarData = [
   },
 
   {
+<<<<<<< Updated upstream:FRONT-END/src/components/autopart-profile-puntore/src/components/SidebarData.js
     title: 'Ndihma',
     path: '/Support',
+=======
+    title: 'Produktet',
+    path: '/Produktet',
+    icon: <FaIcons.FaEnvelopeOpenText className="iconn"/>,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Support',
+    path: '/support',
+>>>>>>> Stashed changes:LoggedinUser/src/components/SidebarData.js
     icon: <IoIcons.IoMdHelpCircle className="iconn"/>,
     cName: 'nav-text'
   },

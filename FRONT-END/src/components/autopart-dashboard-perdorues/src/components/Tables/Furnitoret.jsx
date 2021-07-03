@@ -50,7 +50,11 @@ export default function FurnitoriTable() {
 
 
     useEffect(() => {
+<<<<<<< Updated upstream:FRONT-END/src/components/autopart-dashboard-perdorues/src/components/Tables/Furnitoret.jsx
         axios.get('http://localhost:5000/api/Furnitori/user',config).then(response => {
+=======
+        axios.get('http://localhost:5000/api/Furnitori').then(response => {
+>>>>>>> Stashed changes:LoggedinUser/src/components/Tables/Furnitoret.jsx
             setfurnitoret(response.data);
             console.log(furnitorii + "kujebe");
             console.log(response.data);
@@ -61,7 +65,11 @@ export default function FurnitoriTable() {
     const removeFurnitor = async () => {
 
         setModal({open:false})
+<<<<<<< Updated upstream:FRONT-END/src/components/autopart-dashboard-perdorues/src/components/Tables/Furnitoret.jsx
         axios.delete("http://localhost:5000/api/Furnitori/" + modali.currentID,config)
+=======
+        axios.delete("http://localhost:5000/api/Furnitori/" + modali.currentID, { withCredentials: true })
+>>>>>>> Stashed changes:LoggedinUser/src/components/Tables/Furnitoret.jsx
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -80,7 +88,11 @@ export default function FurnitoriTable() {
         console.log(Editmodal.currentID);
         console.log(data);
         setEditModal({open:false})
+<<<<<<< Updated upstream:FRONT-END/src/components/autopart-dashboard-perdorues/src/components/Tables/Furnitoret.jsx
         axios.put("http://localhost:5000/api/Furnitori/" + Editmodal.currentID, {furnitoriID:Editmodal.currentID,emriFurnitorit:data},config)
+=======
+        axios.put("http://localhost:5000/api/Furnitori/" + Editmodal.currentID, {furnitoriID:Editmodal.currentID,emriFurnitorit:data}, { withCredentials: true })
+>>>>>>> Stashed changes:LoggedinUser/src/components/Tables/Furnitoret.jsx
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -93,7 +105,11 @@ export default function FurnitoriTable() {
     const ShtoFurnitor = async () => {
      
         setAddModal({open:false})
+<<<<<<< Updated upstream:FRONT-END/src/components/autopart-dashboard-perdorues/src/components/Tables/Furnitoret.jsx
         axios.post("http://localhost:5000/api/Furnitori", {emriFurnitorit:data}, config)
+=======
+        axios.post("http://localhost:5000/api/Furnitori", {emriFurnitorit:data}, { withCredentials: true })
+>>>>>>> Stashed changes:LoggedinUser/src/components/Tables/Furnitoret.jsx
             .then((response) => {
                 console.log(response.data.message)
             })

@@ -12,7 +12,11 @@ import Furnitori from './pages/Furnitori';
 import Shitjet from './pages/Shitjet';
 import Produktet from './pages/Produktet';
 import AddKerkesaTable from './components/Tables/AddKerkesaT';
+<<<<<<< Updated upstream:FRONT-END/src/components/autopart-dashboard-perdorues/src/App.js
 import Punetoret from './pages/Punetoret';
+=======
+import Produkti from './components/Tables/Produkti';
+>>>>>>> Stashed changes:LoggedinUser/src/App.js
 
 function UserApp() {
   return (
@@ -25,7 +29,12 @@ function UserApp() {
           <Route path='/Porosite' component={Porosite} />
           <Route path='/Furnitori' component={Furnitori} />
           <Route path='/Sektoret' component={Sektoret} />
+<<<<<<< Updated upstream:FRONT-END/src/components/autopart-dashboard-perdorues/src/App.js
           <Route path='/Ndihma' component={Support} />
+=======
+          <Route path='/support' component={Support} />
+          <Route path='/produktet' component={Produkti} />
+>>>>>>> Stashed changes:LoggedinUser/src/App.js
           <Route path='/Kerkesa' component={AddKerkesaTable} />
           <Route path='/settings' component={Settings} />
           <Route path='/Shitjet' component={Shitjet} />

@@ -106,6 +106,7 @@ namespace PartsManagement
 
         public static void ConfigureRateLimiting(this IServiceCollection services)
         {
+<<<<<<< Updated upstream
             //var rateLimitRules = new List<RateLimitRule>
             //{
             //    new RateLimitRule
@@ -119,6 +120,21 @@ namespace PartsManagement
             //{
             //    opt.GeneralRules = rateLimitRules;
             //});
+=======
+            var rateLimitRules = new List<RateLimitRule>
+            {
+                new RateLimitRule
+                {
+                    Endpoint = "*",
+                    Limit= 20,
+                    Period = "1s"
+                }
+            };
+            services.Configure<IpRateLimitOptions>(opt =>
+            {
+                opt.GeneralRules = rateLimitRules;
+            });
+>>>>>>> Stashed changes
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
