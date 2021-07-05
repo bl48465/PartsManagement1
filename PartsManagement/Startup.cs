@@ -38,10 +38,10 @@ namespace PartsManagement
 
             services.AddMemoryCache();
             services.AddSwaggerGen();
-            services.ConfigureRateLimiting();
+   
             services.AddHttpContextAccessor();
 
-            services.ConfigureHttpCacheHeaders();
+       
 
             services.AddAuthentication();
             services.ConfigureIdentity();
@@ -92,11 +92,6 @@ namespace PartsManagement
 
             app.UseCors("AllowAll");
 
-            app.UseResponseCaching();
-
-            app.UseHttpCacheHeaders();
-
-            app.UseIpRateLimiting();
 
             app.UseRouting();
 

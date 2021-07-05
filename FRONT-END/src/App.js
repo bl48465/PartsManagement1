@@ -4,9 +4,11 @@ import {BrowserRouter,Switch,Route} from 'react-router-dom';
 import { AccountBox } from './components/accountBox/index';
 import { Homepage } from './containers/homepage/index';
 import Home from "./components/accountBox/loginSuccess";
-import AppJs from "./components/autopart-dashboard-admin/src/App";
-import UserApp from "./components/autopart-dashboard-perdorues/src/App";
-import PuntoriApp from "./components/autopart-profile-puntore/src/App";
+import UserApp from "./components/user/userindex";
+import { SektoriTable } from '././components/user/Sektori'
+import { KomentiTable } from '././components/user/Komenti';
+import Navbar from '././components/user/navbar/Navbar';
+
 
 
 const AppContainer = styled.div`
@@ -28,22 +30,24 @@ function App() {
       </Route>
       <Route path="/AccountBox">
           <AppContainer>
-          <AccountBox />
+            <AccountBox />
           </AppContainer>
-          </Route>
-          <Route path="/Dashboard">
-          <Home />
-          </Route>
-          <Route path="/AdminPanel">
-          <AppJs />
-          </Route>
-          <Route path="/UserPanel">
-          <UserApp />
-          </Route>
-          <Route path="/PuntoriPanel">
-          <PuntoriApp />
-          </Route>
-        </Switch>
+      </Route>
+
+        <Route path="/Sektori">
+          <AppContainer>
+            <Navbar/>
+            <SektoriTable/>
+          </AppContainer>
+        </Route>
+
+        <Route path="/Komenti">
+          <AppContainer>
+              <Navbar/>
+              <KomentiTable/>
+          </AppContainer>
+        </Route>
+    </Switch>
       </div> 
       </BrowserRouter>
   );
