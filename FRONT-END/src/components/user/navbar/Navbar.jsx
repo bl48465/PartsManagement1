@@ -7,6 +7,7 @@ import { SidebarData } from './SidebarData';
 import './Navbar.css';
 import { IconContext } from 'react-icons';
 import { DropdownData } from './DropdownData';
+import { NavText } from './StyledComponents';
 
 function Navbar(props) {
 
@@ -25,8 +26,9 @@ function Navbar(props) {
             <Link to='#' className='menu-bars'>
               <FaIcons.FaBars onClick={showSidebar} />
             </Link>
-
+         
             <Link to='#' className='menu-user' onClick={showDropdown}>
+                  <NavText>{window.localStorage.getItem('emri')}</NavText>
                   <RiIcons.RiUserFill />
             </Link>
         </div>

@@ -2,14 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import axios from 'axios'
 import { Header, Icon, Modal, Input } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-import { BoxContainer, Flexirimi } from './navbar/StyledComponents';
+import { BoxContainer, Flexirimi, MainDiv, TableHead } from './navbar/StyledComponents';
 import  SearchBar  from './navbar/SearchBar';
+import { AddButton } from '../button/add'
+import { UpdateButton } from '../button/update'
+import { DeleteButton } from '../button/delButton'
+
 
 export function SektoriTable() {
 
@@ -102,47 +107,44 @@ export function SektoriTable() {
     return (
 
         <BoxContainer>
-            <div style={{ margin: 30, padding: 0, width: 500 }}>
+         <MainDiv>
                 <Flexirimi>
+                <AddButton className="butoni" variant="contained" color="secondary" startIcon={<CloudUploadIcon />}
+                            onClick={() => setAddModal({ open: true })}>
+                            Shto sektor
+                </AddButton>
                     <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
-                        <SearchBar
+                    <SearchBar
                             placeholder="Enter Name"
                             handleChange={e => setSearchField(e.target.value)} />
                     </div>
-                    <div style={{ display: 'block', padding: 10 }}>
-                        <Button className="butoni" variant="contained" color="secondary"
-                            onClick={() => setAddModal({ open: true })}>
-                            Shto nje Sektor
-                        </Button>
-                    </div>
                 </Flexirimi>
-            </div>
+        </MainDiv>
+
             <Table className="" aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>SektoriID</TableCell>
-                        <TableCell align="right">Emri Sektorit</TableCell>
-                        <TableCell align="right">Manage</TableCell>
+                        <TableCell fontSize="large" align="center">Emri Sektorit</TableCell>
+                        <TableCell align="right">Menaxho</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {sektori.filter(rreshti => rreshti.emri.toLowerCase()
                         .includes(SearchField.toLowerCase())).map((row, key) => (
                             <TableRow key={row.sektoriId}>
-                                <TableCell align="right">{row.sektoriId}</TableCell>
-                                <TableCell align="right">{row.emri}</TableCell>
-                                <TableCell align="right"> <Button variant="contained" color="primary"
+                                <TableCell align="center">{row.emri}</TableCell>
+                                <TableCell align="right"> 
+                                <UpdateButton variant="contained" color="primary"
                                     onClick={() =>
                                         setEditModal(
                                             { currentID: row.sektoriId, open: true, emri: row.emri })}>
-                                    Perditeso
-                                </Button>
-                                    <Button variant="contained" color="secondary"
+                                    Përditëso
+                                </UpdateButton>
+                                    <DeleteButton variant="contained" color="secondary" startIcon={<DeleteIcon />}
                                         onClick={() => setModal({ currentID: row.sektoriId, open: true })}>
-                                        Fshij
-                                    </Button>
+                                          Fshij  
+                                    </DeleteButton>
                                 </TableCell>
-
                             </TableRow>
                         ))}
                 </TableBody>
