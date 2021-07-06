@@ -19,7 +19,7 @@ export const SidebarData = [
   },
   {
     title: 'Komentet',
-    path: '/Komente',
+    path: '/Komenti',
     icon: <IoIcons.IoIosPaper className="iconn"/>,
     cName: 'nav-text'
   },
@@ -37,7 +37,7 @@ export const SidebarData = [
   },
   {
     title: 'Sektorët',
-    path: '/Sektoret',
+    path: '/Sektori',
     icon: <AiIcons.AiFillDatabase className="iconn"/>,
     cName: 'nav-text'
   },

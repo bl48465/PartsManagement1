@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
 import axios from 'axios'
-import { Header, Icon, Modal,Input } from 'semantic-ui-react'
+import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-import {BoxContainer,Flexirimi} from '../StyledComponents';
-import SearchBar from './navbar/SearchBar';
+import { BoxContainer, Flexirimi, MainDiv, TableHead , TableText , RowText } from './navbar/StyledComponents';
 
+import { AddButton } from '../button/add'
+import { UpdateButton } from '../button/update'
+import { DeleteButton } from '../button/delButton'
+import { IconContext } from 'react-icons';
+import { SearchBar }  from './navbar/SearchBar';
 
-export default function PorosiaTable() {
+export function PorositeTable() {
     const [data, setData] = useState({
         dataInfo:{
             emri:'',
@@ -102,49 +104,52 @@ export default function PorosiaTable() {
     }
 
 
-    // const classes = useStyles();
-
     return (
+        <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
         <BoxContainer>
-              <div style={{margin:30,padding:0 , width:500}}>
+        <MainDiv>
             <Flexirimi>
-            <div style={{display:'block', padding:10, marginBottom:1}}>
-            <SearchBar placeholder="Enter Name" handleChange={e=>setSearchField(e.target.value)} />
-           </div>
-           <div style={{display:'block', padding:10}}>
-            <Button  className="butoni" variant="contained" color="secondary"
-            onClick={() => setAddModal({open:true})}>
-            Shto nje Porosi
-            </Button>
-            </div>
+                <AddButton onClick={() => setAddModal({open:true})}>
+                <Icon name='add'/>
+                Shto Porosi
+                </AddButton>
+                <div style={{display:'block', padding:10, marginBottom:1}}>
+                <SearchBar 
+                        placeholder="Enter Name"
+                        handleChange={e=>setSearchField(e.target.value)} />
+                </div>
             </Flexirimi>
-            </div>
+        </MainDiv>
+        
             <Table className="" aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>PorosiaID</TableCell>
-                        <TableCell align="right">Emri Porosise</TableCell>
-                        <TableCell align="right">Sasia</TableCell>
-                        <TableCell align="right">Manage</TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>PorosiaID</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Emri Porosisë</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                 {porosia.filter(rreshti=>rreshti.emriFurnitorit.toLowerCase()
                 .includes(SearchField.toLowerCase())).map((row,key)=>(
                     <TableRow key={row.porosiaID}>
-                        <TableCell align="right">{row.porosiaID}</TableCell>
-                        <TableCell align="right">{row.emri}</TableCell>
-                        <TableCell align="right">{row.sasia}</TableCell>
-                        <TableCell align="right"> <Button variant="contained" color="primary" 
+                        <TableCell align="right"><RowText>{row.porosiaID}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.emri}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.sasia}</RowText></TableCell>
+                        <TableCell align="right"> 
+                        <UpdateButton
                         onClick={() => 
                         setEditModal(
                             {currentID:row.porosiaID,open:true,emriPorosise:row.emri,sasia:row.sasia})}>
-                            Perditeso
-                        </Button>
-                            <Button variant="contained" color="secondary"
+                            <Icon name='history'/>
+                            Përditëso
+                        </UpdateButton>
+                            <DeleteButton 
                             onClick={() => setModal({currentID:row.PorosiaID,open:true})}>
-                                Fshij
-                            </Button>
+                            <Icon name='delete'/>
+                            Fshij
+                            </DeleteButton>
                         </TableCell>
                     
                     </TableRow>
@@ -163,11 +168,11 @@ export default function PorosiaTable() {
                 <Header icon='archive' content='Konfirmo Fshierjen!' />
                 <Modal.Content>
                     <p>
-                    Deshironi te fshini porosine?
+                    Dëshironi të fshini porosine?
                     </p>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setModal({open:false})}>
+                    <Button color='black' onClick={() => setModal({open:false})}>
                         <Icon name='remove' /> No
                     </Button>                   
                     <Button color='green' onClick={fshijPorosine}>
@@ -192,7 +197,7 @@ export default function PorosiaTable() {
                 onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setEditModal({open:false})}>
+                    <Button color='black' onClick={() => setEditModal({open:false})}>
                         <Icon name='remove' /> Pishmon
                     </Button>
                     <Button color='green' onClick={UpdatePorosia}>
@@ -210,13 +215,13 @@ export default function PorosiaTable() {
             >
                 <Header icon='archive' content='Shto Porosi!' />
                 <Modal.Content>
-                <Input focus placeholder='Emri Porosise' 
+                <Input focus placeholder='Emri Porosisë' 
                 onChange={handleChange} />
                  <Input focus placeholder='Sasia' 
                 onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setAddModal({open:false})}>
+                    <Button color='black' onClick={() => setAddModal({open:false})}>
                         <Icon name='remove' /> Pishmon
                     </Button>
                     <Button color='green' onClick={ShtoPorosi}>
@@ -225,5 +230,6 @@ export default function PorosiaTable() {
                 </Modal.Actions>
             </Modal>
         </BoxContainer>
+        </IconContext.Provider>
     );
 }

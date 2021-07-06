@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
 import axios from 'axios'
-import { Header, Icon, Modal, Input } from 'semantic-ui-react'
+import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-import SearchBar from '../SearchBar';
-import { BoxContainer, Flexirimi } from '../StyledComponents';
+import { BoxContainer, Flexirimi, MainDiv, TableHead , TableText , RowText } from './navbar/StyledComponents';
+
+import { AddButton } from '../button/add'
+import { UpdateButton } from '../button/update'
+import { DeleteButton } from '../button/delButton'
+import { IconContext } from 'react-icons';
+import { SearchBar }  from './navbar/SearchBar';
 
 
-export default function FurnitoriTable() {
+export  function FurnitoriTable() {
     var token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxlcmltQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiYWEwZWJmNi1lZGFjLTQxYjMtOTRiMS04NjRmMzM3MzE3NjUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJibGVyaW1AZXhhbXBsZS5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNjI1NDEyMTQ1LCJpc3MiOiJQYXJ0c01hbmFnZW1lbnRBUEkifQ.iZfbepc_1eYBZ5i9Q-RCzjWWUQiLP5TCtAW2GSDFWAgVudYiALmJpmiD_5TjtiynmfGh9v2YoyYBIG4Cy6lzpA";
     var userId = "baa0ebf6-edac-41b3-94b1-864f33731765";
 
@@ -105,29 +108,30 @@ export default function FurnitoriTable() {
     }
 
 
-    //Tabela
 
     return (
+        <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
         <BoxContainer>
-            <div style={{ margin: 30, padding: 0, width: 500 }}>
+        <MainDiv>
                 <Flexirimi>
-                    <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
-                        <SearchBar placeholder="Enter Name" handleChange={e => setSearchField(e.target.value)} />
-                    </div>
-                    <div style={{ display: 'block', padding: 10 }}>
-                        <Button variant="contained" color="secondary"
-                            onClick={() => setAddModal({ open: true })}>
-                            Shto nje Furnitor
-                        </Button>
+                        <AddButton onClick={() => setAddModal({ open: true })}>
+                        <Icon name='add'/>
+                        Shto furnitor
+                        </AddButton>
+                        <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
+                        <SearchBar 
+                            placeholder="Enter Name" 
+                            handleChange={e => setSearchField(e.target.value)} />
                     </div>
                 </Flexirimi>
-            </div>
+        </MainDiv>
+
             <Table className="tabelaa" aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>FurnitoriID</TableCell>
-                        <TableCell align="right">Emri Furnitorit</TableCell>
-                        <TableCell align="right">Manage</TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>FurnitoriID</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Emri Furnitorit</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -135,17 +139,21 @@ export default function FurnitoriTable() {
                         .filter(rreshti => rreshti.emriFurnitorit.toLowerCase()
                             .includes(SearchField.toLowerCase())).map((row, key) => (
                                 <TableRow key={row.furnitoriID}>
-                                    <TableCell align="right">{row.furnitoriID}</TableCell>
-                                    <TableCell align="right">{row.emriFurnitorit}</TableCell>
-                                    <TableCell align="right"> <Button variant="contained" color="primary"
+                                    <TableCell align="right"><RowText>{row.furnitoriID}</RowText></TableCell>
+                                    <TableCell align="right"><RowText>{row.emriFurnitorit}</RowText></TableCell>
+                                    <TableCell align="right"> 
+                                    <UpdateButton 
                                         onClick={() =>
-                                            setEditModal({ currentID: row.furnitoriID, open: true, emriFurnitorit: row.emriFurnitorit })}>
-                                        Perditeso
-                                    </Button>
-                                        <Button variant="contained" color="secondary"
+                                            setEditModal(
+                                            { currentID: row.furnitoriID, open: true, emriFurnitorit: row.emriFurnitorit })}>
+                                            <Icon name='history'/>
+                                            Përditëso
+                                    </UpdateButton>
+                                        <DeleteButton
                                             onClick={() => setModal({ currentID: row.furnitoriID, open: true })}>
+                                            <Icon name='delete'/>
                                             Fshij
-                                        </Button>
+                                        </DeleteButton>
                                     </TableCell>
 
                                 </TableRow>
@@ -164,15 +172,15 @@ export default function FurnitoriTable() {
                 <Header icon='archive' content='Konfirmo Fshierjen!' />
                 <Modal.Content>
                     <p>
-                        Deshironi te fshini Userin?
+                        Dëshironi të fshini furnitorin?
                     </p>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setModal({ open: false })}>
+                    <Button color='black' onClick={() => setModal({ open: false })}>
                         <Icon name='remove' /> Pishmon?
                     </Button>
                     <Button color='green' onClick={removeFurnitor}>
-                        <Icon name='checkmark' /> Yes
+                        <Icon name='checkmark' /> Po
                     </Button>
                 </Modal.Actions>
             </Modal>
@@ -191,11 +199,11 @@ export default function FurnitoriTable() {
                         onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setEditModal({ open: false })}>
+                    <Button color='black' onClick={() => setEditModal({ open: false })}>
                         <Icon name='remove' /> Pishmon
                     </Button>
                     <Button color='green' onClick={updateFurnitor}>
-                        <Icon name='checkmark' /> Perditeso
+                        <Icon name='checkmark' /> Përditëso
                     </Button>
                 </Modal.Actions>
             </Modal>
@@ -213,7 +221,7 @@ export default function FurnitoriTable() {
                         onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setAddModal({ open: false })}>
+                    <Button color='black' onClick={() => setAddModal({ open: false })}>
                         <Icon name='remove' /> Pishmon
                     </Button>
                     <Button color='green' onClick={ShtoFurnitor}>
@@ -222,5 +230,6 @@ export default function FurnitoriTable() {
                 </Modal.Actions>
             </Modal>
         </BoxContainer>
+        </IconContext.Provider> 
     );
 }

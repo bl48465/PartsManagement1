@@ -108,10 +108,9 @@ export function SektoriTable() {
          <BoxContainer>
          <MainDiv>
                 <Flexirimi>
-                <AddButton className="butoni" variant="contained" color="secondary"
-                            onClick={() => setAddModal({ open: true })}>
+                <AddButton onClick={() => setAddModal({ open: true })}>
                            <Icon name='add'/>
-                           Shto sektor
+                           Shto sektorë
                    </AddButton>
                     <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
                     <SearchBar
@@ -163,7 +162,7 @@ export function SektoriTable() {
                 <Header icon='archive' content='Konfirmo fshirjen e sektorit' />
                 <Modal.Content>
                     <p>
-                        Dëshironi te fshini Sektorin?
+                        Dëshironi të fshini Sektorin?
                     </p>
                 </Modal.Content>
                 <Modal.Actions>

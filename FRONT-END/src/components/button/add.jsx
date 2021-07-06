@@ -16,7 +16,7 @@ const ButtonWrapper = styled.button`
   transition: all 220ms ease-in-out;
   cursor: pointer;
   display:flex;
-  width:160px;
+  width:170px;
   height:40px;
   justify-content:space-between;
 

@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
 import axios from 'axios'
-import { Header, Icon, Modal,Input } from 'semantic-ui-react'
+import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-import  SearchBar  from './navbar/SearchBar';
-import {BoxContainer,Flexirimi} from './navbar/StyledComponents';
+import { BoxContainer, Flexirimi, MainDiv, TableHead , TableText , RowText } from './navbar/StyledComponents';
 
+import { AddButton } from '../button/add'
+import { UpdateButton } from '../button/update'
+import { DeleteButton } from '../button/delButton'
+import { IconContext } from 'react-icons';
+import { SearchBar }  from './navbar/SearchBar';
 
 export  function KomentiTable() {
 
@@ -104,49 +106,53 @@ export  function KomentiTable() {
     }
 
 
-    // const classes = useStyles();
 
     return (
+        <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
         <BoxContainer>
-            <div style={{margin:30,padding:0 , width:500}}>
+        <MainDiv>
             <Flexirimi>
-            <div style={{display:'block', padding:10, marginBottom:1}}>
-            <SearchBar placeholder="Enter Name" handleChange={e=>setSearchField(e.target.value)} />
-            </div>
-            <div style={{display:'block', padding:10}}>
-            <Button  className="butoni" variant="contained" color="secondary"
-            onClick={() => setAddModal({open:true})}>
-            Shto nje Koment
-            </Button>
-            </div>
+                <AddButton onClick={() => setAddModal({open:true})}>
+                <Icon name='add'/>
+                Shto Koment
+                </AddButton>
+                <div style={{display:'block', padding:10, marginBottom:1}}>
+                <SearchBar 
+                        placeholder="Enter Name" 
+                        handleChange={e=>setSearchField(e.target.value)} />
+                </div>
             </Flexirimi>
-            </div>
+        </MainDiv>
+
             <Table className="" aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Komenti ID</TableCell>
-                        <TableCell align="right">Titulli Komentit</TableCell>
-                        <TableCell align="right">Komenti</TableCell>
-                        <TableCell align="right">Manage</TableCell>
+                    <TableCell fontSize="large" align="center"><TableText>Komenti ID</TableText></TableCell>
+                    <TableCell fontSize="large" align="center"><TableText>Titulli Komentit</TableText></TableCell>
+                    <TableCell fontSize="large" align="center"><TableText>Komenti</TableText></TableCell>
+                    <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                 {komenti.filter(rreshti=>rreshti.titulli.toLowerCase()
                 .includes(SearchField.toLowerCase())).map((row,key)=>(
                     <TableRow key={row.komentiId}>
-                        <TableCell align="right">{row.komentiId}</TableCell>
-                        <TableCell align="right">{row.titulli}</TableCell>
-                        <TableCell align="right">{row.body}</TableCell>
-                        <TableCell align="right"> <Button variant="contained" color="primary" 
+                        <TableCell align="right"><RowText>{row.komentiId}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.titulli}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.body}</RowText></TableCell>
+                        <TableCell align="right">
+                        <UpdateButton 
                         onClick={() => 
                         setEditModal(
                             {currentID:row.komentiId,open:true,titulli:row.titulli,body:row.body})}>
-                            Perditeso
-                        </Button>
-                            <Button variant="contained" color="secondary"
+                            <Icon name='history'/>
+                            Përditëso
+                        </UpdateButton>
+                            <DeleteButton variant="contained" color="secondary"
                             onClick={() => setModal({currentID:row.bodyID,open:true})}>
-                                Fshij
-                            </Button>
+                            <Icon name='delete'/>
+                             Fshij
+                            </DeleteButton>
                         </TableCell>
                     
                     </TableRow>
@@ -165,15 +171,15 @@ export  function KomentiTable() {
                 <Header icon='archive' content='Konfirmo Fshierjen!' />
                 <Modal.Content>
                     <p>
-                    Deshironi te fshini Komentin?
+                    Dëshironi të fshini komentin?
                     </p>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setModal({open:false})}>
-                        <Icon name='remove' /> No
+                    <Button color='black' onClick={() => setModal({open:false})}>
+                        <Icon name='remove' />  Pishmon?
                     </Button>                   
                     <Button color='green' onClick={fshijKomentin}>
-                        <Icon name='checkmark' /> Yes
+                        <Icon name='checkmark' /> Po
                     </Button>
                 </Modal.Actions>
             </Modal>
@@ -194,11 +200,11 @@ export  function KomentiTable() {
                 onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setEditModal({open:false})}>
+                    <Button color='black' onClick={() => setEditModal({open:false})}>
                         <Icon name='remove' /> Pishmon
                     </Button>
                     <Button color='green' onClick={UpdateKomenti}>
-                        <Icon name='checkmark' /> Perditeso
+                        <Icon name='checkmark' /> Përditëso
                     </Button>
                 </Modal.Actions>
             </Modal>
@@ -218,7 +224,7 @@ export  function KomentiTable() {
                 onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setAddModal({open:false})}>
+                    <Button color='black' onClick={() => setAddModal({open:false})}>
                         <Icon name='remove' /> Pishmon
                     </Button>
                     <Button color='green' onClick={ShtoKoment}>
@@ -227,5 +233,6 @@ export  function KomentiTable() {
                 </Modal.Actions>
             </Modal>
         </BoxContainer>
+        </IconContext.Provider>
     );
 }

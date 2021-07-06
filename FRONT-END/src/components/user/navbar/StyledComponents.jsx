@@ -6,7 +6,7 @@ width: 80%;
 display: flex;
 flex-direction: column;
 align-items: center;
-margin-left:10%;
+margin-left:18%;
 
 `;
 
