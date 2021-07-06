@@ -53,12 +53,23 @@ export const MainDiv = styled.div`
 export const TableHead = styled.thead`
 
   border: 1px solid black;
-  background-color:black;
+  background-color:#181818;
   color:white;
-  
-
   `;
-// export const Table = styled.table`
-//   width:100%;
-//   border:1px solid black;
-// `;
+
+
+export const TableText = styled.p`
+  font-size: 21px;
+  color: #white;
+  font-weight: normal;
+  line-height: 1.4;
+  margin-right:60px;
+`;
+
+export const RowText = styled.p`
+  font-size: 21px;
+  color: #black;
+  font-weight: normal;
+  line-height: 1.4;
+  margin-right:60px;
+`;

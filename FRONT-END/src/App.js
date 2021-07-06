@@ -1,6 +1,6 @@
 import "./App.css";
 import styled from "styled-components";
-import {BrowserRouter,Switch,Route} from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { AccountBox } from './components/accountBox/index';
 import { Homepage } from './containers/homepage/index';
 import Home from "./components/accountBox/loginSuccess";
@@ -11,7 +11,7 @@ import Navbar from '././components/user/navbar/Navbar';
 
 
 
-const AppContainer = styled.div`
+const AppContainer = styled.div `
   width: 100%;
   height: 100%;
   display: flex;
@@ -21,36 +21,55 @@ const AppContainer = styled.div`
 `;
 
 function App() {
-  return (
-    <BrowserRouter>
-    <div className="Container">
-      <Switch>
-      <Route exact path="/">
-        <Homepage/>
-      </Route>
-      <Route path="/AccountBox">
-          <AppContainer>
-            <AccountBox />
-          </AppContainer>
-      </Route>
+    return ( <
+        BrowserRouter >
+        <
+        div className = "Container" >
+        <
+        Switch >
+        <
+        Route exact path = "/" >
+        <
+        Homepage / >
+        <
+        /Route> <
+        Route path = "/AccountBox" >
+        <
+        AppContainer >
+        <
+        AccountBox / >
+        <
+        /AppContainer> <
+        /Route>
 
-        <Route path="/Sektori">
-          <AppContainer>
-            <Navbar/>
-            <SektoriTable/>
-          </AppContainer>
-        </Route>
+        <
+        Route path = "/Sektori" >
 
-        <Route path="/Komenti">
-          <AppContainer>
-              <Navbar/>
-              <KomentiTable/>
-          </AppContainer>
-        </Route>
-    </Switch>
-      </div> 
-      </BrowserRouter>
-  );
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        SektoriTable / >
+        <
+        /AppContainer> <
+        /Route>
+
+        <
+        Route path = "/Komenti" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        KomentiTable / >
+        <
+        /AppContainer> <
+        /Route> <
+        /Switch> <
+        /div>  <
+        /BrowserRouter>
+    );
 }
 
 export default App;

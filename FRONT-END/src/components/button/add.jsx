@@ -2,10 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import { theme } from "../../theme";
 
+
+
 const ButtonWrapper = styled.button`
-  padding: ${({ small }) => (small ? "5px 8px" : "7px 15px")};
+  padding: ${({ small }) => (small ? "8px 8px" : "8px 20px")};
   border-radius: 5px;
-  background-color: black;
+  background-color: #181818;
   color: #fff;
   font-weight: bold;
   font-size: ${({ small }) => (small ? "12px" : "16px")};
@@ -13,6 +15,10 @@ const ButtonWrapper = styled.button`
   border: 2px solid transparent;
   transition: all 220ms ease-in-out;
   cursor: pointer;
+  display:flex;
+  width:160px;
+  height:40px;
+  justify-content:space-between;
 
   &:hover {
     background-color: transparent;

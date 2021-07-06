@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
 import axios from 'axios'
-import { Header, Icon, Modal, Input } from 'semantic-ui-react'
+import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-import { BoxContainer, Flexirimi, MainDiv, TableHead } from './navbar/StyledComponents';
-import  SearchBar  from './navbar/SearchBar';
+import { BoxContainer, Flexirimi, MainDiv, TableHead , TableText , RowText } from './navbar/StyledComponents';
+
 import { AddButton } from '../button/add'
 import { UpdateButton } from '../button/update'
 import { DeleteButton } from '../button/delButton'
+import { IconContext } from 'react-icons';
+import { SearchBar }  from './navbar/SearchBar';
 
 
 export function SektoriTable() {
@@ -105,18 +104,20 @@ export function SektoriTable() {
     }
 
     return (
-
-        <BoxContainer>
+        <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
+         <BoxContainer>
          <MainDiv>
                 <Flexirimi>
-                <AddButton className="butoni" variant="contained" color="secondary" startIcon={<CloudUploadIcon />}
+                <AddButton className="butoni" variant="contained" color="secondary"
                             onClick={() => setAddModal({ open: true })}>
-                            Shto sektor
-                </AddButton>
+                           <Icon name='add'/>
+                           Shto sektor
+                   </AddButton>
                     <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
                     <SearchBar
                             placeholder="Enter Name"
                             handleChange={e => setSearchField(e.target.value)} />
+
                     </div>
                 </Flexirimi>
         </MainDiv>
@@ -124,25 +125,27 @@ export function SektoriTable() {
             <Table className="" aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell fontSize="large" align="center">Emri Sektorit</TableCell>
-                        <TableCell align="right">Menaxho</TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Emri Sektorit</TableText></TableCell>
+                        <TableCell align="right"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {sektori.filter(rreshti => rreshti.emri.toLowerCase()
                         .includes(SearchField.toLowerCase())).map((row, key) => (
                             <TableRow key={row.sektoriId}>
-                                <TableCell align="center">{row.emri}</TableCell>
+                                <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
                                 <TableCell align="right"> 
-                                <UpdateButton variant="contained" color="primary"
+                                <UpdateButton
                                     onClick={() =>
                                         setEditModal(
                                             { currentID: row.sektoriId, open: true, emri: row.emri })}>
+                                   <Icon name='history'/>
                                     Përditëso
                                 </UpdateButton>
-                                    <DeleteButton variant="contained" color="secondary" startIcon={<DeleteIcon />}
+                                    <DeleteButton
                                         onClick={() => setModal({ currentID: row.sektoriId, open: true })}>
-                                          Fshij  
+                                       <Icon name='delete'/>
+                                        Fshij
                                     </DeleteButton>
                                 </TableCell>
                             </TableRow>
@@ -153,17 +156,18 @@ export function SektoriTable() {
             <Modal
                 closeIcon
                 open={modali.open}
+                size='mini'
                 onClose={() => setModal({ open: false })}
                 onOpen={() => setModal({ open: true })}
             >
-                <Header icon='archive' content='Konfirmo Fshirjen!' />
+                <Header icon='archive' content='Konfirmo fshirjen e sektorit' />
                 <Modal.Content>
                     <p>
                         Dëshironi te fshini Sektorin?
                     </p>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setModal({ open: false })}>
+                    <Button color='black' onClick={() => setModal({ open: false })}>
                         <Icon name='remove' /> Jo
                     </Button>
                     <Button color='green' onClick={fshijSektorin}>
@@ -174,43 +178,46 @@ export function SektoriTable() {
             <Modal
                 closeIcon
                 open={Editmodal.open}
+                size='mini'
                 onClose={() => setEditModal({ open: false })}
                 onOpen={() => setEditModal({ open: true })}
             >
-                <Header icon='archive' content='Edito Te Dhenat!' />
+                <Header icon='archive' content='Edito të dhënat' />
                 <Modal.Content>
                     <Input focus placeholder='Search...' defaultValue={Editmodal.emri}
                         onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setEditModal({ open: false })}>
-                        <Icon name='remove' /> Pishmon
+                    <Button color='black' onClick={() => setEditModal({ open: false })}>
+                        <Icon name='remove' />Pishmon
                     </Button>
                     <Button color='green' onClick={UpdateSektori}>
-                        <Icon name='checkmark' /> Përditëso
+                        <Icon name='checkmark'/> Përditëso
                     </Button>
                 </Modal.Actions>
             </Modal>
             <Modal
                 closeIcon
                 open={AddModal.open}
+                size='mini'
                 onClose={() => setAddModal({ open: false })}
                 onOpen={() => setAddModal({ open: true })}
             >
-                <Header icon='archive' content='Shto Sektor!' />
+                <Header icon='add' content='Shto sektor' />
                 <Modal.Content>
                     <Input focus placeholder='Emri Sektorit'
                         onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setAddModal({ open: false })}>
-                        <Icon name='remove' /> Pishmon
+                    <Button color='black' onClick={() => setAddModal({ open: false })}>
+                        <Icon name='remove'/> Pishmon
                     </Button>
                     <Button color='green' onClick={ShtoSektor}>
-                        <Icon name='checkmark' /> Shto
+                    <Icon name='checkmark' />Shto
                     </Button>
                 </Modal.Actions>
             </Modal>
         </BoxContainer>
+        </IconContext.Provider>
     );
 }

@@ -2,7 +2,7 @@
 import { Search } from "semantic-ui-react";
 import React from 'react';
 
-const SearchBar = (props) => {
+export const SearchBar = (props) => {
 
     return (
         <Search

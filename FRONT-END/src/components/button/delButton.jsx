@@ -10,6 +10,8 @@ const ButtonWrapper = styled.button`
   font-weight: bold;
   font-size: ${({ small }) => (small ? "12px" : "16px")};
   outline: none;
+  width:140px;
+  margin-left:20px;
   border: 2px solid transparent;
   transition: all 220ms ease-in-out;
   cursor: pointer;
