@@ -5,6 +5,7 @@ import { AccountBox } from './components/accountBox/index';
 import { Homepage } from './containers/homepage/index';
 import Home from "./components/accountBox/loginSuccess";
 import UserApp from "./components/user/userindex";
+import { ProduktiTable } from '././components/user/Produkti'
 import { SektoriTable } from '././components/user/Sektori'
 import { KomentiTable } from '././components/user/Komenti';
 import { PorositeTable } from '././components/user/Porosia';
@@ -37,6 +38,13 @@ function App() {
               </AppContainer>
               </Route>
 
+              <Route path = "/Produkti" >
+              <AppContainer >
+              <Navbar / >
+              <ProduktiTable / >
+              </AppContainer> 
+              </Route>
+
               <Route path = "/Sektori" >
               <AppContainer >
               <Navbar / >
@@ -65,7 +73,7 @@ function App() {
               </AppContainer> 
               </Route> 
             </Switch>
-         </div> 
+          </div> 
     </BrowserRouter>
     );
 }

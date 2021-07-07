@@ -66,7 +66,7 @@ namespace PartsManagement.Controllers
             }
             else
             {
-                var produkteteuserit = await _unitOfWork.Produktet.GetAll(a => a.Sektori.UserId == userId);
+                var produkteteuserit = await _context.Produktet.Include(x =>x.Marka).Include(p=>p.Sektori).Where(a => a.Sektori.UserId == userId).ToListAsync();
                 if (produkteteuserit == null) { return NotFound($"Produktet nuk u gjetën!"); }
                 return Ok(produkteteuserit);
             }
@@ -233,7 +233,7 @@ namespace PartsManagement.Controllers
                 await _unitOfWork.Save();
 
 
-                return Ok(produkti + "Produkti u përditësua me sukses!");
+                return Ok("Produkti u përditësua me sukses!");
             }
 
         }

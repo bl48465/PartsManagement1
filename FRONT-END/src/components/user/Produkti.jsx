@@ -7,17 +7,16 @@ import axios from 'axios'
 import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from './navbar/StyledComponents';
-
 import { AddButton } from '../button/add'
 import { UpdateButton } from '../button/update'
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
-import { GoFileDirectory } from 'react-icons/go';
+import { GiCardboardBox } from 'react-icons/gi';
+import { Select } from './navbar/StyledComponents'; 
 
-
-export function SektoriTable() {
+export function ProduktiTable() {
 
     const token = window.localStorage.getItem('token');
 
@@ -27,8 +26,21 @@ export function SektoriTable() {
         }
     };
 
-    const [data, setData] = useState('')
-    const [sektori, setSektori] = useState([]);
+    const [formState, setFormState] = useState({
+        formValues: {
+            emri: '',
+            number: '',
+            sektoriId:0,
+            markaId:0
+        }
+        });
+
+    const [sektoret,setSektoret]=useState([]);
+
+    const [produkti, setProdukti] = useState([]);
+
+    const [marka,setMarka] = useState([]);
+
     const [modali, setModal] = useState({
         modal: {
             currentID: 0,
@@ -45,9 +57,13 @@ export function SektoriTable() {
         modali: {
             currentID: 0,
             open: false,
-            emri: ''
+            emri: '',
+            number:'',
+            sektoriId:0,
+            markaId:0
         }
     });
+    
     const [AddModal, setAddModal] = useState({
         modal: {
             emri: '',
@@ -58,52 +74,59 @@ export function SektoriTable() {
 
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/Sektori/user', config).then(response => {
-            setSektori(response.data);
+        axios.get('http://localhost:5000/api/Produkti', config).then(response => {
+            setProdukti(response.data);
         });
 
-    }, [sektori])
+    }, [produkti])
 
-    const fshijSektorin = async () => {
+    const fshijProduktin = async () => {
 
         setModal({ open: false })
-        axios.delete("http://localhost:5000/api/Sektori/" + modali.currentID, config)
+        axios.delete("http://localhost:5000/api/Produkti/" + modali.currentID, config)
             .then((response) => {
-                console.log(response.data)
                 setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error);
                 setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
-
     }
 
-    function handleChange(e) {
-        setData(e.target.value);
-        console.log(data);
-    }
+    const handleChange = ({ target }) => {
+        const { formValues } = formState;
+        formValues[target.name] = target.value;
+        setFormState({ formValues });
+        };
 
-    const UpdateSektori = async () => {
+    const updateChange = ({ target }) => {
+            const { modali } = Editmodal;
+            modali[target.name] = target.value;
+            setEditModal({ modali });
+            };
+
+    const UpdateProdukti = async () => {
+        console.log(Editmodal)
+        
+        const { modali } = Editmodal;
+        console.log(modali);
         setEditModal({ open: false })
-        axios.put("http://localhost:5000/api/Sektori/" + Editmodal.currentID,
-            { sektoriID: Editmodal.currentID, emri: data }, config)
+        axios.put("http://localhost:5000/api/Produkti/"+ Editmodal.currentID, modali ,config)
             .then((response) => {
                 console.log(response.data.message)
                 setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error.data);
+                console.log(error);
                 setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
 
-    const ShtoSektor = async () => {
+    const ShtoProdukt = async () => {
 
         setAddModal({ open: false })
-
-        axios.post("http://localhost:5000/api/Sektori/", { emri: data }, config)
+        const { formValues } = formState;
+        axios.post("http://localhost:5000/api/Produkti/",formValues,config)
             .then((response) => {
                 console.log(response.data)
                 setAlert({validity:true,message:response.data})
@@ -112,8 +135,21 @@ export function SektoriTable() {
                 console.log(error);
                 setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
-
     }
+
+    useEffect(()=>{
+        axios.get("http://localhost:5000/api/Sektori/user",config)
+        .then((response) => {  
+            setSektoret(response.data);
+        })
+    },[])
+
+    useEffect(()=>{
+        axios.get("http://localhost:5000/api/Marka",config)
+        .then((response) => {  
+            setMarka(response.data);
+        })
+    },[])
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
@@ -122,7 +158,7 @@ export function SektoriTable() {
                     <Flexirimi>
                         <AddButton onClick={() => setAddModal({ open: true })}>
                             <Icon name='add' />
-                            Shto sektorë
+                            Shto produkt
                         </AddButton>
                         {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
@@ -138,27 +174,33 @@ export function SektoriTable() {
                     <TableHead>
                         <TableRow>
                             <TableCell align="left"><TableText></TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Emri Sektorit</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Emri Produktit</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Numri</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Marka</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Sektori</TableText></TableCell>
                             <TableCell align="right"><TableText>Menaxho</TableText></TableCell>
 
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sektori.filter(rreshti => rreshti.emri.toLowerCase()
+                        {produkti.filter(rreshti => rreshti.emri.toLowerCase()
                             .includes(SearchField.toLowerCase())).map((row, key) => (
-                                <TableRow key={row.sektoriId}>
-                                    <TableCell align="left"><GoFileDirectory color="#fc4747" size="30"/></TableCell>
+                                <TableRow key={row.produktiId}>
+                                    <TableCell align="left"><GiCardboardBox color="#fc4747" size="30"/></TableCell>
                                     <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.number}</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.marka.emri}</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.sektori.emri}</RowText></TableCell>
                                     <TableCell align="right">
                                         <UpdateButton
                                             onClick={() =>
                                                 setEditModal(
-                                                    { currentID: row.sektoriId, open: true, emri: row.emri })}>
+                                                    { currentID: row.produktiId, open: true, emri: row.emri ,number:row.number, sektoriId:row.sektoriId, markaId: row.markaId})}>
                                             <Icon name='history' />
                                             Përditëso
                                         </UpdateButton>
                                         <DeleteButton
-                                            onClick={() => setModal({ currentID: row.sektoriId, open: true })}>
+                                            onClick={() => setModal({ currentID: row.produktiId,open: true })}>
                                             <Icon name='delete' />
                                             Fshij
                                         </DeleteButton>
@@ -175,17 +217,17 @@ export function SektoriTable() {
                     onClose={() => setModal({ open: false })}
                     onOpen={() => setModal({ open: true })}
                 >
-                    <Header icon='archive' content='Konfirmo fshirjen e sektorit' />
+                    <Header icon='archive' content='Konfirmo fshirjen e produktit' />
                     <Modal.Content>
                         <p>
-                            Dëshironi të fshini Sektorin?
+                            Dëshironi të fshini Produktin?
                         </p>
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='black' onClick={() => setModal({ open: false })}>
                             <Icon name='remove' /> Jo
                         </Button>
-                        <Button color='green' onClick={fshijSektorin}>
+                        <Button color='green' onClick={fshijProduktin}>
                             <Icon name='checkmark' /> Po
                         </Button>
                     </Modal.Actions>
@@ -199,14 +241,29 @@ export function SektoriTable() {
                 >
                     <Header icon='archive' content='Edito të dhënat' />
                     <Modal.Content>
-                        <Input focus placeholder='Search...' defaultValue={Editmodal.emri}
-                            onChange={handleChange} />
+                    <Input focus placeholder='Emri produktit' name="emri"  defaultValue={Editmodal.emri}
+                            onChange={updateChange} />
+                        <Input focus placeholder='Numri' name="number" defaultValue={Editmodal.number}
+                            onChange={updateChange} />
+
+                        <Select  onChange={updateChange} name="sektoriId"  defaultValue={Editmodal.sektoriId}>   
+                            {sektoret.map((e, key) => {  
+                            return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
+                            })}  
+                        </Select>
+                        
+                        <Select  onChange={updateChange} name="markaId" defaultValue={Editmodal.markaId}>   
+                            {marka.map((e, key) => {  
+                            return <option key={key} value={e.markaId}>{e.emri}</option>;  
+                            })}  
+                        </Select>
+        
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='black' onClick={() => setEditModal({ open: false })}>
                             <Icon name='remove' />Pishmon
                         </Button>
-                        <Button color='green' onClick={UpdateSektori}>
+                        <Button color='green' onClick={UpdateProdukti}> 
                             <Icon name='checkmark' /> Përditëso
                         </Button>
                     </Modal.Actions>
@@ -218,16 +275,33 @@ export function SektoriTable() {
                     onClose={() => setAddModal({ open: false })}
                     onOpen={() => setAddModal({ open: true })}
                 >
-                    <Header icon='add' content='Shto sektor' />
+                    <Header icon='add' content='Shto produkt' />
                     <Modal.Content>
-                        <Input focus placeholder='Emri Sektorit'
+                        <Input focus placeholder='Emri produktit' name="emri" 
                             onChange={handleChange} />
+                        <Input focus placeholder='Numri' name="number"
+                            onChange={handleChange} />
+
+                        <Select  onChange={handleChange} name="sektoriId"  >  
+                            <option>Sektori</option> 
+                            {sektoret.map((e, key) => {  
+                            return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
+                            })}  
+                        </Select>
+                        
+                        <Select  onChange={handleChange} name="markaId"  >  
+                            <option>Marka</option> 
+                            {marka.map((e, key) => {  
+                            return <option key={key} value={e.markaId}>{e.emri}</option>;  
+                            })}  
+                        </Select>
+        
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='black' onClick={() => setAddModal({ open: false })}>
                             <Icon name='remove' /> Pishmon
                         </Button>
-                        <Button color='green' onClick={ShtoSektor}>
+                        <Button color='green' onClick={ShtoProdukt}>
                             <Icon name='checkmark' />Shto
                         </Button>
                     </Modal.Actions>

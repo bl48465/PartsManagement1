@@ -73,3 +73,15 @@ export const RowText = styled.p`
   line-height: 1.4;
   margin-right:60px;
 `;
+
+export const Select = styled.select`
+  width: 53%;
+  height: 35px;
+  outline: none;
+  background: white;
+  border: 1px solid #85b7d9;
+  border-radius:5px;
+  padding: 0px 10px;
+  color:#a1a1a1;
+  transition: all 200ms ease-in-out;
+  `;

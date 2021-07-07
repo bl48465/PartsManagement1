@@ -120,7 +120,7 @@ namespace PartsManagement.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var furnitori = await _unitOfWork.Furnitoret.Get(a => a.UserId == userId);
+            var furnitori = await _unitOfWork.Furnitoret.Get(a => a.FurnitoriId == id);
 
             if (furnitori == null)
             {
