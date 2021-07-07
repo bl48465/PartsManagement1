@@ -25,7 +25,7 @@ namespace PartsManagement.Dtos
         [MinLength(3,ErrorMessage ="Numri i telefonit jo valid")]
         public string Telefoni { get; set;}
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
     }
 
