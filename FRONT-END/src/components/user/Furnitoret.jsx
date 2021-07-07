@@ -6,18 +6,18 @@ import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios'
 import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-import { BoxContainer, Flexirimi, MainDiv, TableHead , TableText , RowText } from './navbar/StyledComponents';
+import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from './navbar/StyledComponents';
 
 import { AddButton } from '../button/add'
 import { UpdateButton } from '../button/update'
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
-import { SearchBar }  from './navbar/SearchBar';
+import { SearchBar } from './navbar/SearchBar';
 
 
-export  function FurnitoriTable() {
-    var token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxlcmltQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiYWEwZWJmNi1lZGFjLTQxYjMtOTRiMS04NjRmMzM3MzE3NjUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJibGVyaW1AZXhhbXBsZS5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIiwiZXhwIjoxNjI1NDEyMTQ1LCJpc3MiOiJQYXJ0c01hbmFnZW1lbnRBUEkifQ.iZfbepc_1eYBZ5i9Q-RCzjWWUQiLP5TCtAW2GSDFWAgVudYiALmJpmiD_5TjtiynmfGh9v2YoyYBIG4Cy6lzpA";
-    var userId = "baa0ebf6-edac-41b3-94b1-864f33731765";
+export function FurnitoriTable() {
+    var token = window.localStorage.getItem('token');
+    var userId = window.localStorage.getItem('userId');
 
     const config = {
         headers: {
@@ -25,7 +25,6 @@ export  function FurnitoriTable() {
         }
     };
 
-    const [data, setData] = useState("");
     const [SearchField, setSearchField] = useState('');
     const [furnitorii, setfurnitoret] = useState([]);
     const [modali, setModal] = useState({
@@ -39,15 +38,36 @@ export  function FurnitoriTable() {
         modali: {
             currentID: 0,
             open: false,
-            emriFurnitorit: ''
+            emri: '',
+            mbiemri: '',
+            lokacioni: '',
+            telefoni: ''
         }
     });
     const [AddModal, setAddModal] = useState({
         modal: {
-            emri: '',
             open: false,
+            emri: '',
+            mbiemri: '',
+            lokacioni: '',
+            telefoni: ''
         }
     });
+
+    const [formState, setFormState] = useState({
+        formValues: {
+
+            emri: '',
+            mbiemri: '',
+            lokacioni: '',
+            telefoni: ''
+        }
+    });
+    const [emrii ,setEmri] = useState("");
+    const [mbiemrii, setMbiemri] = useState("");
+    const [lokacionii, setLokacioni] = useState("");
+    const [telefonii, setTelefoni] = useState("");
+
 
 
 
@@ -56,11 +76,9 @@ export  function FurnitoriTable() {
     useEffect(() => {
         axios.get('http://localhost:5000/api/Furnitori/user', config).then(response => {
             setfurnitoret(response.data);
-            console.log(furnitorii + "kujebe");
-            console.log(response.data);
         });
 
-    }, [])
+    }, [furnitorii])
 
     const removeFurnitor = async () => {
 
@@ -75,34 +93,52 @@ export  function FurnitoriTable() {
 
     }
 
-    function handleChange(e) {
-        setData(e.target.value);
-        console.log(data);
-    }
+    const handleChange = ({ target }) => {
+        const { formValues } = formState;
+        formValues[target.name] = target.value;
+        setFormState({ formValues });
+    };
+
+
 
     const updateFurnitor = async () => {
-        console.log(Editmodal.currentID);
-        console.log(data);
+    
+        var id=Editmodal.currentID;
         setEditModal({ open: false })
-        axios.put("http://localhost:5000/api/Furnitori/" + Editmodal.currentID, { furnitoriID: Editmodal.currentID, emriFurnitorit: data }, config)
+
+        axios.put("http://localhost:5000/api/Furnitori/" + id,
+            {
+                emri: emrii===""? Editmodal.emri:emrii,
+                mbiemri: mbiemrii ===""? Editmodal.mbiemri:mbiemrii,
+                lokacioni: lokacionii ===""? Editmodal.lokacioni:lokacionii,
+                telefoni: telefonii ===""? Editmodal.telefoni:telefonii,
+                userId: userId
+            }, config)
             .then((response) => {
+                setEmri("");
+                setMbiemri("");
+                setLokacioni("");
+                setTelefoni("");
                 console.log(response.data.message)
             })
             .catch((error) => {
                 console.log(error.data);
+                console.log('Dicka shkoi gabim');
             })
 
     }
 
     const ShtoFurnitor = async () => {
-
+        const { formValues } = formState;
+        console.log(formValues);
         setAddModal({ open: false })
-        axios.post("http://localhost:5000/api/Furnitori", { emriFurnitorit: data }, config)
+        axios.post("http://localhost:5000/api/Furnitori", formValues, config)
             .then((response) => {
                 console.log(response.data.message)
             })
             .catch((error) => {
                 console.log(error.data);
+                console.log('Dicka shkoi gabim');
             })
 
     }
@@ -110,126 +146,151 @@ export  function FurnitoriTable() {
 
 
     return (
-        <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
-        <BoxContainer>
-        <MainDiv>
-                <Flexirimi>
+        <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+            <BoxContainer>
+                <MainDiv>
+                    <Flexirimi>
                         <AddButton onClick={() => setAddModal({ open: true })}>
-                        <Icon name='add'/>
-                        Shto furnitor
+                            <Icon name='add' />
+                            Shto furnitor
                         </AddButton>
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
-                        <SearchBar 
-                            placeholder="Enter Name" 
-                            handleChange={e => setSearchField(e.target.value)} />
-                    </div>
-                </Flexirimi>
-        </MainDiv>
+                            <SearchBar
+                                placeholder="Enter Name"
+                                handleChange={e => setSearchField(e.target.value)} />
+                        </div>
+                    </Flexirimi>
+                </MainDiv>
 
-            <Table className="tabelaa" aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell fontSize="large" align="center"><TableText>FurnitoriID</TableText></TableCell>
-                        <TableCell fontSize="large" align="center"><TableText>Emri Furnitorit</TableText></TableCell>
-                        <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {furnitorii
-                        .filter(rreshti => rreshti.emriFurnitorit.toLowerCase()
-                            .includes(SearchField.toLowerCase())).map((row, key) => (
-                                <TableRow key={row.furnitoriID}>
-                                    <TableCell align="right"><RowText>{row.furnitoriID}</RowText></TableCell>
-                                    <TableCell align="right"><RowText>{row.emriFurnitorit}</RowText></TableCell>
-                                    <TableCell align="right"> 
-                                    <UpdateButton 
-                                        onClick={() =>
-                                            setEditModal(
-                                            { currentID: row.furnitoriID, open: true, emriFurnitorit: row.emriFurnitorit })}>
-                                            <Icon name='history'/>
-                                            Përditëso
-                                    </UpdateButton>
-                                        <DeleteButton
-                                            onClick={() => setModal({ currentID: row.furnitoriID, open: true })}>
-                                            <Icon name='delete'/>
-                                            Fshij
-                                        </DeleteButton>
-                                    </TableCell>
+                <Table className="tabelaa" aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell fontSize="large" align="center"><TableText>FurnitoriID</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Emri i Furnitorit</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Mbiemri i Furnitorit</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Lokacioni</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Telefoni</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {furnitorii
+                            .filter(rreshti => rreshti.emri.toLowerCase()
+                                .includes(SearchField.toLowerCase())).map((row, key) => (
+                                    <TableRow key={row.furntoriId}>
+                                        <TableCell align="right"><RowText>{row.furnitoriId}</RowText></TableCell>
+                                        <TableCell align="right"><RowText>{row.emri}</RowText></TableCell>
+                                        <TableCell align="right"><RowText>{row.mbiemri}</RowText></TableCell>
+                                        <TableCell align="right"><RowText>{row.lokacioni}</RowText></TableCell>
+                                        <TableCell align="right"><RowText>{row.telefoni}</RowText></TableCell>
+                                        <TableCell align="right">
+                                            <UpdateButton
+                                                onClick={() =>
+                                                    setEditModal(
+                                                        {
+                                                            currentID: row.furnitoriId,
+                                                            open: true,
+                                                            emri: row.emri,
+                                                            mbiemri: row.mbiemri,
+                                                            lokacioni: row.lokacioni,
+                                                            telefoni: row.telefoni
+                                                        })}>
+                                                <Icon name='history' />
+                                                Përditëso
+                                            </UpdateButton>
+                                            <DeleteButton
+                                                onClick={() => setModal({ currentID: row.furnitoriId, open: true })}>
+                                                <Icon name='delete' />
+                                                Fshij
+                                            </DeleteButton>
+                                        </TableCell>
 
-                                </TableRow>
-                            ))}
-                </TableBody>
-            </Table>
+                                    </TableRow>
+                                ))}
+                    </TableBody>
+                </Table>
 
-            {/* Modali per Delete */}
+                {/* Modali per Delete */}
 
-            <Modal
-                closeIcon
-                open={modali.open}
-                onClose={() => setModal({ open: false })}
-                onOpen={() => setModal({ open: true })}
-            >
-                <Header icon='archive' content='Konfirmo Fshierjen!' />
-                <Modal.Content>
-                    <p>
-                        Dëshironi të fshini furnitorin?
-                    </p>
-                </Modal.Content>
-                <Modal.Actions>
-                    <Button color='black' onClick={() => setModal({ open: false })}>
-                        <Icon name='remove' /> Pishmon?
-                    </Button>
-                    <Button color='green' onClick={removeFurnitor}>
-                        <Icon name='checkmark' /> Po
-                    </Button>
-                </Modal.Actions>
-            </Modal>
+                <Modal
+                    closeIcon
+                    open={modali.open}
+                    onClose={() => setModal({ open: false })}
+                    onOpen={() => setModal({ open: true })}
+                >
+                    <Header icon='archive' content='Konfirmo Fshierjen!' />
+                    <Modal.Content>
+                        <p>
+                            Dëshironi të fshini furnitorin?
+                        </p>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='black' onClick={() => setModal({ open: false })}>
+                            <Icon name='remove' /> Pishmon?
+                        </Button>
+                        <Button color='green' onClick={removeFurnitor}>
+                            <Icon name='checkmark' /> Po
+                        </Button>
+                    </Modal.Actions>
+                </Modal>
 
-            {/* Modali per Edit */}
+                {/* Modali per Edit */}
 
-            <Modal
-                closeIcon
-                open={Editmodal.open}
-                onClose={() => setEditModal({ open: false })}
-                onOpen={() => setEditModal({ open: true })}
-            >
-                <Header icon='archive' content='Edito Te Dhenat!' />
-                <Modal.Content>
-                    <Input focus placeholder='Search...' defaultValue={Editmodal.emriFurnitorit}
-                        onChange={handleChange} />
-                </Modal.Content>
-                <Modal.Actions>
-                    <Button color='black' onClick={() => setEditModal({ open: false })}>
-                        <Icon name='remove' /> Pishmon
-                    </Button>
-                    <Button color='green' onClick={updateFurnitor}>
-                        <Icon name='checkmark' /> Përditëso
-                    </Button>
-                </Modal.Actions>
-            </Modal>
+                <Modal
+                    closeIcon
+                    open={Editmodal.open}
+                    onClose={() => setEditModal({ open: false })}
+                    onOpen={() => setEditModal({ open: true })}
+                >
+                    <Header icon='archive' content='Edito Te Dhenat!' />
+                    <Modal.Content>
+                        <Input focus placeholder='Emri' name='emri' defaultValue={Editmodal.emri}
+                            onChange={(e) => setEmri(e.target.value)} />
+                        <Input focus placeholder='Mbiemri' name='mbiemri' defaultValue={Editmodal.mbiemri}
+                            onChange={(e) => setMbiemri(e.target.value)} />
+                        <Input focus placeholder='Lokacioni' name='lokacioni' defaultValue={Editmodal.lokacioni}
+                            onChange={(e) => setLokacioni(e.target.value)} />
+                        <Input focus placeholder='Telefoni' name='telefoni' defaultValue={Editmodal.telefoni}
+                            onChange={(e) => setTelefoni(e.target.value)} />
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='black' onClick={() => setEditModal({ open: false })}>
+                            <Icon name='remove' /> Pishmon
+                        </Button>
+                        <Button color='green' onClick={updateFurnitor}>
+                            <Icon name='checkmark' /> Përditëso
+                        </Button>
+                    </Modal.Actions>
+                </Modal>
 
-            {/* Modali per Add */}
-            <Modal
-                closeIcon
-                open={AddModal.open}
-                onClose={() => setAddModal({ open: false })}
-                onOpen={() => setAddModal({ open: true })}
-            >
-                <Header icon='archive' content='ShtoFurnitor!' />
-                <Modal.Content>
-                    <Input focus placeholder='Emri Furnitorit...'
-                        onChange={handleChange} />
-                </Modal.Content>
-                <Modal.Actions>
-                    <Button color='black' onClick={() => setAddModal({ open: false })}>
-                        <Icon name='remove' /> Pishmon
-                    </Button>
-                    <Button color='green' onClick={ShtoFurnitor}>
-                        <Icon name='checkmark' /> Shto
-                    </Button>
-                </Modal.Actions>
-            </Modal>
-        </BoxContainer>
-        </IconContext.Provider> 
+                {/* Modali per Add */}
+                <Modal
+                    closeIcon
+                    open={AddModal.open}
+                    onClose={() => setAddModal({ open: false })}
+                    onOpen={() => setAddModal({ open: true })}
+                >
+                    <Header icon='archive' content='ShtoFurnitor!' />
+                    <Modal.Content>
+                        <Input focus placeholder='Emri' name='emri'
+                            onChange={handleChange} />
+                        <Input focus placeholder='Mbiemri' name='mbiemri'
+                            onChange={handleChange} />
+                        <Input focus placeholder='Lokacioni' name='lokacioni'
+                            onChange={handleChange} />
+                        <Input focus placeholder='Telefoni' name='telefoni'
+                            onChange={handleChange} />
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='black' onClick={() => setAddModal({ open: false })}>
+                            <Icon name='remove' /> Pishmon
+                        </Button>
+                        <Button color='green' onClick={ShtoFurnitor}>
+                            <Icon name='checkmark' /> Shto
+                        </Button>
+                    </Modal.Actions>
+                </Modal>
+            </BoxContainer>
+        </IconContext.Provider>
     );
 }

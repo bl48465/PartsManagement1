@@ -29,12 +29,12 @@ function App() {
         <div className = "Container" >
             <Switch>
               <Route exact path = "/" >
-              <Homepage / >
+              <Homepage />
               </Route>
 
               <Route path = "/AccountBox" >
               <AppContainer >
-              <AccountBox / >
+              <AccountBox />
               </AppContainer>
               </Route>
 
@@ -47,29 +47,29 @@ function App() {
 
               <Route path = "/Sektori" >
               <AppContainer >
-              <Navbar / >
-              <SektoriTable / >
+              <Navbar />
+              <SektoriTable />
               </AppContainer> 
               </Route>
 
               <Route path = "/Komenti" >
               <AppContainer >
-              <Navbar / >
-              <KomentiTable / >
+              <Navbar />
+              <KomentiTable />
               </AppContainer> 
               </Route> 
 
               <Route path = "/Porosite" >
               < AppContainer >
-              <Navbar / >
-              < PorositeTable / >
+              <Navbar />
+              < PorositeTable />
               </AppContainer> 
               </Route>
               
               <Route path = "/Furnitori" >
               <AppContainer >
-              < Navbar / >
-              <FurnitoriTable / >
+              < Navbar />
+              <FurnitoriTable />
               </AppContainer> 
               </Route> 
             </Switch>
