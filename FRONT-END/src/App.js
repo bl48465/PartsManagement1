@@ -40,8 +40,8 @@ function App() {
 
               <Route path = "/Produkti" >
               <AppContainer >
-              <Navbar / >
-              <ProduktiTable / >
+              <Navbar />
+              <ProduktiTable />
               </AppContainer> 
               </Route>
 

@@ -71,6 +71,10 @@ export function ProduktiTable() {
         }
     });
     const [SearchField, setSearchField] = useState('');
+    const [emri ,setEmri] = useState("");
+    const [number, setNumber] = useState("");
+    const [sektoriId, setSektoriId] = useState(0);
+    const [markaId, setMarkaId] = useState(0);
 
 
     useEffect(() => {
@@ -98,19 +102,21 @@ export function ProduktiTable() {
         setFormState({ formValues });
         };
 
-    const updateChange = ({ target }) => {
-            const { modali } = Editmodal;
-            modali[target.name] = target.value;
-            setEditModal({ modali });
-            };
-
+ 
     const UpdateProdukti = async () => {
-        console.log(Editmodal)
-        
-        const { modali } = Editmodal;
-        console.log(modali);
+      console.log(emri);
+      console.log(number);
+      console.log(sektoriId);
+      console.log(markaId);
+      var id=Editmodal.currentID;
+      console.log(id);
         setEditModal({ open: false })
-        axios.put("http://localhost:5000/api/Produkti/"+ Editmodal.currentID, modali ,config)
+        axios.put("http://localhost:5000/api/Produkti/"+ id, {
+            emri: emri===""? Editmodal.emri:emri,
+            number: number ===""? Editmodal.number:number,
+            sektoriId: sektoriId ===""? Editmodal.sektoriId:sektoriId,
+            markaId: markaId ===""? Editmodal.markaid:markaId,
+        } ,config)
             .then((response) => {
                 console.log(response.data.message)
                 setAlert({validity:true,message:response.data})
@@ -242,17 +248,17 @@ export function ProduktiTable() {
                     <Header icon='archive' content='Edito të dhënat' />
                     <Modal.Content>
                     <Input focus placeholder='Emri produktit' name="emri"  defaultValue={Editmodal.emri}
-                            onChange={updateChange} />
+                            onChange={(e) => setEmri(e.target.value)} />
                         <Input focus placeholder='Numri' name="number" defaultValue={Editmodal.number}
-                            onChange={updateChange} />
+                            onChange={(e) => setNumber(e.target.value)} />
 
-                        <Select  onChange={updateChange} name="sektoriId"  defaultValue={Editmodal.sektoriId}>   
+                        <Select   onChange={(e) => setSektoriId(e.target.value)} name="sektoriId"  defaultValue={Editmodal.sektoriId}>   
                             {sektoret.map((e, key) => {  
                             return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
                             })}  
                         </Select>
                         
-                        <Select  onChange={updateChange} name="markaId" defaultValue={Editmodal.markaId}>   
+                        <Select   onChange={(e) => setMarkaId(e.target.value)} name="markaId" defaultValue={Editmodal.markaId}>   
                             {marka.map((e, key) => {  
                             return <option key={key} value={e.markaId}>{e.emri}</option>;  
                             })}  
