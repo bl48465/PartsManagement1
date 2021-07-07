@@ -17,6 +17,7 @@ import { SearchBar }  from './navbar/SearchBar';
 export  function KomentiTable() {
 
     const token = window.localStorage.getItem('token');
+    var userId = window.localStorage.getItem('userId');
     const [data, setData] = useState('')
     const config = {
         headers: {
@@ -48,11 +49,12 @@ export  function KomentiTable() {
         }
     });
     const[SearchField,setSearchField]=useState('');
+    const[titulli,setTitulli]=useState('');
+    const[body,setBody]=useState('');
 
     useEffect(() => {
         axios.get('http://localhost:5000/api/Komenti',config).then(response => {
             setKomenti(response.data)
-            console.log(response.data);
         });
 
     }, [komenti])
@@ -68,34 +70,14 @@ export  function KomentiTable() {
             .catch((error) => {
                 console.log(error);
             })
-
     }
     
-    function handleChange(e){
-        setData(e.target.value);
-        console.log(data);
-    }
+
     
-    const UpdateKomenti = async () => {
-        console.log(Editmodal.currentID);
-        console.log(data);
-
-        setEditModal({open:false})
-        axios.put("http://localhost:5000/api/Koment/" + Editmodal.currentID, 
-        {komentiId:Editmodal.currentID,titulli:data[0],komenti:data[1]},config)
-            .then((response) => {
-                console.log(response.data)
-            })
-            .catch((error) => {
-                console.log(error.data);
-            })
-
-    }
-
     const ShtoKoment = async () => {
-    
         setAddModal({open:false})
-        axios.post("http://localhost:5000/api/Koment", {titulli:data[0],body:data[1]})
+        axios.post("http://localhost:5000/api/Komenti",
+        {titulli:titulli, body:body, userId:userId},config)
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -141,17 +123,17 @@ export  function KomentiTable() {
                         <TableCell align="right"><RowText>{row.titulli}</RowText></TableCell>
                         <TableCell align="right"><RowText>{row.body}</RowText></TableCell>
                         <TableCell align="right">
-                        <UpdateButton 
+                        {/* <UpdateButton 
                         onClick={() => 
                         setEditModal(
                             {currentID:row.komentiId,open:true,titulli:row.titulli,body:row.body})}>
                             <Icon name='history'/>
                             Përditëso
-                        </UpdateButton>
+                        </UpdateButton> */}
                             <DeleteButton variant="contained" color="secondary"
-                            onClick={() => setModal({currentID:row.bodyID,open:true})}>
+                            onClick={() => setModal({currentID:row.komentiId,open:true})}>
                             <Icon name='delete'/>
-                             Fshij
+                            Fshij
                             </DeleteButton>
                         </TableCell>
                     
@@ -184,30 +166,6 @@ export  function KomentiTable() {
                 </Modal.Actions>
             </Modal>
 
-            {/* Modali per Edit */}
-            
-            <Modal
-                closeIcon
-                open={Editmodal.open}
-                onClose={() => setEditModal({open:false})}
-                onOpen={() => setEditModal({open:true})}
-            >
-                <Header icon='archive' content='Edito Te Dhenat!' />
-                <Modal.Content>
-                <Input focus placeholder='Search...' defaultValue={Editmodal.titulli} 
-                onChange={handleChange} />
-                <Input focus placeholder='Search...' defaultValue={Editmodal.body} 
-                onChange={handleChange} />
-                </Modal.Content>
-                <Modal.Actions>
-                    <Button color='black' onClick={() => setEditModal({open:false})}>
-                        <Icon name='remove' /> Pishmon
-                    </Button>
-                    <Button color='green' onClick={UpdateKomenti}>
-                        <Icon name='checkmark' /> Përditëso
-                    </Button>
-                </Modal.Actions>
-            </Modal>
 
                {/* Modali per Add */}
             <Modal
@@ -219,9 +177,9 @@ export  function KomentiTable() {
                 <Header icon='archive' content='Shto Koment!' />
                 <Modal.Content>
                 <Input focus placeholder='Titulli Komentit' 
-                onChange={handleChange} />
-                <Input focus placeholder='body' 
-                onChange={handleChange} />
+                onChange={(e) => setTitulli(e.target.value)}/>
+                <Input focus placeholder='Komenti' 
+                onChange={(e) => setBody(e.target.value)} />
                 </Modal.Content>
                 <Modal.Actions>
                     <Button color='black' onClick={() => setAddModal({open:false})}>
