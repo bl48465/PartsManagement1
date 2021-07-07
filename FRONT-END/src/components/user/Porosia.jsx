@@ -15,10 +15,22 @@ import { IconContext } from 'react-icons';
 import { SearchBar }  from './navbar/SearchBar';
 
 export function PorositeTable() {
-    const [data, setData] = useState({
-        dataInfo:{
-            emri:'',
-            sasia:0
+    const token = window.localStorage.getItem('token');
+    var userId = window.localStorage.getItem('userId');
+    const [data, setData] = useState('')
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + token}
+        };
+
+    const [formState, setFormState] = useState({
+        formValues: {
+
+            titulli: '',
+            sasia: 0,
+            klienti: '',
+            telefoni: '',
+            userId:window.localStorage.getItem('userId')
         }
     });
     const[porosia,setPorosia] = useState([]);
@@ -33,25 +45,32 @@ export function PorositeTable() {
         modali:{
             currentID:0,
             open:false,
-            emriPorosise:'',
-            sasia:0
+            titulli: '',
+            sasia: 0,
+            klienti: '',
+            telefoni: ''
         }
     });
     const [AddModal, setAddModal] = useState({
         modal:{
-            emri:'',
-            sasia:null,
             open:false,
+            titulli: '',
+            sasia: 0,
+            klienti: '',
+            telefoni: ''
         }
     });
     const[SearchField,setSearchField]=useState('');
+    const [titulli ,setTitulli] = useState("");
+    const [sasia, setSasia] = useState(0);
+    const [klienti, setKlienti] = useState("");
+    const [telefoni, setTelefoni] = useState("");
 
 
 
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/Porosia',{ withCredentials: true }).then(response => {
-            console.log(response);
+        axios.get('http://localhost:5000/api/Porosia/user',config).then(response => {
             setPorosia(response.data);
         });
 
@@ -60,7 +79,7 @@ export function PorositeTable() {
     const fshijPorosine = async () => {
 
         setModal({open:false})
-        axios.delete("http://localhost:5000/api/Porosia/" + modali.currentID, { withCredentials: true })
+        axios.delete("http://localhost:5000/api/Porosia/" + modali.currentID,config)
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -70,17 +89,21 @@ export function PorositeTable() {
 
     }
     
-    function handleChange(e){
-        setData(e.target.value);
-        console.log(data);
-    }
+    const handleChange = ({ target }) => {
+        const { formValues } = formState;
+        formValues[target.name] = target.value;
+        setFormState({ formValues });
+    };
     
     const UpdatePorosia = async () => {
-        console.log(Editmodal.currentID);
-        console.log(data);
+
         setEditModal({open:false})
         axios.put("http://localhost:5000/api/Porosia/" + Editmodal.currentID, 
-        {porosiaID:Editmodal.currentID,emri:data[0],sasia:data[1]}, { withCredentials: true })
+        {titulli: titulli===""? Editmodal.titulli:titulli,
+        sasia: sasia ===""? Editmodal.sasia:sasia,
+        klienti: klienti ===""? Editmodal.klienti:klienti,
+        telefoni: telefoni ===""? Editmodal.telefoni:telefoni,
+        userId:userId}, config)
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -91,9 +114,10 @@ export function PorositeTable() {
     }
 
     const ShtoPorosi = async () => {
-     
+        const { formValues } = formState;
+        console.log(formValues);
         setAddModal({open:false})
-        axios.post("http://localhost:5000/api/Porosia/1", {emri:data[0],sasia:data[1]}, { withCredentials: true })
+        axios.post("http://localhost:5000/api/Porosia", formValues, config)
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -125,28 +149,33 @@ export function PorositeTable() {
                 <TableHead>
                     <TableRow>
                         <TableCell fontSize="large" align="center"><TableText>PorosiaID</TableText></TableCell>
-                        <TableCell fontSize="large" align="center"><TableText>Emri Porosisë</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Titulli</TableText></TableCell>
                         <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Klienti</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>NrTel</TableText></TableCell>
                         <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                {porosia.filter(rreshti=>rreshti.emriFurnitorit.toLowerCase()
+                {porosia.filter(rreshti=>rreshti.titulli.toLowerCase()
                 .includes(SearchField.toLowerCase())).map((row,key)=>(
-                    <TableRow key={row.porosiaID}>
-                        <TableCell align="right"><RowText>{row.porosiaID}</RowText></TableCell>
-                        <TableCell align="right"><RowText>{row.emri}</RowText></TableCell>
+                    <TableRow key={row.porosiaId}>
+                        <TableCell align="right"><RowText>{row.porosiaId}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.titulli}</RowText></TableCell>
                         <TableCell align="right"><RowText>{row.sasia}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.klienti}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.telefoni}</RowText></TableCell>
                         <TableCell align="right"> 
                         <UpdateButton
                         onClick={() => 
                         setEditModal(
-                            {currentID:row.porosiaID,open:true,emriPorosise:row.emri,sasia:row.sasia})}>
+                            {currentID:row.porosiaId,open:true,titulli:row.titulli,sasia:row.sasia,klienti:row.klienti,
+                            telefoni:row.telefoni})}>
                             <Icon name='history'/>
                             Përditëso
                         </UpdateButton>
                             <DeleteButton 
-                            onClick={() => setModal({currentID:row.PorosiaID,open:true})}>
+                            onClick={() => setModal({currentID:row.porosiaId,open:true})}>
                             <Icon name='delete'/>
                             Fshij
                             </DeleteButton>
@@ -191,10 +220,14 @@ export function PorositeTable() {
             >
                 <Header icon='archive' content='Edito Te Dhenat!' />
                 <Modal.Content>
-                <Input focus placeholder='Search...' defaultValue={Editmodal.emriPorosise} 
-                onChange={handleChange} />
-                  <Input focus placeholder='Search...' defaultValue={Editmodal.sasia} 
-                onChange={handleChange} />
+                <Input focus placeholder='Search...' defaultValue={Editmodal.titulli} 
+                  onChange={(e) => setTitulli(e.target.value)} />
+                <Input focus placeholder='Search...' defaultValue={Editmodal.sasia} 
+                  onChange={(e) => setSasia(e.target.value)} />
+                   <Input focus placeholder='Search...' defaultValue={Editmodal.klienti} 
+                  onChange={(e) => setKlienti(e.target.value)} />
+                   <Input focus placeholder='Search...' defaultValue={Editmodal.telefoni} 
+                  onChange={(e) => setTelefoni(e.target.value)} />
                 </Modal.Content>
                 <Modal.Actions>
                     <Button color='black' onClick={() => setEditModal({open:false})}>
@@ -215,9 +248,13 @@ export function PorositeTable() {
             >
                 <Header icon='archive' content='Shto Porosi!' />
                 <Modal.Content>
-                <Input focus placeholder='Emri Porosisë' 
+                <Input focus placeholder='Titulli' name="titulli"
                 onChange={handleChange} />
-                 <Input focus placeholder='Sasia' 
+                <Input focus placeholder='Sasia' name="sasia"
+                onChange={handleChange} />
+                <Input focus placeholder='Klienti' name="klienti"
+                onChange={handleChange} />
+                <Input focus placeholder='Telefoni' name="telefoni"
                 onChange={handleChange} />
                 </Modal.Content>
                 <Modal.Actions>

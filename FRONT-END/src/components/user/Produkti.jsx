@@ -104,10 +104,7 @@ export function ProduktiTable() {
 
  
     const UpdateProdukti = async () => {
-      console.log(emri);
-      console.log(number);
-      console.log(sektoriId);
-      console.log(markaId);
+
       var id=Editmodal.currentID;
       console.log(id);
         setEditModal({ open: false })
