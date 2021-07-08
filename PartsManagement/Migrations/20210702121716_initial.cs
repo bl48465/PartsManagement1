@@ -375,7 +375,7 @@ namespace PartsManagement.Migrations
                     Emri = table.Column<string>(nullable: true),
                     Number = table.Column<string>(nullable: true),
                     SektoriId = table.Column<int>(nullable: false),
-                    MarkaId = table.Column<int>(nullable: false)
+                    MarkaId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

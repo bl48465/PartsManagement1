@@ -7,17 +7,18 @@ import axios from 'axios'
 import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import { BoxContainer, Flexirimi, MainDiv, TableHead , TableText , RowText } from './navbar/StyledComponents';
-
 import { AddButton } from '../button/add'
-import { UpdateButton } from '../button/update'
+import Alert from '@material-ui/lab/Alert';
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar }  from './navbar/SearchBar';
+import { MdComment } from 'react-icons/md'
 
 export  function KomentiTable() {
 
     const token = window.localStorage.getItem('token');
     var userId = window.localStorage.getItem('userId');
+
     const [data, setData] = useState('')
     const config = {
         headers: {
@@ -48,6 +49,15 @@ export  function KomentiTable() {
             open:false,
         }
     });
+
+    
+
+    const [alert,setAlert] = useState({
+        validity:null,
+        message:''
+    })
+
+
     const[SearchField,setSearchField]=useState('');
     const[titulli,setTitulli]=useState('');
     const[body,setBody]=useState('');
@@ -65,10 +75,10 @@ export  function KomentiTable() {
 
         axios.delete("http://localhost:5000/api/Komenti/" + modali.currentID,config)
             .then((response) => {
-                console.log(response.data)
+                    setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error);
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
     }
     
@@ -79,10 +89,10 @@ export  function KomentiTable() {
         axios.post("http://localhost:5000/api/Komenti",
         {titulli:titulli, body:body, userId:userId},config)
             .then((response) => {
-                console.log(response.data.message)
+                setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error.data);
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
@@ -98,6 +108,7 @@ export  function KomentiTable() {
                 <Icon name='add'/>
                 Shto Koment
                 </AddButton>
+                {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                 <div style={{display:'block', padding:10, marginBottom:1}}>
                 <SearchBar 
                         placeholder="Enter Name" 
@@ -109,27 +120,21 @@ export  function KomentiTable() {
             <Table className="" aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                    <TableCell fontSize="large" align="center"><TableText>Komenti ID</TableText></TableCell>
-                    <TableCell fontSize="large" align="center"><TableText>Titulli Komentit</TableText></TableCell>
+                    <TableCell fontSize="large" align="center"><TableText></TableText></TableCell>
+                    <TableCell fontSize="large" align="center"><TableText>Titulli</TableText></TableCell>
                     <TableCell fontSize="large" align="center"><TableText>Komenti</TableText></TableCell>
-                    <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
+                    <TableCell fontSize="large" align="right"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                 {komenti.filter(rreshti=>rreshti.titulli.toLowerCase()
                 .includes(SearchField.toLowerCase())).map((row,key)=>(
                     <TableRow key={row.komentiId}>
-                        <TableCell align="right"><RowText>{row.komentiId}</RowText></TableCell>
-                        <TableCell align="right"><RowText>{row.titulli}</RowText></TableCell>
-                        <TableCell align="right"><RowText>{row.body}</RowText></TableCell>
-                        <TableCell align="right">
-                        {/* <UpdateButton 
-                        onClick={() => 
-                        setEditModal(
-                            {currentID:row.komentiId,open:true,titulli:row.titulli,body:row.body})}>
-                            <Icon name='history'/>
-                            Përditëso
-                        </UpdateButton> */}
+                        <TableCell align="left"><MdComment color="#fc4747" size="30"/></TableCell>
+                        <TableCell align="center"><RowText>{row.titulli}</RowText></TableCell>
+                        <TableCell align="center"><RowText>{row.body}</RowText></TableCell>
+                        <TableCell align="center">
+
                             <DeleteButton variant="contained" color="secondary"
                             onClick={() => setModal({currentID:row.komentiId,open:true})}>
                             <Icon name='delete'/>
@@ -147,10 +152,11 @@ export  function KomentiTable() {
             <Modal
                 closeIcon
                 open={modali.open}
+                size='mini'
                 onClose={() => setModal({open:false})}
                 onOpen={() => setModal({open:true})}
             >
-                <Header icon='archive' content='Konfirmo Fshierjen!' />
+                <Header icon='delete' content='Konfirmo fshirjen?' />
                 <Modal.Content>
                     <p>
                     Dëshironi të fshini komentin?
@@ -170,11 +176,12 @@ export  function KomentiTable() {
                {/* Modali per Add */}
             <Modal
                 closeIcon
+                size='mini'
                 open={AddModal.open}
                 onClose={() => setAddModal({open:false})}
                 onOpen={() => setAddModal({open:true})}
             >
-                <Header icon='archive' content='Shto Koment!' />
+                <Header icon='add' content='Shto koment' />
                 <Modal.Content>
                 <Input focus placeholder='Titulli Komentit' 
                 onChange={(e) => setTitulli(e.target.value)}/>

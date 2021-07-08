@@ -17,7 +17,7 @@ namespace PartsManagement.Dtos
 
         public int SektoriId { get; set; }
 
-        [Required]
+
         public int MarkaId { get; set; }
 
     }
