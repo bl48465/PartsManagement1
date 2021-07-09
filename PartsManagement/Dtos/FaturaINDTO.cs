@@ -16,7 +16,7 @@ namespace PartsManagement.Dtos
         [Required]
         public double Qmimi { get; set; }
 
-        [Required]
+
         public int ProduktiId { get; set; }
 
         public string UserId { get; set; }

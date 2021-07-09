@@ -11,6 +11,7 @@ import { KomentiTable } from '././components/user/Komenti';
 import { PorositeTable } from '././components/user/Porosia';
 import { FurnitoriTable } from '././components/user/Furnitoret';
 import Navbar from '././components/user/navbar/Navbar';
+import { StokuTable } from "./components/user/Stoku";
 
 
 
@@ -24,57 +25,103 @@ const AppContainer = styled.div `
 `;
 
 function App() {
-    return (
-    <BrowserRouter >
-        <div className = "Container" >
-            <Switch>
-              <Route exact path = "/" >
-              <Homepage />
-              </Route>
+    return ( <
+        BrowserRouter >
+        <
+        div className = "Container" >
+        <
+        Switch >
+        <
+        Route exact path = "/" >
+        <
+        Homepage / >
+        <
+        /Route>
 
-              <Route path = "/AccountBox" >
-              <AppContainer >
-              <AccountBox />
-              </AppContainer>
-              </Route>
+        <
+        Route path = "/AccountBox" >
+        <
+        AppContainer >
+        <
+        AccountBox / >
+        <
+        /AppContainer> <
+        /Route>
 
-              <Route path = "/Produkti" >
-              <AppContainer >
-              <Navbar />
-              <ProduktiTable />
-              </AppContainer> 
-              </Route>
+        <
+        Route path = "/Produkti" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        ProduktiTable / >
+        <
+        /AppContainer>  <
+        /Route>
 
-              <Route path = "/Sektori" >
-              <AppContainer >
-              <Navbar />
-              <SektoriTable />
-              </AppContainer> 
-              </Route>
+        <
+        Route path = "/Sektori" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        SektoriTable / >
+        <
+        /AppContainer>  <
+        /Route>
 
-              <Route path = "/Komenti" >
-              <AppContainer >
-              <Navbar />
-              <KomentiTable />
-              </AppContainer> 
-              </Route> 
+        <
+        Route path = "/Komenti" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        KomentiTable / >
+        <
+        /AppContainer>  <
+        /Route> 
 
-              <Route path = "/Porosite" >
-              < AppContainer >
-              <Navbar />
-              < PorositeTable />
-              </AppContainer> 
-              </Route>
-              
-              <Route path = "/Furnitori" >
-              <AppContainer >
-              < Navbar />
-              <FurnitoriTable />
-              </AppContainer> 
-              </Route> 
-            </Switch>
-          </div> 
-    </BrowserRouter>
+        <
+        Route path = "/Porosite" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        PorositeTable / >
+        <
+        /AppContainer>  <
+        /Route>
+
+        <
+        Route path = "/Furnitori" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        FurnitoriTable / >
+        <
+        /AppContainer>  <
+        /Route> 
+
+        <
+        Route path = "/Stoku" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        StokuTable / >
+        <
+        /AppContainer>  <
+        /Route>  <
+        /Switch> <
+        /div>  <
+        /BrowserRouter>
     );
 }
 

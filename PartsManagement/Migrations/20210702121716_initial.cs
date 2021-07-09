@@ -402,7 +402,7 @@ namespace PartsManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Sasia = table.Column<int>(nullable: false),
                     Qmimi = table.Column<double>(nullable: false),
-                    ProduktiId = table.Column<int>(nullable: false),
+                    ProduktiId = table.Column<int>(nullable: true),
                     UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
