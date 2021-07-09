@@ -43,7 +43,7 @@ export const SidebarData = [
   },
   {
     title: 'Produktet',
-    path: '/Produktet',
+    path: '/Produkti',
     icon: <AiIcons.AiOutlineDropbox className="iconn"/>,
     cName: 'nav-text'
   },

@@ -24,7 +24,8 @@ namespace PartsManagement.Models
         public DbSet<Marka> Markat { get; set; }
         public DbSet<Shteti> Shtetet { get; set; }
         public DbSet<Qyteti> Qytetet { get; set; }
-        public DbSet<Shitja> Shitjet { get; set; }
+        public DbSet<Shitja> Shitjet { get; set;} 
+        public DbSet<Kerkesa>Kerkesat { get;set;}
 
         protected override void OnModelCreating(ModelBuilder model)
         {

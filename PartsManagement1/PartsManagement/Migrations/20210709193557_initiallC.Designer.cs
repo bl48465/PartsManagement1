@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PartsManagement.Models;
 
 namespace PartsManagement.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20210709193557_initiallC")]
+    partial class initiallC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,22 +50,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d90e8e82-bd63-4cab-8ed6-a26645cb6b80",
-                            ConcurrencyStamp = "18cb3664-6069-485a-9326-2cb7a1ce2dea",
+                            Id = "b6c06de7-4a5d-4c4e-aefb-fd349d953805",
+                            ConcurrencyStamp = "a6b9ba22-e67c-433c-8bd8-48a7b15ea5e2",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "59486023-1937-4c47-acd5-584b496c2c93",
-                            ConcurrencyStamp = "da0caafa-6d8a-4464-a8a6-6d9c1e180680",
+                            Id = "c9674503-38c4-45eb-bbc7-9edd59bea5d0",
+                            ConcurrencyStamp = "cfc35c97-70eb-46cf-9476-edf43d58af07",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "24d0dbc7-aee7-4bbd-9d0e-2fd6176fd68d",
-                            ConcurrencyStamp = "206d7b6f-c6a8-4820-b68c-71b1d3e1b5cf",
+                            Id = "67ac1bbf-cd0e-4cdf-8185-06a1e7b88f59",
+                            ConcurrencyStamp = "a6ae0729-6974-45fe-b3ff-c615d219d269",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });
@@ -257,6 +259,33 @@ namespace PartsManagement.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Furnitoret");
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.Kerkesa", b =>
+                {
+                    b.Property<int>("KekresaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmriMbiemri")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Marka")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mbishkrimi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Modeli")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("KekresaID");
+
+                    b.ToTable("Kerkesat");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.Komenti", b =>

@@ -17,6 +17,8 @@ import React,{useState} from 'react'
 import { Logout } from "./components/accountBox/Logout";
 import { selectUser } from "./reducers/rootReducer";
 import { selectCurrentLog } from "./reducers/logReducer";
+import UserCard from "./components/user/Useri";
+import Form from "./components/user/KerkesaComponent/Form";
 
 
 
@@ -33,8 +35,6 @@ const AppContainer = styled.div `
 function App() {
   const user = useSelector(selectUser);
   const log = useSelector(selectCurrentLog)
-
- 
 
     return (
     <BrowserRouter >
@@ -56,41 +56,16 @@ function App() {
               <ProtectedRoute path="/Porosite" component={PorositeTable} isAuth={user===null?false:true}/>
               <ProtectedRoute path="/Logout" component={Logout} isAuth={user===null?false:true}/>
               <ProtectedRoute path="/Furnitori" component={FurnitoriTable} isAuth={user===null?false:true}/>
-             
-{/* 
+              <ProtectedRoute path="/Settings" component={UserCard} isAuth={user===null?false:true}/>
+              <ProtectedRoute path="/Kerkesa" component={Form} isAuth={user===null?false:true}/>
 
-              {/* <Route path = "/Sektori" >
-              <AppContainer >
-              <Navbar />
-              <SektoriTable />
-              </AppContainer> 
-              </Route> */}
-{/* 
-              <Route path = "/Komenti" >
-              <AppContainer >
-              <Navbar />
-              <KomentiTable />
-              </AppContainer> 
-              </Route>  */}
 
-              {/* <Route path = "/Porosite" >
-              < AppContainer >
-              <Navbar />
-              < PorositeTable />
-              </AppContainer> 
-              </Route>
 
-              
-              <Route path = "/Logout" >
-              <Logout/>
-              </Route> */}
-              
-              {/* <Route path = "/Furnitori" >
-              <AppContainer >
-              < Navbar />
-              <FurnitoriTable />
-              </AppContainer> 
-              </Route>  */} 
+        
+
+
+
+
             </Switch>
           </div> 
     </BrowserRouter>

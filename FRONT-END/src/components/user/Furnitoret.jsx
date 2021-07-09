@@ -15,6 +15,7 @@ import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import { RiUserLocationFill } from 'react-icons/ri';
 import Alert from '@material-ui/lab/Alert';
+import Navbar from './navbar/Navbar';
 
 
 export function FurnitoriTable() {
@@ -153,6 +154,7 @@ export function FurnitoriTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+            <Navbar/>
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
