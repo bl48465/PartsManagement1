@@ -17,7 +17,6 @@ namespace PartsManagement.Dtos
 
         public int SektoriId { get; set; }
 
-
         public int MarkaId { get; set; }
 
     }
@@ -30,5 +29,6 @@ namespace PartsManagement.Dtos
     public class ProduktiDTO : CreateProduktiDTO
     {
         public int ProduktiId { get; set; }
+        public int Sasia { get; set; }
     }
 }

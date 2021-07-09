@@ -18,8 +18,8 @@ using PartsManagement.Dtos;
 
 
 namespace PartsManagement.Controllers
-{   
-  
+{
+
     [Route("api/[controller]")]
     [ApiController]
     public class ProduktiController : ControllerBase
@@ -66,7 +66,7 @@ namespace PartsManagement.Controllers
             }
             else
             {
-                var produkteteuserit = await _context.Produktet.Include(x =>x.Marka).Include(p=>p.Sektori).Where(a => a.Sektori.UserId == userId).ToListAsync();
+                var produkteteuserit = await _context.Produktet.Include(x => x.Marka).Include(p => p.Sektori).Where(a => a.Sektori.UserId == userId).ToListAsync();
                 if (produkteteuserit == null) { return NotFound($"Produktet nuk u gjetën!"); }
                 return Ok(produkteteuserit);
             }
@@ -87,24 +87,24 @@ namespace PartsManagement.Controllers
                 _logger.LogError($"Invalid POST attempt in {nameof(CreateProdukti)}");
                 return BadRequest(ModelState);
             }
-  
+
             if (role.Equals("Puntor"))
             {
                 var puntori = _context.Users.Where(a => a.Id.Equals(userId));
                 var p = puntori.FirstOrDefault();
 
-                var checkExist = await _unitOfWork.Produktet.Get(a => a.SektoriId == produktiDTO.SektoriId && a.Number.Equals(produktiDTO.Number));
+                var checkExist = await _unitOfWork.Produktet.Get(a => a.Number.Equals(produktiDTO.Number));
                 if (checkExist != null) { return BadRequest($"Produkti ekziston!"); }
-               
+
                 var produkti = _mapper.Map<Produkti>(produktiDTO);
                 await _unitOfWork.Produktet.Insert(produkti);
                 await _unitOfWork.Save();
-                
+
                 return Ok($"Produkti { produkti.Emri } u shtua me sukses");
             }
             else
             {
-                var checkExist = await _unitOfWork.Produktet.Get(a => a.SektoriId == produktiDTO.SektoriId && a.Number.Equals(produktiDTO.Number));
+                var checkExist = await _unitOfWork.Produktet.Get(a => a.Number.Equals(produktiDTO.Number));
                 if (checkExist != null) { return BadRequest($"Produkti ekziston!"); }
 
                 var produkti = _mapper.Map<Produkti>(produktiDTO);
@@ -115,14 +115,77 @@ namespace PartsManagement.Controllers
 
         }
 
-        [HttpPost("stoku")]
-        [Authorize(Roles ="User")]
+        [HttpPost("shitja")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateStoku([FromBody] CreateFaturaINDTO faturaINDTO,string productNo)
+        public async Task<IActionResult> CreateShitja([FromBody] CreateFaturaOUTDTO faturaOUTDTO, string productNo)
         {
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError($"Invalid POST attempt in {nameof(CreateShitja)}");
+                return BadRequest(ModelState);
+            }
+            var puntori = _context.Users.Where(a => a.Id.Equals(userId));
+            var worker  = puntori.FirstOrDefault();
+
+            var useri = _context.Users.Where(a => a.Id.Equals(userId));
+            var u = useri.FirstOrDefault();
+
+            var product = _context.Produktet.Where(a => a.Number.Equals(productNo));
+            var p = product.FirstOrDefault();
+
+            if (p == null) return BadRequest("Numri serik i dhënë është gabim");
+
+            if (role.Equals("Puntor")) {
+
+                faturaOUTDTO.UserId = worker.ShefiId;
+                faturaOUTDTO.ProduktiId = p.ProduktiId;
+                faturaOUTDTO.Shitesi = $"{worker.Emri} {worker.Mbiemri}";
+
+                var fatura = _mapper.Map<FaturaOUT>(faturaOUTDTO);
+
+                if (p.Sasia < 0) return BadRequest("Nuk keni sasi të mjaftueshme");
+
+                p.Sasia -= faturaOUTDTO.Sasia;
+
+                _context.Produktet.Update(p);
+                _context.FaturatOUT.Add(fatura);
+
+                await _context.SaveChangesAsync();
+                return Ok($"Produkti {p.Emri} u shit me sukses");
+            }
+            else
+            {
+                faturaOUTDTO.UserId = userId;
+                faturaOUTDTO.ProduktiId = p.ProduktiId;
+                faturaOUTDTO.Shitesi = $"{u.Emri} {u.Mbiemri}";
+                var fatura = _mapper.Map<FaturaOUT>(faturaOUTDTO);
          
+                p.Sasia -= faturaOUTDTO.Sasia;
+
+                if (p.Sasia < 0) return BadRequest("Nuk keni sasi të mjaftueshme");
+
+                _context.Produktet.Update(p);
+                _context.FaturatOUT.Add(fatura);
+
+                await _context.SaveChangesAsync();
+                return Ok($"Produkti {p.Emri} u shit me sukses");
+            }
+        }
+
+        [HttpPost("stoku")]
+        [Authorize(Roles = "User")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateStoku([FromBody] CreateFaturaINDTO faturaINDTO, string productNo)
+        {
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!ModelState.IsValid)
@@ -139,11 +202,13 @@ namespace PartsManagement.Controllers
             faturaINDTO.UserId = userId;
             faturaINDTO.ProduktiId = p.ProduktiId;
             var fatura = _mapper.Map<FaturaIN>(faturaINDTO);
+            p.Sasia += faturaINDTO.Sasia;
+            _context.Produktet.Update(p);
             _context.FaturatIN.Add(fatura);
             await _context.SaveChangesAsync();
             return Ok($"Fatura u shtua me sukses");
-
         }
+
 
         [Authorize(Roles = "User")]
         [HttpGet("stoku")]
@@ -154,6 +219,18 @@ namespace PartsManagement.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var stoku = await _context.FaturatIN.Include(x=>x.Produkti).ToListAsync();
+            return Ok(stoku);
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpGet("shitja")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> GetShitjet()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var stoku = await _context.FaturatOUT.Include(x => x.Produkti).ToListAsync();
             return Ok(stoku);
         }
 

@@ -7,17 +7,17 @@ import axios from 'axios'
 import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from './navbar/StyledComponents';
-
 import { AddButton } from '../button/add'
 import { UpdateButton } from '../button/update'
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
-import { RiBillFill } from 'react-icons/ri';
+import ReactToPrint from 'react-to-print';
+import { RiMoneyEuroCircleFill } from 'react-icons/ri';
 
 
-export function StokuTable() {
+export function ShitjaTable() {
 
     const token = window.localStorage.getItem('token');
 
@@ -35,7 +35,7 @@ export function StokuTable() {
         }
         });
 
-    const [stoku, setStoku] = useState([]);
+    const [shitja, setShitja] = useState([]);
     
 
     const [alert,setAlert] = useState({
@@ -52,11 +52,11 @@ export function StokuTable() {
     const [SearchField, setSearchField] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/Produkti/stoku', config).then(response => {
-            setStoku(response.data);
+        axios.get('http://localhost:5000/api/Produkti/shitja', config).then(response => {
+            setShitja(response.data);
         });
 
-    }, [stoku])
+    }, [shitja])
 
 
     const handleChange = ({ target }) => {
@@ -74,7 +74,7 @@ export function StokuTable() {
         console.log(formValues.number)
         setAddModal({ open: false })
 
-        axios.post("http://localhost:5000/api/Produkti/stoku?productNo="+formValues.number, formValues, config)
+        axios.post("http://localhost:5000/api/Produkti/shitja?productNo="+formValues.number, formValues, config)
             .then((response) => {
                 console.log(response.data)
                 setAlert({validity:true,message:response.data})
@@ -83,9 +83,7 @@ export function StokuTable() {
                 console.log(error.response.data);
                 setAlert({validity:false,message:error.response.data})
             })
-
     }
-
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
             <BoxContainer>
@@ -93,7 +91,7 @@ export function StokuTable() {
                     <Flexirimi>
                         <AddButton onClick={() => setAddModal({ open: true })}>
                             <Icon name='add' />
-                            Shto stok
+                            Shto shitje
                         </AddButton>
                         {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
@@ -112,18 +110,23 @@ export function StokuTable() {
                             <TableCell fontSize="large" align="center"><TableText>Emri</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Qmimi</TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Data e faturës</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Shitësi</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Data</TableText></TableCell>
+                            <TableCell align="right"></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {stoku.map((row, key) => (
+                        {shitja.map((row, key) => (
                                 <TableRow key={row.faturaId}>
-                                    <TableCell align="left"><RiBillFill color="#fc4747" size="30"/></TableCell>
+                                    <TableCell align="left"><RiMoneyEuroCircleFill color="#fc4747" size="30"/></TableCell>
                                     <TableCell align="center"><RowText>{row.produkti.number}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.produkti.emri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.sasia}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.qmimi} €</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.shitesi}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.createdAt}</RowText></TableCell>
+                                    <TableCell align="right">
+                                    </TableCell>
                                 </TableRow>
                             ))}
                     </TableBody>
@@ -136,7 +139,7 @@ export function StokuTable() {
                     onClose={() => setAddModal({ open: false })}
                     onOpen={() => setAddModal({ open: true })}
                 >
-                    <Header icon='add' content='Shto sektor' />
+                    <Header icon='add' content='Shto shitje' />
                     <Modal.Content>
                         <Input focus placeholder='Numri serik' name="number"
                             onChange={handleChange} />

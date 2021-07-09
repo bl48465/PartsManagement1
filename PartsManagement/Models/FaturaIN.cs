@@ -13,9 +13,8 @@ namespace PartsManagement.Models
         public int FaturaId { get; set; }
         public int Sasia { get; set; }
         public double Qmimi { get; set; }
-        
+        public string CreatedAt { get; set; } = DateTime.Now.ToString("MM/dd/yyyy");
         public int ProduktiId { get; set; }
-
         public string UserId { get; set; }
 
         [JsonIgnore]

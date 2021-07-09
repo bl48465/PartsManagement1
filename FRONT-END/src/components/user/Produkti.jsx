@@ -92,7 +92,7 @@ export function ProduktiTable() {
                 setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                setAlert({validity:false,message:'Diqka shkoi gabim!'})
+                setAlert({validity:false,message:error.response.data})
             })
     }
 
@@ -102,11 +102,10 @@ export function ProduktiTable() {
         setFormState({ formValues });
         };
 
- 
     const UpdateProdukti = async () => {
 
-      var id=Editmodal.currentID;
-      console.log(Editmodal);
+        var id=Editmodal.currentID;
+        console.log(Editmodal);
         setEditModal({ open: false })
         axios.put("http://localhost:5000/api/Produkti/"+ id, {
             emri: emri===""? Editmodal.emri:emri,
@@ -120,7 +119,7 @@ export function ProduktiTable() {
             })
             .catch((error) => {
                 console.log(error);
-                setAlert({validity:false,message:'Diqka shkoi gabim!'})
+                setAlert({validity:false,message:error.response.data})
             })
 
     }
@@ -136,7 +135,7 @@ export function ProduktiTable() {
             })
             .catch((error) => {
                 console.log(error);
-                setAlert({validity:false,message:'Diqka shkoi gabim!'})
+                setAlert({validity:false,message:error.response.data})
             })
     }
 
@@ -179,6 +178,7 @@ export function ProduktiTable() {
                             <TableCell align="left"><TableText></TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Emri Produktit</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Numri</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Marka</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Sektori</TableText></TableCell>
                             <TableCell align="right"><TableText>Menaxho</TableText></TableCell>
@@ -192,6 +192,7 @@ export function ProduktiTable() {
                                     <TableCell align="left"><GiCardboardBox color="#fc4747" size="30"/></TableCell>
                                     <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.number}</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.sasia}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.marka.emri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.sektori.emri}</RowText></TableCell>
                                     <TableCell align="right">
@@ -244,18 +245,18 @@ export function ProduktiTable() {
                 >
                     <Header icon='archive' content='Edito të dhënat' />
                     <Modal.Content>
-                    <Input focus placeholder='Emri produktit' name="emri"  defaultValue={Editmodal.emri}
+                    <Input focus placeholder='Emri produktit' name="emri"  required defaultValue={Editmodal.emri}
                             onChange={(e) => setEmri(e.target.value)} />
                         <Input focus placeholder='Numri' name="number" defaultValue={Editmodal.number}
                             onChange={(e) => setNumber(e.target.value)} />
 
-                        <Select   onChange={(e) => setSektoriId(e.target.value)} name="sektoriId"  defaultValue={Editmodal.sektoriId}>   
+                        <Select   onChange={(e) => setSektoriId(e.target.value)} name="sektoriId" required defaultValue={Editmodal.sektoriId}>   
                             {sektoret.map((e, key) => {  
                             return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
                             })}  
                         </Select>
                         
-                        <Select  onChange={(e) => setMarkaId(e.target.value)} name="markaId" defaultValue={Editmodal.markaId}>   
+                        <Select  onChange={(e) => setMarkaId(e.target.value)} required name="markaId" defaultValue={Editmodal.markaId}>   
                             {marka.map((e, key) => {  
                             return <option key={key} value={e.markaId}>{e.emri}</option>;  
                             })}  

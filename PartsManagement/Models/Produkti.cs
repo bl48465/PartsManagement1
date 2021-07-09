@@ -10,6 +10,7 @@ namespace PartsManagement.Models
         public int ProduktiId { get; set; }
         public string Emri { get; set; }
         public string Number { get; set; }
+        public int Sasia { get; set; }
 
         public int SektoriId { get; set; }
 

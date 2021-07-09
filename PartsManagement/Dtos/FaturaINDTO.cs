@@ -16,10 +16,10 @@ namespace PartsManagement.Dtos
         [Required]
         public double Qmimi { get; set; }
 
-
         public int ProduktiId { get; set; }
 
         public string UserId { get; set; }
+
     }
 
     public class UpdateFaturaINDTO : CreateFaturaINDTO { }
@@ -27,6 +27,7 @@ namespace PartsManagement.Dtos
     public class FaturaINDTO : CreateFaturaINDTO
         {
             public int FaturaId { get; set; }
-        }
+            public string CreatedAt { get; set; }
+    }
     
 }

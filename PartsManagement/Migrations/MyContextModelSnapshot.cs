@@ -48,22 +48,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9f672ad5-1895-41fe-ba42-cd945c68057f",
-                            ConcurrencyStamp = "31b27f05-a90d-4479-a85f-4d5301c1c16a",
+                            Id = "23642bf0-4dd8-407b-85e6-aac47660d457",
+                            ConcurrencyStamp = "2efea42d-16ec-45ec-b231-adb39c4cea6d",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "6a4d8f40-4100-4702-b159-e3d519f2a2b4",
-                            ConcurrencyStamp = "b0554823-db30-4e03-ad6a-622adf9b4e49",
+                            Id = "a1bf863d-b5e3-45a9-b4b3-01e3dfc543c8",
+                            ConcurrencyStamp = "fb4348b0-b359-40c8-b0c6-3a716104d8d7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f79efbb1-054c-452f-a561-55ea37f90542",
-                            ConcurrencyStamp = "82d39428-3e90-458f-93d1-ef511ea410e1",
+                            Id = "a54250eb-0733-4796-a4b9-469316b360d2",
+                            ConcurrencyStamp = "e29d9283-78c0-488d-aa08-b9897fe0599e",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });
@@ -180,6 +180,9 @@ namespace PartsManagement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CreatedAt")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProduktiId")
                         .HasColumnType("int");
 
@@ -206,6 +209,9 @@ namespace PartsManagement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CreatedAt")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProduktiId")
                         .HasColumnType("int");
 
@@ -215,6 +221,9 @@ namespace PartsManagement.Migrations
                     b.Property<int>("Sasia")
                         .HasColumnType("int");
 
+                    b.Property<string>("Shitesi")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Totali")
                         .HasColumnType("float");
 
@@ -222,6 +231,8 @@ namespace PartsManagement.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("FaturaId");
+
+                    b.HasIndex("ProduktiId");
 
                     b.HasIndex("UserId");
 
@@ -476,6 +487,9 @@ namespace PartsManagement.Migrations
 
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Sasia")
+                        .HasColumnType("int");
 
                     b.Property<int>("SektoriId")
                         .HasColumnType("int");
@@ -927,26 +941,6 @@ namespace PartsManagement.Migrations
                     b.ToTable("Sektoret");
                 });
 
-            modelBuilder.Entity("PartsManagement.Models.Shitja", b =>
-                {
-                    b.Property<int>("ShitjaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("FaturaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ShitjaId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Shitjet");
-                });
-
             modelBuilder.Entity("PartsManagement.Models.Shteti", b =>
                 {
                     b.Property<int>("ShtetiId")
@@ -1125,6 +1119,12 @@ namespace PartsManagement.Migrations
 
             modelBuilder.Entity("PartsManagement.Models.FaturaOUT", b =>
                 {
+                    b.HasOne("PartsManagement.Models.Produkti", "Produkti")
+                        .WithMany("FaturatOUT")
+                        .HasForeignKey("ProduktiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PartsManagement.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -1188,13 +1188,6 @@ namespace PartsManagement.Migrations
                 {
                     b.HasOne("PartsManagement.Models.User", null)
                         .WithMany("Sektoret")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("PartsManagement.Models.Shitja", b =>
-                {
-                    b.HasOne("PartsManagement.Models.User", "User")
-                        .WithMany()
                         .HasForeignKey("UserId");
                 });
 

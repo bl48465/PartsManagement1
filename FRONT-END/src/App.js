@@ -12,7 +12,7 @@ import { PorositeTable } from '././components/user/Porosia';
 import { FurnitoriTable } from '././components/user/Furnitoret';
 import Navbar from '././components/user/navbar/Navbar';
 import { StokuTable } from "./components/user/Stoku";
-
+import { ShitjaTable } from "./components/user/Shitja";
 
 
 const AppContainer = styled.div `
@@ -107,6 +107,17 @@ function App() {
         <
         /AppContainer>  <
         /Route> 
+        <
+        Route path = "/Shitja" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        ShitjaTable / >
+        <
+        /AppContainer>  <
+        /Route> 
 
         <
         Route path = "/Stoku" >
@@ -118,7 +129,8 @@ function App() {
         StokuTable / >
         <
         /AppContainer>  <
-        /Route>  <
+        /Route> 
+        <
         /Switch> <
         /div>  <
         /BrowserRouter>
