@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import {Redirect} from 'react-router-dom';
+import { useDispatch } from "react-redux";
 import {
   BoldLink,
   BoxContainer,
@@ -12,11 +13,14 @@ import {
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import axios from "axios";
+import { login } from "../../reducers/rootReducer";
+import {log} from "../../reducers/logReducer";
 
 export function LoginForm(props) {
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(true);
   const[fail,setFail]= useState({message:''});
+  const dispatch = useDispatch();
   
   const [form, setForm] = useState({
     formValues: {
@@ -32,6 +36,7 @@ export function LoginForm(props) {
   };
 
   const initialSession = async () => {
+    
     const { formValues } = form;
     await axios.post("http://localhost:5000/api/Account/login",formValues)
     .then((response) =>{
@@ -40,6 +45,20 @@ export function LoginForm(props) {
         window.localStorage.setItem('userId',response.data.userId);
         window.localStorage.setItem('emri',response.data.emri);
         window.localStorage.setItem('roli',response.data.roli);
+        
+    
+        dispatch(login({
+        userId:response.data.userId,
+        email:formValues.email,
+        emri:response.data.emri,
+        roli:response.data.roli,
+        token:response.data.token,
+        loggedIn:true
+        }));
+
+        dispatch(log({logStatus:true}));
+
+
         setRedirect(true);
       }
     })

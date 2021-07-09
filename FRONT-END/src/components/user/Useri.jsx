@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Card, Icon, Image, Button, Form,Transition } from 'semantic-ui-react'
 // import matthew from '../../images/matthew.png';
 import styled from "styled-components";
+import Navbar from './navbar/Navbar';
 
 export const BoxContainer = styled.div`
 margin-left:30%;
@@ -17,6 +18,7 @@ export default function UserCard() {
 
     return (
         <BoxContainer>
+            <Navbar/>
             <Card>
                 <Image src="" wrapped ui={false} />
                 <Card.Content>

@@ -11,6 +11,13 @@ import { KomentiTable } from '././components/user/Komenti';
 import { PorositeTable } from '././components/user/Porosia';
 import { FurnitoriTable } from '././components/user/Furnitoret';
 import Navbar from '././components/user/navbar/Navbar';
+import { useSelector } from "react-redux";
+import { ProtectedRoute } from "./features/ProtectedRoute";
+import React,{useState} from 'react'
+import { Logout } from "./components/accountBox/Logout";
+import { selectUser } from "./reducers/rootReducer";
+import { selectCurrentLog } from "./reducers/logReducer";
+
 
 
 
@@ -24,6 +31,11 @@ const AppContainer = styled.div `
 `;
 
 function App() {
+  const user = useSelector(selectUser);
+  const log = useSelector(selectCurrentLog)
+
+ 
+
     return (
     <BrowserRouter >
         <div className = "Container" >
@@ -38,40 +50,47 @@ function App() {
               </AppContainer>
               </Route>
 
-              <Route path = "/Produkti" >
-              <AppContainer >
-              <Navbar />
-              <ProduktiTable />
-              </AppContainer> 
-              </Route>
+              <ProtectedRoute path="/Produkti" component={ProduktiTable} isAuth={user===null?false:true}/>
+              <ProtectedRoute path="/Komenti" component={KomentiTable} isAuth={user===null?false:true}/>
+              <ProtectedRoute path="/Sektori" component={SektoriTable} isAuth={user===null?false:true}/>
+              <ProtectedRoute path="/Porosite" component={PorositeTable} isAuth={user===null?false:true}/>
+              <ProtectedRoute path="/Logout" component={Logout} isAuth={user===null?false:true}/>
+              <ProtectedRoute path="/Furnitori" component={FurnitoriTable} isAuth={user===null?false:true}/>
+             
+{/* 
 
-              <Route path = "/Sektori" >
+              {/* <Route path = "/Sektori" >
               <AppContainer >
               <Navbar />
               <SektoriTable />
               </AppContainer> 
-              </Route>
-
+              </Route> */}
+{/* 
               <Route path = "/Komenti" >
               <AppContainer >
               <Navbar />
               <KomentiTable />
               </AppContainer> 
-              </Route> 
+              </Route>  */}
 
-              <Route path = "/Porosite" >
+              {/* <Route path = "/Porosite" >
               < AppContainer >
               <Navbar />
               < PorositeTable />
               </AppContainer> 
               </Route>
+
               
-              <Route path = "/Furnitori" >
+              <Route path = "/Logout" >
+              <Logout/>
+              </Route> */}
+              
+              {/* <Route path = "/Furnitori" >
               <AppContainer >
               < Navbar />
               <FurnitoriTable />
               </AppContainer> 
-              </Route> 
+              </Route>  */} 
             </Switch>
           </div> 
     </BrowserRouter>

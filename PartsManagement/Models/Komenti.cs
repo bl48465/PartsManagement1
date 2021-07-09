@@ -8,6 +8,7 @@ namespace PartsManagement.Models
         public int KomentiId { get; set; }
         public string Titulli { get; set; }
         public string Body { get; set; }
+        public string emriKomentuesit { get;set;}
         public string UserId {get; set;}
         public string PuntoriId { get; set; }
         public User User { get; set; }

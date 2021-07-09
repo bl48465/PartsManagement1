@@ -13,15 +13,20 @@ import { UpdateButton } from '../button/update'
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar }  from './navbar/SearchBar';
+import Navbar from './navbar/Navbar';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
 
 export  function KomentiTable() {
 
+    const user=useSelector(selectUser);
+  
     const token = window.localStorage.getItem('token');
     var userId = window.localStorage.getItem('userId');
     const [data, setData] = useState('')
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token}
+            Authorization: 'Bearer ' + user.token}
         };
 
     const[komenti,setKomenti] = useState([]);
@@ -77,7 +82,7 @@ export  function KomentiTable() {
     const ShtoKoment = async () => {
         setAddModal({open:false})
         axios.post("http://localhost:5000/api/Komenti",
-        {titulli:titulli, body:body, userId:userId},config)
+        {titulli:titulli, body:body, emriKomentuesit:user.emri, userId:userId},config)
             .then((response) => {
                 console.log(response.data.message)
             })
@@ -91,6 +96,7 @@ export  function KomentiTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
+             <Navbar/>
         <BoxContainer>
         <MainDiv>
             <Flexirimi>
@@ -112,6 +118,7 @@ export  function KomentiTable() {
                     <TableCell fontSize="large" align="center"><TableText>Komenti ID</TableText></TableCell>
                     <TableCell fontSize="large" align="center"><TableText>Titulli Komentit</TableText></TableCell>
                     <TableCell fontSize="large" align="center"><TableText>Komenti</TableText></TableCell>
+                    <TableCell fontSize="large" align="center"><TableText>Komentuesi</TableText></TableCell>
                     <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
@@ -122,6 +129,7 @@ export  function KomentiTable() {
                         <TableCell align="right"><RowText>{row.komentiId}</RowText></TableCell>
                         <TableCell align="right"><RowText>{row.titulli}</RowText></TableCell>
                         <TableCell align="right"><RowText>{row.body}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.emriKomentuesit}</RowText></TableCell>
                         <TableCell align="right">
                         {/* <UpdateButton 
                         onClick={() => 

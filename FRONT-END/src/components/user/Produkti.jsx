@@ -15,14 +15,20 @@ import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { GiCardboardBox } from 'react-icons/gi';
 import { Select } from './navbar/StyledComponents'; 
+import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
+import Navbar from './navbar/Navbar';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
 
 export function ProduktiTable() {
 
-    const token = window.localStorage.getItem('token');
+
+    const user=useSelector(selectUser);
 
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + user.token
         }
     };
 
@@ -115,6 +121,10 @@ export function ProduktiTable() {
             markaId: markaId ===""? Editmodal.markaid:markaId,
         } ,config)
             .then((response) => {
+                setEmri("");
+                setNumber("");
+                setSektoriId("");
+                setMarkaId("");
                 console.log(response.data.message)
                 setAlert({validity:true,message:response.data})
             })
@@ -155,7 +165,10 @@ export function ProduktiTable() {
     },[])
 
     return (
-        <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+    
+        
+            <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+                    <Navbar />
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
@@ -311,5 +324,7 @@ export function ProduktiTable() {
                 </Modal>
             </BoxContainer>
         </IconContext.Provider>
+   
     );
 }
+export default withRouter(ProduktiTable);

@@ -15,6 +15,7 @@ import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { GoFileDirectory } from 'react-icons/go';
+import Navbar from './navbar/Navbar';
 
 
 export function SektoriTable() {
@@ -117,6 +118,7 @@ export function SektoriTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+             <Navbar/>
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
