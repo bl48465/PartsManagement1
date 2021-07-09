@@ -61,13 +61,13 @@ namespace PartsManagement.Controllers
                 var puntori = _context.Users.Where(a => a.Id.Equals(userId));
                 var p = puntori.FirstOrDefault();
 
-                var komenti = await _context.Komentet.Where(x => x.UserId == p.ShefiId).ToListAsync();
+                var komenti = await _context.Komentet.Include(a => a.User).Where(x => x.UserId == p.ShefiId).ToListAsync();
                 if (komenti == null) { return NotFound($"Komentet nuk u gjetën!"); }
                 return Ok(komenti);
             }
             else
             {
-                var komentetuserit = await _unitOfWork.Komentet.GetAll(a => a.UserId == userId);
+                var komentetuserit = await _context.Komentet.Include(x=>x.User).Where(a => a.UserId == userId).ToListAsync();
                 if (komentetuserit == null) { return NotFound($"Komentet nuk u gjetën!"); }
                 return Ok(komentetuserit);
             }

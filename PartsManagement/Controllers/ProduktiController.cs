@@ -120,7 +120,7 @@ namespace PartsManagement.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateStoku([FromBody] CreateFaturaINDTO faturaINDTO)
+        public async Task<IActionResult> CreateStoku([FromBody] CreateFaturaINDTO faturaINDTO,string productNo)
         {
          
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -130,8 +130,14 @@ namespace PartsManagement.Controllers
                 _logger.LogError($"Invalid POST attempt in {nameof(CreateStoku)}");
                 return BadRequest(ModelState);
             }
+            var product = _context.Produktet.Where(a => a.Number.Equals(productNo));
+
+            var p = product.FirstOrDefault();
+
+            if (p == null) return BadRequest("Numri serik i dhënë është gabim");
 
             faturaINDTO.UserId = userId;
+            faturaINDTO.ProduktiId = p.ProduktiId;
             var fatura = _mapper.Map<FaturaIN>(faturaINDTO);
             _context.FaturatIN.Add(fatura);
             await _context.SaveChangesAsync();
@@ -147,7 +153,7 @@ namespace PartsManagement.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var stoku = await _context.Produktet.Include(p => p.Faturat).ToListAsync();
+            var stoku = await _context.FaturatIN.Include(x=>x.Produkti).ToListAsync();
             return Ok(stoku);
         }
 

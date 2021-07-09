@@ -7,12 +7,14 @@ import axios from 'axios'
 import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from './navbar/StyledComponents';
-
+import ReactCountryFlag from "react-country-flag"
 import { AddButton } from '../button/add'
 import { UpdateButton } from '../button/update'
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
+import { RiUserLocationFill } from 'react-icons/ri';
+import Alert from '@material-ui/lab/Alert';
 
 
 export function FurnitoriTable() {
@@ -70,6 +72,10 @@ export function FurnitoriTable() {
 
 
 
+    const [alert,setAlert] = useState({
+        validity:null,
+        message:''
+    })
 
 
 
@@ -85,10 +91,10 @@ export function FurnitoriTable() {
         setModal({ open: false })
         axios.delete("http://localhost:5000/api/Furnitori/" + modali.currentID, config)
             .then((response) => {
-                console.log(response.data.message)
+                setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error.data);
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
@@ -119,11 +125,11 @@ export function FurnitoriTable() {
                 setMbiemri("");
                 setLokacioni("");
                 setTelefoni("");
-                console.log(response.data.message)
+                setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
                 console.log(error.data);
-                console.log('Dicka shkoi gabim');
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
@@ -134,11 +140,11 @@ export function FurnitoriTable() {
         setAddModal({ open: false })
         axios.post("http://localhost:5000/api/Furnitori", formValues, config)
             .then((response) => {
-                console.log(response.data.message)
+                setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
                 console.log(error.data);
-                console.log('Dicka shkoi gabim');
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
@@ -154,6 +160,7 @@ export function FurnitoriTable() {
                             <Icon name='add' />
                             Shto furnitor
                         </AddButton>
+                        {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
                             <SearchBar
                                 placeholder="Enter Name"
@@ -165,7 +172,7 @@ export function FurnitoriTable() {
                 <Table className="tabelaa" aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell fontSize="large" align="center"><TableText>FurnitoriID</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText></TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Emri i Furnitorit</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Mbiemri i Furnitorit</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Lokacioni</TableText></TableCell>
@@ -178,12 +185,12 @@ export function FurnitoriTable() {
                             .filter(rreshti => rreshti.emri.toLowerCase()
                                 .includes(SearchField.toLowerCase())).map((row, key) => (
                                     <TableRow key={row.furntoriId}>
-                                        <TableCell align="right"><RowText>{row.furnitoriId}</RowText></TableCell>
-                                        <TableCell align="right"><RowText>{row.emri}</RowText></TableCell>
-                                        <TableCell align="right"><RowText>{row.mbiemri}</RowText></TableCell>
-                                        <TableCell align="right"><RowText>{row.lokacioni}</RowText></TableCell>
-                                        <TableCell align="right"><RowText>{row.telefoni}</RowText></TableCell>
-                                        <TableCell align="right">
+                                        <TableCell align="left"><RiUserLocationFill color="#fc4747" size="30"/></TableCell>
+                                        <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
+                                        <TableCell align="center"><RowText>{row.mbiemri}</RowText></TableCell>
+                                        <TableCell align="center"><RowText>{row.lokacioni}</RowText></TableCell>
+                                        <TableCell align="center"><RowText><ReactCountryFlag countryCode="XK" svg  style={{width: '1em',height: '1em'}}/>  {row.telefoni}</RowText></TableCell>
+                                        <TableCell align="center">
                                             <UpdateButton
                                                 onClick={() =>
                                                     setEditModal(
@@ -215,10 +222,11 @@ export function FurnitoriTable() {
                 <Modal
                     closeIcon
                     open={modali.open}
+                    size='mini'
                     onClose={() => setModal({ open: false })}
                     onOpen={() => setModal({ open: true })}
                 >
-                    <Header icon='archive' content='Konfirmo Fshierjen!' />
+                    <Header icon='delete' content='Konfirmo fshirjen?' />
                     <Modal.Content>
                         <p>
                             Dëshironi të fshini furnitorin?
@@ -239,10 +247,11 @@ export function FurnitoriTable() {
                 <Modal
                     closeIcon
                     open={Editmodal.open}
+                    size='mini'
                     onClose={() => setEditModal({ open: false })}
                     onOpen={() => setEditModal({ open: true })}
                 >
-                    <Header icon='archive' content='Edito Te Dhenat!' />
+                    <Header icon='edit' content='Edito të dhënat' />
                     <Modal.Content>
                         <Input focus placeholder='Emri' name='emri' defaultValue={Editmodal.emri}
                             onChange={(e) => setEmri(e.target.value)} />
@@ -266,11 +275,12 @@ export function FurnitoriTable() {
                 {/* Modali per Add */}
                 <Modal
                     closeIcon
+                    size='mini'
                     open={AddModal.open}
                     onClose={() => setAddModal({ open: false })}
                     onOpen={() => setAddModal({ open: true })}
                 >
-                    <Header icon='archive' content='ShtoFurnitor!' />
+                    <Header icon='add' content='Shto furnitorë' />
                     <Modal.Content>
                         <Input focus placeholder='Emri' name='emri'
                             onChange={handleChange} />
@@ -278,7 +288,7 @@ export function FurnitoriTable() {
                             onChange={handleChange} />
                         <Input focus placeholder='Lokacioni' name='lokacioni'
                             onChange={handleChange} />
-                        <Input focus placeholder='Telefoni' name='telefoni'
+                        <Input focus placeholder='Telefoni' name='telefoni' 
                             onChange={handleChange} />
                     </Modal.Content>
                     <Modal.Actions>

@@ -112,7 +112,7 @@ export function ProduktiTable() {
     const UpdateProdukti = async () => {
 
       var id=Editmodal.currentID;
-      console.log(id);
+      console.log(Editmodal);
         setEditModal({ open: false })
         axios.put("http://localhost:5000/api/Produkti/"+ id, {
             emri: emri===""? Editmodal.emri:emri,
@@ -268,7 +268,7 @@ export function ProduktiTable() {
                             })}  
                         </Select>
                         
-                        <Select   onChange={(e) => setMarkaId(e.target.value)} name="markaId" defaultValue={Editmodal.markaId}>   
+                        <Select  onChange={(e) => setMarkaId(e.target.value)} name="markaId" defaultValue={Editmodal.markaId}>   
                             {marka.map((e, key) => {  
                             return <option key={key} value={e.markaId}>{e.emri}</option>;  
                             })}  

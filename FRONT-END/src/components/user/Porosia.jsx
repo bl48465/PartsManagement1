@@ -7,13 +7,13 @@ import axios from 'axios'
 import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import { BoxContainer, Flexirimi, MainDiv, TableHead , TableText , RowText } from './navbar/StyledComponents';
-
+import Alert from '@material-ui/lab/Alert';
 import { AddButton } from '../button/add'
 import { UpdateButton } from '../button/update'
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar }  from './navbar/SearchBar';
-import Navbar from './navbar/Navbar';
+import { GoListUnordered } from 'react-icons/go'
 
 export function PorositeTable() {
     const token = window.localStorage.getItem('token');
@@ -34,6 +34,12 @@ export function PorositeTable() {
             userId:window.localStorage.getItem('userId')
         }
     });
+
+    const [alert,setAlert] = useState({
+        validity:null,
+        message:''
+    })
+
     const[porosia,setPorosia] = useState([]);
     const [modali, setModal] = useState({
         modal:{
@@ -82,10 +88,10 @@ export function PorositeTable() {
         setModal({open:false})
         axios.delete("http://localhost:5000/api/Porosia/" + modali.currentID,config)
             .then((response) => {
-                console.log(response.data.message)
+                setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error.data);
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
@@ -106,10 +112,11 @@ export function PorositeTable() {
         telefoni: telefoni ===""? Editmodal.telefoni:telefoni,
         userId:userId}, config)
             .then((response) => {
-                console.log(response.data.message)
+
+                setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error.data);
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
@@ -120,10 +127,10 @@ export function PorositeTable() {
         setAddModal({open:false})
         axios.post("http://localhost:5000/api/Porosia", formValues, config)
             .then((response) => {
-                console.log(response.data.message)
+                setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error.data);
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
@@ -131,7 +138,6 @@ export function PorositeTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
-             <Navbar/>
         <BoxContainer>
         <MainDiv>
             <Flexirimi>
@@ -139,6 +145,7 @@ export function PorositeTable() {
                 <Icon name='add'/>
                 Shto Porosi
                 </AddButton>
+                {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                 <div style={{display:'block', padding:10, marginBottom:1}}>
                 <SearchBar 
                         placeholder="Enter Name"
@@ -150,23 +157,23 @@ export function PorositeTable() {
             <Table className="" aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell fontSize="large" align="center"><TableText>PorosiaID</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText></TableText></TableCell>
                         <TableCell fontSize="large" align="center"><TableText>Titulli</TableText></TableCell>
                         <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
                         <TableCell fontSize="large" align="center"><TableText>Klienti</TableText></TableCell>
-                        <TableCell fontSize="large" align="center"><TableText>NrTel</TableText></TableCell>
-                        <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
+                        <TableCell fontSize="large" align="center"><TableText>Telefoni</TableText></TableCell>
+                        <TableCell fontSize="large" align="right"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                 {porosia.filter(rreshti=>rreshti.titulli.toLowerCase()
                 .includes(SearchField.toLowerCase())).map((row,key)=>(
                     <TableRow key={row.porosiaId}>
-                        <TableCell align="right"><RowText>{row.porosiaId}</RowText></TableCell>
-                        <TableCell align="right"><RowText>{row.titulli}</RowText></TableCell>
-                        <TableCell align="right"><RowText>{row.sasia}</RowText></TableCell>
-                        <TableCell align="right"><RowText>{row.klienti}</RowText></TableCell>
-                        <TableCell align="right"><RowText>{row.telefoni}</RowText></TableCell>
+                        <TableCell align="center"><GoListUnordered color="#fc4747" size="30"/></TableCell>
+                        <TableCell align="center"><RowText>{row.titulli}</RowText></TableCell>
+                        <TableCell align="center"><RowText>{row.sasia}</RowText></TableCell>
+                        <TableCell align="center"><RowText>{row.klienti}</RowText></TableCell>
+                        <TableCell align="center"><RowText>{row.telefoni}</RowText></TableCell>
                         <TableCell align="right"> 
                         <UpdateButton
                         onClick={() => 
@@ -192,11 +199,12 @@ export function PorositeTable() {
 
             <Modal
                 closeIcon
+                size='mini'
                 open={modali.open}
                 onClose={() => setModal({open:false})}
                 onOpen={() => setModal({open:true})}
             >
-                <Header icon='archive' content='Konfirmo Fshierjen!' />
+                <Header icon='delete' content='Konfirmo fshirjen?' />
                 <Modal.Content>
                     <p>
                     Dëshironi të fshini porosine?
@@ -216,11 +224,12 @@ export function PorositeTable() {
             
             <Modal
                 closeIcon
+                size='mini'
                 open={Editmodal.open}
                 onClose={() => setEditModal({open:false})}
                 onOpen={() => setEditModal({open:true})}
             >
-                <Header icon='archive' content='Edito Te Dhenat!' />
+                <Header icon='edit' content='Edito porositë' />
                 <Modal.Content>
                 <Input focus placeholder='Search...' defaultValue={Editmodal.titulli} 
                   onChange={(e) => setTitulli(e.target.value)} />
@@ -236,7 +245,7 @@ export function PorositeTable() {
                         <Icon name='remove' /> Pishmon
                     </Button>
                     <Button color='green' onClick={UpdatePorosia}>
-                        <Icon name='checkmark' /> Perditeso
+                        <Icon name='checkmark' /> Përditeso
                     </Button>
                 </Modal.Actions>
             </Modal>
@@ -245,10 +254,11 @@ export function PorositeTable() {
             <Modal
                 closeIcon
                 open={AddModal.open}
+                size='mini'
                 onClose={() => setAddModal({open:false})}
                 onOpen={() => setAddModal({open:true})}
             >
-                <Header icon='archive' content='Shto Porosi!' />
+                <Header icon='add' content='Shto porosi' />
                 <Modal.Content>
                 <Input focus placeholder='Titulli' name="titulli"
                 onChange={handleChange} />

@@ -163,7 +163,7 @@ namespace PartsManagement.Controllers
             await _unitOfWork.Furnitoret.Delete(id);
             await _unitOfWork.Save();
 
-            return Ok($"Sektori {furnitori.Emri} u fshij me sukses! ");
+            return Ok($"Furnitori {furnitori.Emri} u fshij me sukses! ");
 
         }
     }
