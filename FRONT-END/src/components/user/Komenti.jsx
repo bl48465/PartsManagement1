@@ -21,7 +21,7 @@ export  function KomentiTable() {
 
     const user=useSelector(selectUser);
   
-    var userId = window.localStorage.getItem('userId');
+    var userId = user.userId;
 
     const config = {
         headers: {
@@ -104,7 +104,7 @@ export  function KomentiTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
-             <Navbar/>
+        <Navbar/>
         <BoxContainer>
         <MainDiv>
             <Flexirimi>

@@ -14,6 +14,7 @@ import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar }  from './navbar/SearchBar';
 import { GoListUnordered } from 'react-icons/go'
+import Navbar from './navbar/Navbar';
 
 export function PorositeTable() {
     const token = window.localStorage.getItem('token');
@@ -138,6 +139,7 @@ export function PorositeTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
+            <Navbar/>
         <BoxContainer>
         <MainDiv>
             <Flexirimi>

@@ -1,6 +1,5 @@
 import React,{useState,useEffect} from 'react'
 import "./featuredInfo.css";
-import { Centirimi } from "../StyledComponents";
 import axios from 'axios';
 import { Icon, Image, Statistic } from 'semantic-ui-react';
 
@@ -21,7 +20,7 @@ export default function FeaturedInfo() {
 
 
   return (
-    <Centirimi>
+
   
     <div className="featured">
       <div className="featuredItem">
@@ -29,7 +28,7 @@ export default function FeaturedInfo() {
     <Statistic>
     <Statistic.Value>
         {/* <Image src={furnitori} inline circular /> */}
-        {count}
+        <Icon name='chart bar' size='tiny' /> {count}
       </Statistic.Value>
       <Statistic.Label>Furnitor Te Regjistruar</Statistic.Label>
     </Statistic>
@@ -38,12 +37,39 @@ export default function FeaturedInfo() {
       <div className="featuredItem">
       <Statistic>
       <Statistic.Value>
-        <Icon name='chart bar' size='small' />5
+        <Icon name='chart bar' size='tiny' />5
       </Statistic.Value>
       <Statistic.Label>Nr i Produkteve</Statistic.Label>
     </Statistic>
         </div>
+
+        <div className="featuredItem">
+      <Statistic>
+      <Statistic.Value>
+        <Icon name='chart bar' size='tiny' />5
+      </Statistic.Value>
+      <Statistic.Label>Nr i Puntoreve</Statistic.Label>
+    </Statistic>
         </div>
-    </Centirimi>
+
+        <div className="featuredItem">
+      <Statistic>
+      <Statistic.Value>
+        <Icon name='chart bar' size='tiny' />5
+      </Statistic.Value>
+      <Statistic.Label>Nr i Shitjeve</Statistic.Label>
+    </Statistic>
+        </div>
+
+        <div className="featuredItem">
+      <Statistic>
+      <Statistic.Value>
+        <Icon name='chart bar' size='tiny' />5
+      </Statistic.Value>
+      <Statistic.Label>Nr i Porosive</Statistic.Label>
+    </Statistic>
+        </div>
+
+        </div>
   );
 }

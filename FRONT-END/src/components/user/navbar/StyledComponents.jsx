@@ -74,6 +74,13 @@ export const RowText = styled.p`
   margin-right:60px;
 `;
 
+export const PicCentiration = styled.p`
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+`;
+
 export const Select = styled.select`
   width: 53%;
   height: 35px;

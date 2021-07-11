@@ -1,0 +1,29 @@
+.form-content{
+    display: flex;
+    flex-direction: column;
+    padding-left: 30%;
+}
+
+input{
+    width: 250px;
+    height: 30px;
+    border-radius: 3px;
+    border: 1px solid lightgrey;
+    margin-top: 10px;
+}
+.form-label{
+    margin-top: 20px;
+    font-weight: 100;
+}
+
+.form-btn{
+  background-color: #FC4747;
+  border: 1px solid #FC4747;
+  color: white;
+  width: 280px;
+  height: 40px;
+  margin-top: 50px;
+}
+.form-btn:hover{
+    background-color:#f76565;
+}
