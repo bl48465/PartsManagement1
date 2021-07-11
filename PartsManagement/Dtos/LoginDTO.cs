@@ -8,11 +8,11 @@ namespace PartsManagement.Dtos
 {
     public class LoginDTO
     {
-        [Required]
+        //[Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(15, ErrorMessage = "Fjalëkalimi duhet të ketë së paku 8 shkronja", MinimumLength = 8)]
         public string Password { get; set; }
     }

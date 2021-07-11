@@ -65,7 +65,6 @@ export function LoginForm(props) {
         <Input type="password" name="password" placeholder="Fjalëkalimi" onChange={handleChange} />
       </FormContainer>
       <Marginer direction="vertical" margin={10} />
-      <MutedLink href="#">Keni harruar fjalëkalimin?</MutedLink>
       <Marginer direction="vertical" margin="1.6em" />
       <SubmitButton type="submit" onClick={() => initialSession()}>Kyquni</SubmitButton>
       <Marginer direction="vertical" margin="1em" />

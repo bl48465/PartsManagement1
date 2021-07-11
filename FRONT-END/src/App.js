@@ -13,7 +13,7 @@ import { FurnitoriTable } from '././components/user/Furnitoret';
 import Navbar from '././components/user/navbar/Navbar';
 import { StokuTable } from "./components/user/Stoku";
 import { ShitjaTable } from "./components/user/Shitja";
-
+import { PuntoriTable} from "./components/user/Puntori";
 
 const AppContainer = styled.div `
   width: 100%;
@@ -104,6 +104,17 @@ function App() {
         Navbar / >
         <
         FurnitoriTable / >
+        <
+        /AppContainer>  <
+        /Route> 
+        <
+        Route path = "/Puntori" >
+        <
+        AppContainer >
+        <
+        Navbar / >
+        <
+        PuntoriTable / >
         <
         /AppContainer>  <
         /Route> 

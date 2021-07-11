@@ -60,7 +60,7 @@ namespace PartsManagement.Controllers
             {
                 var puntori = _context.Users.Where(a => a.Id.Equals(userId));
                 var p = puntori.FirstOrDefault();
-                var produkti = await _context.Produktet.Where(x => x.Sektori.UserId == p.ShefiId).ToListAsync();
+                var produkti = await _context.Produktet.Include(x => x.Marka).Include(p => p.Sektori).Where(x => x.Sektori.UserId == p.ShefiId).ToListAsync();
                 if (produkti == null) { return NotFound($"Produktet nuk u gjetën!"); }
                 return Ok(produkti);
             }

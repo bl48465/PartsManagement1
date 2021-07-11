@@ -37,6 +37,8 @@ namespace PartsManagement
             );
 
             services.AddMemoryCache();
+            services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
+            services.AddSingleton<IMailer, Mailer>();
             services.AddSwaggerGen();
    
             services.AddHttpContextAccessor();

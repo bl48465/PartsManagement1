@@ -46,32 +46,30 @@ namespace PartsManagement.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [Authorize(Roles ="Puntor")]
-        [HttpGet("puntori")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetSektoretAsPuntor()
+        public async Task<ActionResult> GetSektoret()
         {
-            var puntoriId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var puntori = _context.Users.Where(a => a.Id.Equals(puntoriId));
-
-            var p = puntori.FirstOrDefault(); 
-
-            var sektoret = await _context.Sektoret.Where(s => s.UserId.Equals(p.ShefiId)).ToListAsync();
-            return Ok(sektoret);
-        }
-
-        [Authorize(Roles ="User")]
-        [HttpGet("user")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetSektoretAsUser()
-        {
+            var role = User.FindFirstValue(ClaimTypes.Role);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var sektoret = await _context.Sektoret.Where(s => s.UserId.Equals(userId)).ToListAsync();
-            return Ok(sektoret);
+            if (role.Equals("Puntor"))
+            {
+                var puntori = _context.Users.Where(a => a.Id.Equals(userId));
+                var p = puntori.FirstOrDefault();
+                var sektori = await _context.Sektoret.Where(x => x.UserId == p.ShefiId).ToListAsync();
+                if (sektori == null) { return NotFound($"Sektorët nuk u gjetën!"); }
+                return Ok(sektori);
+            }
+            else
+            {
+                var sektoret = await _context.Sektoret.Where(s => s.UserId.Equals(userId)).ToListAsync();
+                if (sektoret == null) { return NotFound($"Sektorët nuk u gjetën!"); }
+                return Ok(sektoret);
+            }
         }
 
         [Authorize(Roles ="User")]

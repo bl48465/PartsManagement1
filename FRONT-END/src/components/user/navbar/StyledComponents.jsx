@@ -59,7 +59,7 @@ export const TableHead = styled.thead`
 
 
 export const TableText = styled.p`
-  font-size: 21px;
+  font-size: 15px;
   color: #white;
   font-weight: normal;
   line-height: 1.4;
@@ -67,7 +67,7 @@ export const TableText = styled.p`
 `;
 
 export const RowText = styled.p`
-  font-size: 21px;
+  font-size: 15px;
   color: #black;
   font-weight: normal;
   line-height: 1.4;

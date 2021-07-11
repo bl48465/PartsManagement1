@@ -13,10 +13,10 @@ import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
-import { GiCardboardBox } from 'react-icons/gi';
-import { Select } from './navbar/StyledComponents'; 
+import { FaUser } from 'react-icons/fa';
+import { Select } from './navbar/StyledComponents';
 
-export function ProduktiTable() {
+export function PuntoriTable() {
 
     const token = window.localStorage.getItem('token');
 
@@ -29,41 +29,45 @@ export function ProduktiTable() {
     const [formState, setFormState] = useState({
         formValues: {
             emri: '',
-            number: '',
-            sektoriId:0,
-            markaId:0
+            mbiemri: '',
+            email: '',
+            password: 'Kosova123.',
+            qytetiId: 0,
         }
-        });
+    });
 
-    const [sektoret,setSektoret]=useState([]);
+    const [shtetet, setShtetet] = useState([]);
+    const [qytetet, setQytetet] = useState([]);
+    const [sh, setSh] = useState();
 
-    const [produkti, setProdukti] = useState([]);
 
-    const [marka,setMarka] = useState([]);
+    const [puntori, setPuntori] = useState([]);
+
 
     const [modali, setModal] = useState({
         modal: {
-            currentID: 0,
+            currentID: '',
             open: false,
         }
     });
 
-    const [alert,setAlert] = useState({
-        validity:null,
-        message:''
+    const [alert, setAlert] = useState({
+        validity: null,
+        message: ''
     })
 
     const [Editmodal, setEditModal] = useState({
         modali: {
-            currentID: 0,
+            currentID: '',
             open: false,
             emri: '',
-            number:'',
-            sektoriId:0,
-            markaId:0
+            mbiemri: '',
+            email: '',
+            password: 'Kosova123.',
+            qytetiId: 0,
         }
     });
-    
+
     const [AddModal, setAddModal] = useState({
         modal: {
             emri: '',
@@ -71,28 +75,25 @@ export function ProduktiTable() {
         }
     });
     const [SearchField, setSearchField] = useState('');
-    const [emri ,setEmri] = useState("");
-    const [number, setNumber] = useState("");
-    const [sektoriId, setSektoriId] = useState(0);
-    const [markaId, setMarkaId] = useState(0);
-
+    const [password, setPassword] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/Produkti', config).then(response => {
-            setProdukti(response.data);
+        axios.get('http://localhost:5000/api/User/puntoret', config).then(response => {
+            setPuntori(response.data);
         });
 
-    }, [produkti])
+    }, [puntori])
 
-    const fshijProduktin = async () => {
+    const fshijPuntorin = async () => {
 
+        var id = Editmodal.currentID;
         setModal({ open: false })
-        axios.delete("http://localhost:5000/api/Produkti/" + modali.currentID, config)
+        axios.delete("http://localhost:5000/api/User/"+ modali.currentID, config)
             .then((response) => {
-                setAlert({validity:true,message:response.data})
+                setAlert({ validity: true, message: response.data })
             })
             .catch((error) => {
-                setAlert({validity:false,message:error.response.data})
+                setAlert({ validity: false, message:error.response.data})
             })
     }
 
@@ -100,58 +101,54 @@ export function ProduktiTable() {
         const { formValues } = formState;
         formValues[target.name] = target.value;
         setFormState({ formValues });
-        };
+    };
 
-    const UpdateProdukti = async () => {
 
-        var id=Editmodal.currentID;
-        console.log(Editmodal);
+    const UpdatePuntori = async () => {
+
+        var id = Editmodal.currentID;
         setEditModal({ open: false })
-        axios.put("http://localhost:5000/api/Produkti/"+ id, {
-            emri: emri===""? Editmodal.emri:emri,
-            number: number ===""? Editmodal.number:number,
-            sektoriId: sektoriId ===""? Editmodal.sektoriId:sektoriId,
-            markaId: markaId ===""? Editmodal.markaid:markaId,
-        } ,config)
+        axios.put("http://localhost:5000/api/User/user/password/" + id, {
+            password: password === "" ? Editmodal.password : password,
+        }, config)
             .then((response) => {
                 console.log(response.data.message)
-                setAlert({validity:true,message:response.data})
+                setAlert({ validity: true, message: response.data })
             })
             .catch((error) => {
                 console.log(error);
-                setAlert({validity:false,message:error.response.data})
+                setAlert({ validity: false, message:error.response.data})
             })
 
     }
 
-    const ShtoProdukt = async () => {
+    const ShtoPuntore = async () => {
 
         setAddModal({ open: false })
         const { formValues } = formState;
-        axios.post("http://localhost:5000/api/Produkti/",formValues,config)
+        axios.post("http://localhost:5000/api/User/register/puntor/", formValues, config)
             .then((response) => {
-                console.log(response.data)
-                setAlert({validity:true,message:response.data})
+            
+                setAlert({ validity: true, message: response.data })
             })
             .catch((error) => {
                 console.log(error);
-                setAlert({validity:false,message:error.response.data})
+                setAlert({ validity: false, message:error.response.data})
             })
     }
 
-    useEffect(()=>{
-        axios.get("http://localhost:5000/api/Sektori/",config)
-        .then((response) => {  
-            setSektoret(response.data);
-        })
-    },[])
+    useEffect(() => {
+        axios.get('http://localhost:5000/api/Shteti').then(response => {
+            setShtetet(response.data);
+        });
+    })
 
-    useEffect(()=>{
-        axios.get("http://localhost:5000/api/Marka",config)
-        .then((response) => {  
-            setMarka(response.data);
-        })
-    },[])
+    const ChangetheState = (e) => {
+        setSh({ sh: e.target.value });
+        axios.get('http://localhost:5000/api/Qyteti?shtetiId=' + e.target.value).then(response => {
+            setQytetet(response.data);
+        });
+    }
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
@@ -160,7 +157,7 @@ export function ProduktiTable() {
                     <Flexirimi>
                         <AddButton onClick={() => setAddModal({ open: true })}>
                             <Icon name='add' />
-                            Shto produkt
+                            Shto puntorë
                         </AddButton>
                         {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
@@ -176,35 +173,33 @@ export function ProduktiTable() {
                     <TableHead>
                         <TableRow>
                             <TableCell align="left"><TableText></TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Emri Produktit</TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Numri</TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Marka</TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Sektori</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Emri</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Mbiemri</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Email</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Qyteti</TableText></TableCell>
                             <TableCell align="right"><TableText>Menaxho</TableText></TableCell>
 
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {produkti.filter(rreshti => rreshti.emri.toLowerCase()
+                        {puntori.filter(rreshti => rreshti.emri.toLowerCase()
                             .includes(SearchField.toLowerCase())).map((row, key) => (
-                                <TableRow key={row.produktiId}>
-                                    <TableCell align="left"><GiCardboardBox color="#fc4747" size="30"/></TableCell>
+                                <TableRow key={row.id}>
+                                    <TableCell align="left"><FaUser color="#fc4747" size="30" /></TableCell>
                                     <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
-                                    <TableCell align="center"><RowText>{row.number}</RowText></TableCell>
-                                    <TableCell align="center"><RowText>{row.sasia}</RowText></TableCell>
-                                    <TableCell align="center"><RowText>{row.marka.emri}</RowText></TableCell>
-                                    <TableCell align="center"><RowText>{row.sektori.emri}</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.mbiemri}</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.email}</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.qyteti.emri}</RowText></TableCell>
                                     <TableCell align="right">
                                         <UpdateButton
                                             onClick={() =>
                                                 setEditModal(
-                                                    { currentID: row.produktiId, open: true, emri: row.emri ,number:row.number, sektoriId:row.sektoriId, markaId: row.markaId})}>
-                                            <Icon name='history' />
-                                            Përditëso
+                                                    { currentID: row.id, open: true, emri: row.emri, mbiemri: row.mbiemri, email: row.email, qytetiId: row.qytetiId })}>
+                                            <Icon name='lock' />
+                                            Fjalëkalimi
                                         </UpdateButton>
                                         <DeleteButton
-                                            onClick={() => setModal({ currentID: row.produktiId,open: true })}>
+                                            onClick={() => setModal({ currentID: row.id, open: true })}>
                                             <Icon name='delete' />
                                             Fshij
                                         </DeleteButton>
@@ -221,17 +216,17 @@ export function ProduktiTable() {
                     onClose={() => setModal({ open: false })}
                     onOpen={() => setModal({ open: true })}
                 >
-                    <Header icon='archive' content='Konfirmo fshirjen e produktit' />
+                    <Header icon='update' content='Konfirmo fshirjen e produktit' />
                     <Modal.Content>
                         <p>
-                            Dëshironi të fshini Produktin?
+                            Dëshironi të fshini Puntorin?
                         </p>
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='black' onClick={() => setModal({ open: false })}>
                             <Icon name='remove' /> Jo
                         </Button>
-                        <Button color='green' onClick={fshijProduktin}>
+                        <Button color='green' onClick={fshijPuntorin}>
                             <Icon name='checkmark' /> Po
                         </Button>
                     </Modal.Actions>
@@ -243,31 +238,16 @@ export function ProduktiTable() {
                     onClose={() => setEditModal({ open: false })}
                     onOpen={() => setEditModal({ open: true })}
                 >
-                    <Header icon='archive' content='Edito të dhënat' />
+                    <Header icon='archive' content='Ndërro fjalëkalimin' />
                     <Modal.Content>
-                    <Input focus placeholder='Emri produktit' name="emri"  required defaultValue={Editmodal.emri}
-                            onChange={(e) => setEmri(e.target.value)} />
-                        <Input focus placeholder='Numri' name="number" defaultValue={Editmodal.number}
-                            onChange={(e) => setNumber(e.target.value)} />
-
-                        <Select   onChange={(e) => setSektoriId(e.target.value)} name="sektoriId" required defaultValue={Editmodal.sektoriId}>   
-                            {sektoret.map((e, key) => {  
-                            return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
-                            })}  
-                        </Select>
-                        
-                        <Select  onChange={(e) => setMarkaId(e.target.value)} required name="markaId" defaultValue={Editmodal.markaId}>   
-                            {marka.map((e, key) => {  
-                            return <option key={key} value={e.markaId}>{e.emri}</option>;  
-                            })}  
-                        </Select>
-        
+                        <Input focus type="password" placeholder='Fjalëkalimi' name="password" defaultValue={Editmodal.password}
+                            onChange={(e) => setPassword(e.target.value)} />
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='black' onClick={() => setEditModal({ open: false })}>
                             <Icon name='remove' />Pishmon
                         </Button>
-                        <Button color='green' onClick={UpdateProdukti}> 
+                        <Button color='green' onClick={UpdatePuntori}>
                             <Icon name='checkmark' /> Përditëso
                         </Button>
                     </Modal.Actions>
@@ -279,33 +259,34 @@ export function ProduktiTable() {
                     onClose={() => setAddModal({ open: false })}
                     onOpen={() => setAddModal({ open: true })}
                 >
-                    <Header icon='add' content='Shto produkt' />
+                    <Header icon='add' content='Shto puntorë' />
                     <Modal.Content>
-                        <Input focus placeholder='Emri produktit' name="emri" 
+                        <Input focus placeholder='Emri puntorit' name="emri"
                             onChange={handleChange} />
-                        <Input focus placeholder='Numri' name="number"
+                        <Input focus placeholder='Mbiemri' name="mbiemri"
                             onChange={handleChange} />
+                        <Input focus placeholder='Email' name="email"
+                            onChange={handleChange} />
+                        <Select onChange={ChangetheState} name="emriQytetit"  >
+                            <option>Shteti</option>
+                            {shtetet.map((e, key) => {
+                                return <option key={key} value={e.shtetiId}>{e.emri}</option>;
+                            })}
+                        </Select>
+                        <Select name="QytetiId" onChange={handleChange} >
+                            <option>Qyteti</option>
+                            {qytetet.map((e, key) => {
+                                return <option key={key} value={e.qytetiId}>{e.emri}</option>;
+                            })}
+                        </Select>
 
-                        <Select  onChange={handleChange} name="sektoriId"  >  
-                            <option>Sektori</option> 
-                            {sektoret.map((e, key) => {  
-                            return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
-                            })}  
-                        </Select>
-                        
-                        <Select  onChange={handleChange} name="markaId"  >  
-                            <option>Marka</option> 
-                            {marka.map((e, key) => {  
-                            return <option key={key} value={e.markaId}>{e.emri}</option>;  
-                            })}  
-                        </Select>
-        
+
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='black' onClick={() => setAddModal({ open: false })}>
                             <Icon name='remove' /> Pishmon
                         </Button>
-                        <Button color='green' onClick={ShtoProdukt}>
+                        <Button color='green' onClick={ShtoPuntore}>
                             <Icon name='checkmark' />Shto
                         </Button>
                     </Modal.Actions>
