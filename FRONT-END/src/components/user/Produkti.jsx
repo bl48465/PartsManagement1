@@ -139,7 +139,7 @@ export function ProduktiTable() {
 
         setAddModal({ open: false })
         const { formValues } = formState;
-        axios.post("http://localhost:5000/api/Produkti/",formValues,config)
+        axios.post("http://localhost:5000/api/Produkti",formValues,config)
             .then((response) => {
                 console.log(response.data)
                 setAlert({validity:true,message:response.data})
@@ -248,6 +248,7 @@ export function ProduktiTable() {
                         </Button>
                     </Modal.Actions>
                 </Modal>
+                
                 <Modal
                     closeIcon
                     open={Editmodal.open}

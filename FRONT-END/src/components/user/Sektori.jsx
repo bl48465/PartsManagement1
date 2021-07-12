@@ -16,15 +16,15 @@ import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { GoFileDirectory } from 'react-icons/go';
 import Navbar from './navbar/Navbar';
-
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../reducers/rootReducer';
 
 export function SektoriTable() {
-
-    const token = window.localStorage.getItem('token');
+    const useri = useSelector(selectUser);
 
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + useri.token
         }
     };
 
