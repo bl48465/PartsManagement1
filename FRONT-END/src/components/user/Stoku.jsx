@@ -7,23 +7,25 @@ import axios from 'axios'
 import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from './navbar/StyledComponents';
-
 import { AddButton } from '../button/add'
 import { UpdateButton } from '../button/update'
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
 import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
-import { RiBillFill } from 'react-icons/ri';
+import { GoFileDirectory } from 'react-icons/go';
+import Navbar from './navbar/Navbar';
 
 
 export function StokuTable() {
 
-    const token = window.localStorage.getItem('token');
+    const useri = useSelector(selectUser);
 
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + useri.token
         }
     };
 
@@ -88,6 +90,7 @@ export function StokuTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+            <Navbar/>
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
@@ -112,18 +115,20 @@ export function StokuTable() {
                             <TableCell fontSize="large" align="center"><TableText>Emri</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Qmimi</TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Data e faturës</TableText></TableCell>
+                            <TableCell align="center"><TableText>Data</TableText></TableCell>
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {stoku.map((row, key) => (
                                 <TableRow key={row.faturaId}>
-                                    <TableCell align="left"><RiBillFill color="#fc4747" size="30"/></TableCell>
+                                    <TableCell align="left"><GoFileDirectory color="#fc4747" size="30"/></TableCell>
                                     <TableCell align="center"><RowText>{row.produkti.number}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.produkti.emri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.sasia}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.qmimi} €</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.createdAt}</RowText></TableCell>
+                                
                                 </TableRow>
                             ))}
                     </TableBody>
@@ -160,3 +165,4 @@ export function StokuTable() {
         </IconContext.Provider>
     );
 }
+ 

@@ -59,7 +59,7 @@ export const TableHead = styled.thead`
 
 
 export const TableText = styled.p`
-  font-size: 15px;
+  font-size: 21px;
   color: #white;
   font-weight: normal;
   line-height: 1.4;
@@ -67,11 +67,18 @@ export const TableText = styled.p`
 `;
 
 export const RowText = styled.p`
-  font-size: 15px;
+  font-size: 21px;
   color: #black;
   font-weight: normal;
   line-height: 1.4;
   margin-right:60px;
+`;
+
+export const PicCentiration = styled.p`
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 `;
 
 export const Select = styled.select`

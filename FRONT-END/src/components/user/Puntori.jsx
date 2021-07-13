@@ -14,15 +14,18 @@ import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { FaUser } from 'react-icons/fa';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
+import Navbar from './navbar/Navbar';
 import { Select } from './navbar/StyledComponents';
 
 export function PuntoriTable() {
 
-    const token = window.localStorage.getItem('token');
+    const useri = useSelector(selectUser);
 
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + useri.token
         }
     };
 
@@ -152,6 +155,7 @@ export function PuntoriTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+            <Navbar/>
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>

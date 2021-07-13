@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import {Redirect} from 'react-router-dom';
+import { useDispatch } from "react-redux";
 import {
   BoldLink,
   BoxContainer,
@@ -12,11 +13,14 @@ import {
 import { Marginer } from "../marginer";
 import { AccountContext } from "./accountContext";
 import axios from "axios";
+import { login } from "../../reducers/rootReducer";
 
 export function LoginForm(props) {
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState(true);
   const[fail,setFail]= useState({message:''});
+  const dispatch = useDispatch();
+  const [rolii,setRoli]=useState('');
   
   const [form, setForm] = useState({
     formValues: {
@@ -32,14 +36,24 @@ export function LoginForm(props) {
   };
 
   const initialSession = async () => {
+    
     const { formValues } = form;
     await axios.post("http://localhost:5000/api/Account/login",formValues)
     .then((response) =>{
       if(response.data){
-        window.localStorage.setItem('token',response.data.token);
-        window.localStorage.setItem('userId',response.data.userId);
-        window.localStorage.setItem('emri',response.data.emri);
-        window.localStorage.setItem('roli',response.data.roli);
+        setRoli(response.data.roli);
+
+        dispatch(login({
+        userId:response.data.userId,
+        email:formValues.email,
+        emri:response.data.emri,
+        roli:response.data.roli,
+        kompania:'beeeli',
+        token:response.data.token,
+        loggedIn:true
+        }));
+
+
         setRedirect(true);
       }
     })
@@ -55,7 +69,16 @@ export function LoginForm(props) {
   const { switchToSignup } = useContext(AccountContext);
 
   if(redirect===true){
-    return <Redirect to="/Dashboard"/>;}
+    if(rolii==='User'){
+      return <Redirect to="/HomeUser"/>;
+    }
+    else if(rolii === 'Admin'){
+      return <Redirect to="/HomeAdmin"/>;
+    }
+    else if(rolii === 'Puntor'){
+      return <Redirect to="/HomePuntor"/>;
+    }
+  }
 
   return (
     <BoxContainer>
@@ -65,6 +88,7 @@ export function LoginForm(props) {
         <Input type="password" name="password" placeholder="Fjalëkalimi" onChange={handleChange} />
       </FormContainer>
       <Marginer direction="vertical" margin={10} />
+      <MutedLink href="#">Keni harruar fjalëkalimin?</MutedLink>
       <Marginer direction="vertical" margin="1.6em" />
       <SubmitButton type="submit" onClick={() => initialSession()}>Kyquni</SubmitButton>
       <Marginer direction="vertical" margin="1em" />

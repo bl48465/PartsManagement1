@@ -136,22 +136,25 @@ namespace PartsManagement.Controllers
             var useri = _context.Users.Where(a => a.Id.Equals(userId));
             var u = useri.FirstOrDefault();
 
-            var product = _context.Produktet.Where(a => a.Number.Equals(productNo));
-            var p = product.FirstOrDefault();
-
-            if (p == null) return BadRequest("Numri serik i dhënë është gabim");
-
             if (role.Equals("Puntor")) {
+
+                var product = _context.Produktet.Where(a => a.Number.Equals(productNo) && a.Sektori.UserId == worker.ShefiId);
+                var p = product.FirstOrDefault();
+
+                if (p == null) return BadRequest("Numri serik i dhënë është gabim");
 
                 faturaOUTDTO.UserId = worker.ShefiId;
                 faturaOUTDTO.ProduktiId = p.ProduktiId;
                 faturaOUTDTO.Shitesi = $"{worker.Emri} {worker.Mbiemri}";
 
+
+                faturaOUTDTO.Totali = faturaOUTDTO.Sasia * faturaOUTDTO.Qmimi;
                 var fatura = _mapper.Map<FaturaOUT>(faturaOUTDTO);
 
                 if (p.Sasia < 0) return BadRequest("Nuk keni sasi të mjaftueshme");
 
                 p.Sasia -= faturaOUTDTO.Sasia;
+                fatura.Totali = faturaOUTDTO.Sasia * faturaOUTDTO.Qmimi;
 
                 _context.Produktet.Update(p);
                 _context.FaturatOUT.Add(fatura);
@@ -161,13 +164,20 @@ namespace PartsManagement.Controllers
             }
             else
             {
+
+                var product = _context.Produktet.Where(a => a.Number.Equals(productNo) && a.Sektori.UserId == userId);
+                var p = product.FirstOrDefault();
+
+                if (p == null) return BadRequest("Numri serik i dhënë është gabim");
+
                 faturaOUTDTO.UserId = userId;
                 faturaOUTDTO.ProduktiId = p.ProduktiId;
                 faturaOUTDTO.Shitesi = $"{u.Emri} {u.Mbiemri}";
-                var fatura = _mapper.Map<FaturaOUT>(faturaOUTDTO);
-         
-                p.Sasia -= faturaOUTDTO.Sasia;
+               
 
+                p.Sasia -= faturaOUTDTO.Sasia;
+                faturaOUTDTO.Totali = faturaOUTDTO.Sasia * faturaOUTDTO.Qmimi;
+                var fatura = _mapper.Map<FaturaOUT>(faturaOUTDTO);
                 if (p.Sasia < 0) return BadRequest("Nuk keni sasi të mjaftueshme");
 
                 _context.Produktet.Update(p);
@@ -193,7 +203,7 @@ namespace PartsManagement.Controllers
                 _logger.LogError($"Invalid POST attempt in {nameof(CreateStoku)}");
                 return BadRequest(ModelState);
             }
-            var product = _context.Produktet.Where(a => a.Number.Equals(productNo));
+            var product = _context.Produktet.Where(a => a.Number.Equals(productNo) && a.Sektori.UserId == userId);
 
             var p = product.FirstOrDefault();
 
@@ -218,7 +228,7 @@ namespace PartsManagement.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var stoku = await _context.FaturatIN.Include(x=>x.Produkti).ToListAsync();
+            var stoku = await _context.FaturatIN.Include(x=>x.Produkti).Where(a => a.UserId.Equals(userId)).ToListAsync();
             return Ok(stoku);
         }
 
@@ -230,7 +240,7 @@ namespace PartsManagement.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var stoku = await _context.FaturatOUT.Include(x => x.Produkti).ToListAsync();
+            var stoku = await _context.FaturatOUT.Include(x => x.Produkti).Where(a => a.UserId.Equals(userId)).ToListAsync();
             return Ok(stoku);
         }
 
@@ -293,7 +303,7 @@ namespace PartsManagement.Controllers
                     return BadRequest("Submitted data is invalid");
                 }
 
-                produktiDTO.SektoriId = produkti.SektoriId;
+                produkti.SektoriId = produktiDTO.SektoriId;
                 _mapper.Map(produktiDTO, produkti);
                 _unitOfWork.Produktet.Update(produkti);
                 await _unitOfWork.Save();
@@ -310,7 +320,7 @@ namespace PartsManagement.Controllers
                 }
 
 
-                produktiDTO.SektoriId = produkti.SektoriId;
+                produkti.SektoriId = produktiDTO.SektoriId;
                 _mapper.Map(produktiDTO, produkti);
                 _unitOfWork.Produktet.Update(produkti);
                 await _unitOfWork.Save();

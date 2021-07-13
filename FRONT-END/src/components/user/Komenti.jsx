@@ -12,17 +12,20 @@ import Alert from '@material-ui/lab/Alert';
 import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar }  from './navbar/SearchBar';
+import Navbar from './navbar/Navbar';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
 import { MdComment } from 'react-icons/md'
 
 export  function KomentiTable() {
 
-    const token = window.localStorage.getItem('token');
-    var userId = window.localStorage.getItem('userId');
+    const user=useSelector(selectUser);
+  
+    var userId = user.userId;
 
-    const [data, setData] = useState('')
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token}
+            Authorization: 'Bearer ' + user.token}
         };
 
     const[komenti,setKomenti] = useState([]);
@@ -87,7 +90,7 @@ export  function KomentiTable() {
     const ShtoKoment = async () => {
         setAddModal({open:false})
         axios.post("http://localhost:5000/api/Komenti",
-        {titulli:titulli, body:body, userId:userId},config)
+        {titulli:titulli, body:body, emriKomentuesit:user.emri, userId:userId},config)
             .then((response) => {
                 setAlert({validity:true,message:response.data})
             })
@@ -101,6 +104,7 @@ export  function KomentiTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
+        <Navbar/>
         <BoxContainer>
         <MainDiv>
             <Flexirimi>
@@ -123,18 +127,19 @@ export  function KomentiTable() {
                     <TableCell fontSize="large" align="center"><TableText></TableText></TableCell>
                     <TableCell fontSize="large" align="center"><TableText>Titulli</TableText></TableCell>
                     <TableCell fontSize="large" align="center"><TableText>Komenti</TableText></TableCell>
-                    <TableCell fontSize="large" align="right"><TableText>Menaxho</TableText></TableCell>
+                    <TableCell fontSize="large" align="center"><TableText>Komentuesi</TableText></TableCell>
+                    <TableCell fontSize="large" align="center"><TableText>Menaxho</TableText></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                 {komenti.filter(rreshti=>rreshti.titulli.toLowerCase()
                 .includes(SearchField.toLowerCase())).map((row,key)=>(
                     <TableRow key={row.komentiId}>
-                        <TableCell align="left"><MdComment color="#fc4747" size="30"/></TableCell>
-                        <TableCell align="center"><RowText>{row.titulli}</RowText></TableCell>
-                        <TableCell align="center"><RowText>{row.body}</RowText></TableCell>
-                        <TableCell align="center">
-
+                        <TableCell align="right"><RowText>{row.komentiId}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.titulli}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.body}</RowText></TableCell>
+                        <TableCell align="right"><RowText>{row.emriKomentuesit}</RowText></TableCell>
+                        <TableCell align="right">
                             <DeleteButton variant="contained" color="secondary"
                             onClick={() => setModal({currentID:row.komentiId,open:true})}>
                             <Icon name='delete'/>

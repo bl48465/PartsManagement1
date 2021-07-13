@@ -15,15 +15,16 @@ import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import { RiUserLocationFill } from 'react-icons/ri';
 import Alert from '@material-ui/lab/Alert';
-
+import Navbar from './navbar/Navbar';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
 
 export function FurnitoriTable() {
-    var token = window.localStorage.getItem('token');
-    var userId = window.localStorage.getItem('userId');
+    const useri = useSelector(selectUser);
 
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + useri.token
         }
     };
 
@@ -118,7 +119,7 @@ export function FurnitoriTable() {
                 mbiemri: mbiemrii ===""? Editmodal.mbiemri:mbiemrii,
                 lokacioni: lokacionii ===""? Editmodal.lokacioni:lokacionii,
                 telefoni: telefonii ===""? Editmodal.telefoni:telefonii,
-                userId: userId
+                userId: useri.userId
             }, config)
             .then((response) => {
                 setEmri("");
@@ -153,6 +154,7 @@ export function FurnitoriTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+            <Navbar/>
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>

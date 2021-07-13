@@ -14,15 +14,18 @@ import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar }  from './navbar/SearchBar';
 import { GoListUnordered } from 'react-icons/go'
-
+import Navbar from './navbar/Navbar';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../reducers/rootReducer';
 export function PorositeTable() {
-    const token = window.localStorage.getItem('token');
-    var userId = window.localStorage.getItem('userId');
-    const [data, setData] = useState('')
+    const useri = useSelector(selectUser);
+
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token}
-        };
+            Authorization: 'Bearer ' + useri.token
+        }
+    };
+    const [data, setData] = useState('')
 
     const [formState, setFormState] = useState({
         formValues: {
@@ -31,7 +34,7 @@ export function PorositeTable() {
             sasia: 0,
             klienti: '',
             telefoni: '',
-            userId:window.localStorage.getItem('userId')
+            userId:useri.userId
         }
     });
 
@@ -110,7 +113,7 @@ export function PorositeTable() {
         sasia: sasia ===""? Editmodal.sasia:sasia,
         klienti: klienti ===""? Editmodal.klienti:klienti,
         telefoni: telefoni ===""? Editmodal.telefoni:telefoni,
-        userId:userId}, config)
+        userId:useri.userId}, config)
             .then((response) => {
 
                 setAlert({validity:true,message:response.data})
@@ -138,6 +141,7 @@ export function PorositeTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
+            <Navbar/>
         <BoxContainer>
         <MainDiv>
             <Flexirimi>

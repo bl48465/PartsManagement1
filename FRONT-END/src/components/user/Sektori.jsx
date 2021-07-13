@@ -15,15 +15,16 @@ import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { GoFileDirectory } from 'react-icons/go';
-
+import Navbar from './navbar/Navbar';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../reducers/rootReducer';
 
 export function SektoriTable() {
-
-    const token = window.localStorage.getItem('token');
+    const useri = useSelector(selectUser);
 
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + useri.token
         }
     };
 
@@ -60,6 +61,7 @@ export function SektoriTable() {
     useEffect(() => {
         axios.get('http://localhost:5000/api/Sektori/', config).then(response => {
             setSektori(response.data);
+            console.log(sektori);
         });
 
     }, [sektori])
@@ -117,13 +119,14 @@ export function SektoriTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+            <Navbar/>
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
-                        <AddButton onClick={() => setAddModal({ open: true })}>
+                        {(useri.roli == "Puntor") ? null : <AddButton onClick={() => setAddModal({ open: true })}>
                             <Icon name='add' />
                             Shto sektorë
-                        </AddButton>
+                        </AddButton>}
                         {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
                             <SearchBar

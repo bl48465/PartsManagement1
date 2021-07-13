@@ -26,7 +26,7 @@ export const Home = () =>{
   }
   },[])
 
-  const logout = async () => {
+    const logout = async () => {
     window.localStorage.removeItem('token');
     window.localStorage.removeItem('userId');
     window.localStorage.removeItem('emri');

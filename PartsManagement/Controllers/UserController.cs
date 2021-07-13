@@ -90,20 +90,18 @@ namespace PartsManagement.Controllers
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                
-                var shefiId = _context.Users.Where(a=>a.Id == userId); 
+                var user = _context.Users.Where(x => x.Id == userId);
+                var u = user.FirstOrDefault();
 
-                var shefi = shefiId.FirstOrDefault(); 
+                userDTO.UserId = userId;
+                userDTO.Kompania = u.Kompania;
+                userDTO.Roles = new string[] { "Puntor" };
+                userDTO.Password = $"{userDTO.Emri}123.";
 
-                var user = _mapper.Map<User>(userDTO);
+                var useri = _mapper.Map<User>(userDTO);
+                useri.UserName = userDTO.Email;
 
-                user.ShefiId = userId;
-                user.UserName = userDTO.Email;
-                user.Kompania = shefi.Kompania;
-                userDTO.Roles = new string[] {"Puntor"};
-                userDTO.Password = $"{userDTO.Emri}.{userDTO.Mbiemri}_{shefi.Id}";
-        
-                var result = await _userManager.CreateAsync(user, userDTO.Password);
+                var result = await _userManager.CreateAsync(useri, userDTO.Password);
 
                 if (!result.Succeeded)
                 {
@@ -114,7 +112,7 @@ namespace PartsManagement.Controllers
                     return BadRequest(ModelState);
                 }
 
-                await _userManager.AddToRolesAsync(user, userDTO.Roles);
+                await _userManager.AddToRolesAsync(useri, userDTO.Roles);
                 await _mailer.SendEmailAsync($"{userDTO.Email}", "Fjalëkalimi i përdoruesit", $"Përshëndetje {userDTO.Emri} për tu qasur në platformën AMS ju keni këto kredenciale : email: {userDTO.Email}, fjalëkalimi:{userDTO.Password}");
                 return Ok("Puntori u shtua me sukses");
             }
@@ -216,6 +214,7 @@ namespace PartsManagement.Controllers
                 await _userManager.RemovePasswordAsync(p);
                 await _userManager.AddPasswordAsync(p, userDTO.Password);
                 await _userManager.UpdateAsync(p);
+                await _mailer.SendEmailAsync($"{userDTO.Email}", "Fjalëkalimi i përdoruesit", $"Fjalëkalimi i ri i përdoruesit :{userDTO.Password}");
             }
             else
             {

@@ -8,22 +8,22 @@ import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from './navbar/StyledComponents';
 import { AddButton } from '../button/add'
-import { UpdateButton } from '../button/update'
-import { DeleteButton } from '../button/delButton'
 import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
-import ReactToPrint from 'react-to-print';
 import { RiMoneyEuroCircleFill } from 'react-icons/ri';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
+import Navbar from './navbar/Navbar';
 
 
 export function ShitjaTable() {
 
-    const token = window.localStorage.getItem('token');
+    const useri = useSelector(selectUser);
 
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + useri.token
         }
     };
 
@@ -69,8 +69,6 @@ export function ShitjaTable() {
     const shtoStok = async () => {
 
         const { formValues } = formState;
-        const { number } = formValues;
-        console.log(formValues)
         console.log(formValues.number)
         setAddModal({ open: false })
 
@@ -86,6 +84,7 @@ export function ShitjaTable() {
     }
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+            <Navbar/>
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
@@ -93,7 +92,7 @@ export function ShitjaTable() {
                             <Icon name='add' />
                             Shto shitje
                         </AddButton>
-                        {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
+                        {(alert.validity == null) ? null : (alert.validity === false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
                             <SearchBar
                                 placeholder="Enter Name"
@@ -110,6 +109,7 @@ export function ShitjaTable() {
                             <TableCell fontSize="large" align="center"><TableText>Emri</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Qmimi</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Totali</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Shitësi</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Data</TableText></TableCell>
                             <TableCell align="right"></TableCell>
@@ -123,6 +123,7 @@ export function ShitjaTable() {
                                     <TableCell align="center"><RowText>{row.produkti.emri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.sasia}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.qmimi} €</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.totali} €</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.shitesi}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.createdAt}</RowText></TableCell>
                                     <TableCell align="right">

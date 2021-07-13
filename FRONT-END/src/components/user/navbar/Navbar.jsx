@@ -7,6 +7,8 @@ import { SidebarData } from './SidebarData';
 import './Navbar.css';
 import { IconContext } from 'react-icons';
 import { DropdownData } from './DropdownData';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../reducers/rootReducer';
 import { NavText } from './StyledComponents';
 
 function Navbar(props) {
@@ -15,6 +17,9 @@ function Navbar(props) {
   const showSidebar = () => setSidebar(!sidebar);
 
   const[open, setOpen] = useState(false);
+
+  const useri = useSelector(selectUser);
+  
   const showDropdown =() => setOpen(!open);
 
 
@@ -26,9 +31,9 @@ function Navbar(props) {
             <Link to='#' className='menu-bars'>
               <FaIcons.FaBars onClick={showSidebar} />
             </Link>
-         
+  
             <Link to='#' className='menu-user' onClick={showDropdown}>
-                  <NavText>{window.localStorage.getItem('emri')}</NavText>
+                  <NavText>{useri.emri}</NavText>
                   <RiIcons.RiUserFill />
             </Link>
         </div>

@@ -15,14 +15,20 @@ import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { GiCardboardBox } from 'react-icons/gi';
 import { Select } from './navbar/StyledComponents'; 
+import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
+import Navbar from './navbar/Navbar';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
 
 export function ProduktiTable() {
 
-    const token = window.localStorage.getItem('token');
+
+    const user=useSelector(selectUser);
 
     const config = {
         headers: {
-            Authorization: 'Bearer ' + token
+            Authorization: 'Bearer ' + user.token
         }
     };
 
@@ -92,7 +98,7 @@ export function ProduktiTable() {
                 setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                setAlert({validity:false,message:error.response.data})
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
     }
 
@@ -102,24 +108,26 @@ export function ProduktiTable() {
         setFormState({ formValues });
         };
 
-    const UpdateProdukti = async () => {
 
+    const UpdateProdukti = async () => {
+        console.log(sektoriId)
         var id=Editmodal.currentID;
         console.log(Editmodal);
         setEditModal({ open: false })
         axios.put("http://localhost:5000/api/Produkti/"+ id, {
             emri: emri===""? Editmodal.emri:emri,
             number: number ===""? Editmodal.number:number,
-            sektoriId: sektoriId ===""? Editmodal.sektoriId:sektoriId,
-            markaId: markaId ===""? Editmodal.markaid:markaId,
+            sektoriId: sektoriId ===0? Editmodal.sektoriId:sektoriId,
+            markaId: markaId ===0? Editmodal.markaid:markaId,
         } ,config)
             .then((response) => {
                 console.log(response.data.message)
+
                 setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error);
-                setAlert({validity:false,message:error.response.data})
+                console.log(error.response.data);
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
     }
@@ -128,7 +136,7 @@ export function ProduktiTable() {
 
         setAddModal({ open: false })
         const { formValues } = formState;
-        axios.post("http://localhost:5000/api/Produkti/",formValues,config)
+        axios.post("http://localhost:5000/api/Produkti",formValues,config)
             .then((response) => {
                 console.log(response.data)
                 setAlert({validity:true,message:response.data})
@@ -154,7 +162,10 @@ export function ProduktiTable() {
     },[])
 
     return (
-        <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+    
+        
+            <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+                    <Navbar />
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
@@ -236,6 +247,7 @@ export function ProduktiTable() {
                         </Button>
                     </Modal.Actions>
                 </Modal>
+                
                 <Modal
                     closeIcon
                     open={Editmodal.open}
@@ -245,18 +257,18 @@ export function ProduktiTable() {
                 >
                     <Header icon='archive' content='Edito të dhënat' />
                     <Modal.Content>
-                    <Input focus placeholder='Emri produktit' name="emri"  required defaultValue={Editmodal.emri}
+                    <Input focus placeholder='Emri produktit' name="emri"  defaultValue={Editmodal.emri}
                             onChange={(e) => setEmri(e.target.value)} />
                         <Input focus placeholder='Numri' name="number" defaultValue={Editmodal.number}
                             onChange={(e) => setNumber(e.target.value)} />
 
-                        <Select   onChange={(e) => setSektoriId(e.target.value)} name="sektoriId" required defaultValue={Editmodal.sektoriId}>   
+                        <Select   onChange={(e) => setSektoriId(e.target.value)} name="sektoriId"  defaultValue={Editmodal.sektoriId}>   
                             {sektoret.map((e, key) => {  
                             return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
                             })}  
                         </Select>
                         
-                        <Select  onChange={(e) => setMarkaId(e.target.value)} required name="markaId" defaultValue={Editmodal.markaId}>   
+                        <Select  onChange={(e) => setMarkaId(e.target.value)} name="markaId" defaultValue={Editmodal.markaId}>   
                             {marka.map((e, key) => {  
                             return <option key={key} value={e.markaId}>{e.emri}</option>;  
                             })}  
@@ -286,14 +298,14 @@ export function ProduktiTable() {
                         <Input focus placeholder='Numri' name="number"
                             onChange={handleChange} />
 
-                        <Select  onChange={handleChange} name="sektoriId"  >  
+                        <Select  onChange={handleChange} name="sektoriId"  defaultValue={Editmodal.sektoriId}>  
                             <option>Sektori</option> 
                             {sektoret.map((e, key) => {  
                             return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
                             })}  
                         </Select>
                         
-                        <Select  onChange={handleChange} name="markaId"  >  
+                        <Select  onChange={handleChange} name="markaId" defaultValue={Editmodal.markaId} >  
                             <option>Marka</option> 
                             {marka.map((e, key) => {  
                             return <option key={key} value={e.markaId}>{e.emri}</option>;  
@@ -312,5 +324,7 @@ export function ProduktiTable() {
                 </Modal>
             </BoxContainer>
         </IconContext.Provider>
+
     );
 }
+export default withRouter(ProduktiTable);

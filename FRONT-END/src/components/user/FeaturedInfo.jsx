@@ -1,27 +1,49 @@
 import React,{useState,useEffect} from 'react'
 import "./featuredInfo.css";
-import { Centirimi } from "../StyledComponents";
 import axios from 'axios';
 import { Icon, Image, Statistic } from 'semantic-ui-react';
-
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../reducers/rootReducer';
 
 
 export default function FeaturedInfo() {
-  const[furnita,setFurnita]=useState([]);
+  const useri = useSelector(selectUser);
+
+  const config = {
+      headers: {
+          Authorization: 'Bearer ' + useri.token
+      }
+  };
+  
   const[count,setCount]=useState(0);
+  const[countProd,setCountProd]=useState(0);
+  const[countPor,setCountPor]=useState(0);
+  const[countKom,setCountKom]=useState(0);
+
   
   useEffect(() => {
-    axios.get('http://localhost:5000/api/Furnitoris').then(response => {
-        setFurnita(response.data);
-        setCount(furnita.length);
-    });
+  fetchData();
 
-}, [furnita])
+}, [count,countProd,countPor,countKom])
 
+const fetchData = async() =>{
+  axios.get('http://localhost:5000/api/Furnitori/user',config).then(response => {
+    setCount(response.data.length);
+});
+axios.get('http://localhost:5000/api/Produkti', config).then(response => {
+  setCountProd(response.data.length);
+});
+axios.get('http://localhost:5000/api/Porosia/user',config).then(response => {
+  setCountPor(response.data.length);
+});
+axios.get('http://localhost:5000/api/Komenti',config).then(response => {
+  setCountKom(response.data.length);
+});
+}
 
 
   return (
-    <Centirimi>
+
   
     <div className="featured">
       <div className="featuredItem">
@@ -29,7 +51,7 @@ export default function FeaturedInfo() {
     <Statistic>
     <Statistic.Value>
         {/* <Image src={furnitori} inline circular /> */}
-        {count}
+        <Icon name='chart bar' size='tiny' /> {count}
       </Statistic.Value>
       <Statistic.Label>Furnitor Te Regjistruar</Statistic.Label>
     </Statistic>
@@ -38,12 +60,39 @@ export default function FeaturedInfo() {
       <div className="featuredItem">
       <Statistic>
       <Statistic.Value>
-        <Icon name='chart bar' size='small' />5
+        <Icon name='chart bar' size='tiny' />{countProd}
       </Statistic.Value>
       <Statistic.Label>Nr i Produkteve</Statistic.Label>
     </Statistic>
         </div>
+
+        <div className="featuredItem">
+      <Statistic>
+      <Statistic.Value>
+        <Icon name='chart bar' size='tiny' />{countPor}
+      </Statistic.Value>
+      <Statistic.Label>Nr i Porosive</Statistic.Label>
+    </Statistic>
         </div>
-    </Centirimi>
+
+        <div className="featuredItem">
+      <Statistic>
+      <Statistic.Value>
+        <Icon name='chart bar' size='tiny' />{countKom}
+      </Statistic.Value>
+      <Statistic.Label>Nr i Komenteve</Statistic.Label>
+    </Statistic>
+        </div>
+
+        {/* <div className="featuredItem">
+      <Statistic>
+      <Statistic.Value>
+        <Icon name='chart bar' size='tiny' />5
+      </Statistic.Value>
+      <Statistic.Label>Nr i Shitjeve</Statistic.Label>
+    </Statistic>
+        </div> */}
+
+        </div>
   );
 }

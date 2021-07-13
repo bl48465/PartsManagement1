@@ -15,6 +15,7 @@ namespace PartsManagement.Dtos
         [Required]
         public double Qmimi { get; set; }
         public string Shitesi { get; set; }
+        public double Totali { get; set; }
         public int ProduktiId { get; set; }
         public string UserId { get; set; }
 
@@ -25,7 +26,6 @@ namespace PartsManagement.Dtos
     public class FaturaOUTDTO : CreateFaturaOUTDTO
     {
         public int FaturaId { get; set; }
-        public double Totali { get; set; }
         public string CreatedAt { get; set; }
 
 
