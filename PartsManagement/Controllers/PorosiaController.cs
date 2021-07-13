@@ -92,13 +92,12 @@ namespace PartsManagement.Controllers
                 var puntori = _context.Users.Where(a => a.Id.Equals(userId));
                 var p = puntori.FirstOrDefault();
 
-                var shefi = _context.Users.Where(a => a.Id == p.ShefiId);
-                var sh = shefi.FirstOrDefault();
-
                 var checkExist = await _unitOfWork.Porosite.Get(a => a.UserId == p.ShefiId && a.Titulli.Equals(porosiaDTO.Titulli));
                 if (checkExist != null) { return BadRequest($"Porosia ekziston!"); }
 
                 var porosia = _mapper.Map<Porosia>(porosiaDTO);
+
+
                 await _unitOfWork.Porosite.Insert(porosia);
                 await _unitOfWork.Save();
 

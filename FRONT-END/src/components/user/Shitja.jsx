@@ -10,11 +10,11 @@ import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from 
 import { AddButton } from '../button/add'
 import { IconContext } from 'react-icons';
 import { SearchBar } from './navbar/SearchBar';
+import PuntoriNav from './puntorinav/Navbar';
 import Alert from '@material-ui/lab/Alert';
 import { RiMoneyEuroCircleFill } from 'react-icons/ri';
 import {selectUser} from '../../reducers/rootReducer'
 import { useSelector } from "react-redux";
-import PuntoriNav from './puntorinav/Navbar';
 import Navbar from './navbar/Navbar';
 
 
@@ -67,7 +67,7 @@ export function ShitjaTable() {
 
         };
 
-    const shtoStok = async () => {
+    const shtoShitje = async () => {
 
         const { formValues } = formState;
         console.log(formValues.number)
@@ -85,7 +85,7 @@ export function ShitjaTable() {
     }
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-             {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
+            {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
@@ -156,7 +156,7 @@ export function ShitjaTable() {
                         <Button color='black' onClick={() => setAddModal({ open: false })}>
                             <Icon name='remove' /> Pishmon
                         </Button>
-                        <Button color='green' onClick={shtoStok}>
+                        <Button color='green' onClick={shtoShitje}>
                             <Icon name='checkmark' />Shto
                         </Button>
                     </Modal.Actions>

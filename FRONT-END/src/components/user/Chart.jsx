@@ -2,10 +2,23 @@ import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import axios from "axios";
 import FeaturedInfo from "./FeaturedInfo";
+import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from './navbar/StyledComponents';
+import { IconContext } from 'react-icons';
+import PuntoriNav from './puntorinav/Navbar';
+import Navbar from './navbar/Navbar';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
 
-
-const Dankmemes = () => {
+export const Dankmemes = () => {
     const [chartData, setChartData] = useState({});
+
+    const useri = useSelector(selectUser);
+
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + useri.token
+        }
+    };
 
     const chart = () => {
         let empSal = [];
@@ -40,7 +53,9 @@ const Dankmemes = () => {
         chart();
     }, []);
     return (
-
+        <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+        {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
+        <BoxContainer>
         <div className="chart">
             <div style={{ paddingTop: 20 }}>
                 <FeaturedInfo />
@@ -77,7 +92,8 @@ const Dankmemes = () => {
                 />
             </div>
         </div>
-
+        </BoxContainer>
+        </IconContext.Provider>
     );
 };
 

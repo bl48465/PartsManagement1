@@ -62,7 +62,7 @@ export function SektoriTable() {
     useEffect(() => {
         axios.get('http://localhost:5000/api/Sektori/', config).then(response => {
             setSektori(response.data);
-            console.log(sektori);
+
         });
 
     }, [sektori])

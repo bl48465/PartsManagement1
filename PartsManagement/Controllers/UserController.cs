@@ -57,7 +57,7 @@ namespace PartsManagement.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var puntoret = await _context.Users.Include(x => x.Qyteti).Where(a => a.ShefiId == userId).ToListAsync();
+            var puntoret = await _context.Users.Include(x => x.Qyteti).Where(a => a.ShefiId == userId && !a.Id.Equals(userId)).ToListAsync();
 
             return Ok(puntoret);
         }

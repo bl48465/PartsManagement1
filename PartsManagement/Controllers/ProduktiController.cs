@@ -147,13 +147,13 @@ namespace PartsManagement.Controllers
                 faturaOUTDTO.ProduktiId = p.ProduktiId;
                 faturaOUTDTO.Shitesi = $"{worker.Emri} {worker.Mbiemri}";
 
-
+                p.Sasia -= faturaOUTDTO.Sasia;
                 faturaOUTDTO.Totali = faturaOUTDTO.Sasia * faturaOUTDTO.Qmimi;
                 var fatura = _mapper.Map<FaturaOUT>(faturaOUTDTO);
 
                 if (p.Sasia < 0) return BadRequest("Nuk keni sasi të mjaftueshme");
 
-                p.Sasia -= faturaOUTDTO.Sasia;
+          
                 fatura.Totali = faturaOUTDTO.Sasia * faturaOUTDTO.Qmimi;
 
                 _context.Produktet.Update(p);
@@ -189,13 +189,13 @@ namespace PartsManagement.Controllers
         }
 
         [HttpPost("stoku")]
-        [Authorize(Roles = "User")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateStoku([FromBody] CreateFaturaINDTO faturaINDTO, string productNo)
         {
-
+            var role = User.FindFirstValue(ClaimTypes.Role);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!ModelState.IsValid)
@@ -203,33 +203,65 @@ namespace PartsManagement.Controllers
                 _logger.LogError($"Invalid POST attempt in {nameof(CreateStoku)}");
                 return BadRequest(ModelState);
             }
-            var product = _context.Produktet.Where(a => a.Number.Equals(productNo) && a.Sektori.UserId == userId);
+
+            var puntori = _context.Users.Where(a => a.Id.Equals(userId));
+            var worker = puntori.FirstOrDefault();
+
+            var product = _context.Produktet.Where(a => a.Number.Equals(productNo) && (a.Sektori.UserId == userId || a.Sektori.UserId == worker.ShefiId ));
 
             var p = product.FirstOrDefault();
 
             if (p == null) return BadRequest("Numri serik i dhënë është gabim");
 
-            faturaINDTO.UserId = userId;
-            faturaINDTO.ProduktiId = p.ProduktiId;
-            var fatura = _mapper.Map<FaturaIN>(faturaINDTO);
-            p.Sasia += faturaINDTO.Sasia;
-            _context.Produktet.Update(p);
-            _context.FaturatIN.Add(fatura);
-            await _context.SaveChangesAsync();
-            return Ok($"Fatura u shtua me sukses");
+
+            if (role.Equals("Puntor"))
+            {
+
+                faturaINDTO.UserId = worker.ShefiId;
+                faturaINDTO.ProduktiId = p.ProduktiId;
+                var fatura = _mapper.Map<FaturaIN>(faturaINDTO);
+                p.Sasia += faturaINDTO.Sasia;
+                _context.Produktet.Update(p);
+                _context.FaturatIN.Add(fatura);
+                await _context.SaveChangesAsync();
+                return Ok($"Fatura u shtua me sukses");
+            }
+            else
+            {
+                faturaINDTO.UserId = userId;
+                faturaINDTO.ProduktiId = p.ProduktiId;
+                var fatura = _mapper.Map<FaturaIN>(faturaINDTO);
+                p.Sasia += faturaINDTO.Sasia;
+                _context.Produktet.Update(p);
+                _context.FaturatIN.Add(fatura);
+                await _context.SaveChangesAsync();
+                return Ok($"Fatura u shtua me sukses");
+            }
         }
 
 
-        [Authorize(Roles = "User")]
+        [Authorize]
         [HttpGet("stoku")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> GetStokun()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            var puntori = _context.Users.Where(a => a.Id.Equals(userId));
+            var worker = puntori.FirstOrDefault();
 
-            var stoku = await _context.FaturatIN.Include(x=>x.Produkti).Where(a => a.UserId.Equals(userId)).ToListAsync();
-            return Ok(stoku);
+            if (role.Equals("Puntor"))
+            {
+                var stoku = await _context.FaturatIN.Include(x => x.Produkti).Where(a => a.UserId.Equals(worker.ShefiId)).ToListAsync();
+                return Ok(stoku);
+            }
+            else
+            {
+                var stoku = await _context.FaturatIN.Include(x => x.Produkti).Where(a => a.UserId.Equals(userId)).ToListAsync();
+                return Ok(stoku);
+            }
+           
         }
 
         [Authorize(Roles = "User")]

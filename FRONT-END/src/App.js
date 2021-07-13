@@ -18,8 +18,8 @@ import { NotFound } from "./NotFound";
 import { ShitjaTable } from './components/user/Shitja';
 import { StokuTable } from './components/user/Stoku';
 import { PuntoriTable } from './components/user/Puntori';
-import { HomeUser } from './components/user/Home';
 import { AdminTable } from "./components/user/admin/Admin";
+import Dankmemes from "./components/user/Chart";
 
 
 const AppContainer = styled.div `
@@ -71,9 +71,9 @@ function App() {
 
 
         <
-        ProtectedRoute path = "/HomeUser"
+        ProtectedRoute path = "/Home"
         role = { user === null ? '' : user.roli }
-        component = { HomeUser }
+        component = { Dankmemes }
         isAuth = { user === null ? false : true }
         />  <
         ProtectedRoute path = "/Produkti"

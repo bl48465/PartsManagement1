@@ -6,11 +6,14 @@ import axios from 'axios';
 import { selectUser } from '../../reducers/rootReducer'
 import { useSelector } from "react-redux";
 import logo from '../../assets/logo/logo.png'
+import { IconContext } from 'react-icons';
 import Alert from '@material-ui/lab/Alert';
 import { Select } from './navbar/StyledComponents';
 import PuntoriNav from './puntorinav/Navbar';
-
+import { useDispatch } from 'react-redux';
 import Navbar from './navbar/Navbar';
+import { useHistory } from 'react-router';
+import { logout } from '../../reducers/rootReducer';
 
 export const BoxContainer = styled.div`
 margin-left:21%;
@@ -26,6 +29,9 @@ flex-direction:row;
 `;
 
 export default function UserCard() {
+
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     const [emri, setEmri] = useState("");
     const [email, setEmail] = useState("");
@@ -74,6 +80,8 @@ export default function UserCard() {
         await axios.put("http://localhost:5000/api/User/password/"+userIdd+"?currentPassword="+current, {password:password} ,config)
         .then((response) => {
             setAlert({validity:true,message:response.data})
+            dispatch(logout());
+            history.push('/AccountBox');
         })
         .catch((error) => {
             setAlert({validity:false,message:'Diqka shkoi gabim!'})
@@ -94,7 +102,7 @@ export default function UserCard() {
         ,config)
 
             .then((response) => {
-                setAlert({validity:true,message:response.data})
+                setAlert({validity:true,message:response.data + ", ri-kyquni për ti parë"})
             })
             .catch((error) => {
                 setAlert({validity:false,message:'Diqka shkoi gabim!'})
@@ -118,9 +126,10 @@ export default function UserCard() {
     }
 
 
-    return (
+    return (      
+        <IconContext.Provider value={{ color: 'white', size: '2%' }}>
+        {(useriFromRedux.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
         <BoxContainer>
-             {(useriFromRedux.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <Flex>
                 <img src={logo} className="picu" width="35%" />
                 <div className="myInfo-box">
@@ -206,7 +215,7 @@ export default function UserCard() {
                 </Modal.Actions>
             </Modal>
         </BoxContainer>
-
+        </IconContext.Provider>
 
 
     );
