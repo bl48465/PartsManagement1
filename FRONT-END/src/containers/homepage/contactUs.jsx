@@ -154,7 +154,7 @@ export function ContactUs(props) {
         <BackgroundFilter>
           <Navbar />
           <Marginer direction="vertical" margin="8em" />
-          <Logo />
+          <Link to="/"><Logo /></Link>
           <br></br>
           <br></br>
           <br></br>

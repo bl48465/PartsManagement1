@@ -21,6 +21,7 @@ import { PuntoriTable } from './components/user/Puntori';
 import { AdminTable } from "./components/user/admin/Admin";
 import Dankmemes from "./components/user/Chart";
 import { ContactUs } from "./containers/homepage/contactUs";
+import { ContactTable } from "./components/user/ContactUs";
 
 
 const AppContainer = styled.div `
@@ -49,11 +50,11 @@ function App() {
         /Route>
 
         <
-        Route path = "/ContactUs" >
+        Route path = "/ContactAdmin" >
 
 
         <
-        ContactUs / >
+        ContactTable / >
         <
         /
         Route >

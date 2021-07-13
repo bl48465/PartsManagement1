@@ -36,7 +36,7 @@ export function Navbar(props) {
   return (
     <NavbarContainer>
       <BrandContainer>
-        <Logo inline />
+      <Link to="/"><Logo inline /></Link>
       </BrandContainer>
       <AccessibilityContainer>
         <Link  to="/ContactUs"><Button small>Na kontaktoni</Button></Link>
