@@ -22,7 +22,7 @@ namespace PartsManagement.Dtos
         public string Mbiemri { get; set; }
         public string Kompania { get; set; }
         public int QytetiId { get; set; }
-        public string UserId { get; set; }
+        public string ShefiId { get; set; }
         public ICollection<string> Roles { get; set; }
     }
 }

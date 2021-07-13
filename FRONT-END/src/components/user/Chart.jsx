@@ -45,7 +45,7 @@ const Dankmemes = () => {
             <div style={{ paddingTop: 20 }}>
                 <FeaturedInfo />
             </div>
-            <h1 style={{ marginLeft: 330 }}>QmimiHyres/Dales</h1>
+            <h1 style={{ marginLeft: 330 }}>Qmimi Hyrës / Dalës</h1>
             <div style={{ width: 600, marginLeft: 150 }}>
                 <Line
                     data={chartData}

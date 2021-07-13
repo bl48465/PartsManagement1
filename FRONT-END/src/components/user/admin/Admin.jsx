@@ -6,21 +6,21 @@ import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios'
 import { Header, Icon, Modal, Input, Button } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
-import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText } from './navbar/StyledComponents';
-import { AddButton } from '../button/add'
-import { UpdateButton } from '../button/update'
-import { DeleteButton } from '../button/delButton'
+import { BoxContainer, Flexirimi, MainDiv, TableHead, TableText, RowText,Select } from '../navbar/StyledComponents';
+import { AddButton } from '../../button/add'
+import { UpdateButton } from '../../button/update'
+import { DeleteButton } from '../../button/delButton'
 import { IconContext } from 'react-icons';
-import { SearchBar } from './navbar/SearchBar';
+import { SearchBar } from '../navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { FaUser } from 'react-icons/fa';
-import {selectUser} from '../../reducers/rootReducer'
+import {selectUser} from '../../../reducers/rootReducer';
 import { useSelector } from "react-redux";
-import Navbar from './navbar/Navbar';
-import PuntoriNav from './puntorinav/Navbar';
-import { Select } from './navbar/StyledComponents';
+import Navbar from '../navbar/Navbar';
+import AdminNav from '../adminnav/Navbar';
 
-export function PuntoriTable() {
+
+export function AdminTable() {
 
     const useri = useSelector(selectUser);
 
@@ -35,6 +35,7 @@ export function PuntoriTable() {
             emri: '',
             mbiemri: '',
             email: '',
+            password: '',
             qytetiId: 0,
         }
     });
@@ -81,7 +82,7 @@ export function PuntoriTable() {
     const [password, setPassword] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/User/puntoret', config).then(response => {
+        axios.get('http://localhost:5000/api/Admin/users', config).then(response => {
             setPuntori(response.data);
         });
 
@@ -91,12 +92,12 @@ export function PuntoriTable() {
 
         var id = Editmodal.currentID;
         setModal({ open: false })
-        axios.delete("http://localhost:5000/api/User/"+ modali.currentID, config)
+        axios.delete("http://localhost:5000/api/Admin/"+ modali.currentID, config)
             .then((response) => {
                 setAlert({ validity: true, message: response.data })
             })
             .catch((error) => {
-                setAlert({ validity: false, message:'Diqka shkoi gabim!'})
+                setAlert({ validity: false, message:error.data})
             })
     }
 
@@ -110,8 +111,9 @@ export function PuntoriTable() {
     const UpdatePuntori = async () => {
 
         var id = Editmodal.currentID;
+        console.log(id);
         setEditModal({ open: false })
-        axios.put("http://localhost:5000/api/User/user/password/" + id, {
+        axios.put("http://localhost:5000/api/Admin/" + id, {
             password: password === "" ? Editmodal.password : password,
         }, config)
             .then((response) => {
@@ -120,50 +122,18 @@ export function PuntoriTable() {
             })
             .catch((error) => {
                 console.log(error);
-                setAlert({ validity: false, message:'Diqka shkoi gabim!'})
+                setAlert({ validity: false, message:error.response.data})
             })
 
-    }
-
-    const ShtoPuntore = async () => {
-
-        setAddModal({ open: false })
-        const { formValues } = formState;
-        console.log(formValues);
-        axios.post("http://localhost:5000/api/User/register/puntor/", formValues, config)
-            .then((response) => {
-            
-                setAlert({ validity: true, message: response.data })
-            })
-            .catch((error) => {
-                console.log(error);
-                setAlert({ validity: false, message:'Diqka shkoi gabim!'})
-            })
-    }
-
-    useEffect(() => {
-        axios.get('http://localhost:5000/api/Shteti').then(response => {
-            setShtetet(response.data);
-        });
-    })
-
-    const ChangetheState = (e) => {
-        setSh({ sh: e.target.value });
-        axios.get('http://localhost:5000/api/Qyteti?shtetiId=' + e.target.value).then(response => {
-            setQytetet(response.data);
-        });
     }
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-            {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
+            <AdminNav/>
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
-                        <AddButton onClick={() => setAddModal({ open: true })}>
-                            <Icon name='add' />
-                            Shto puntorë
-                        </AddButton>
+                        
                         {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
                             <SearchBar
@@ -181,7 +151,8 @@ export function PuntoriTable() {
                             <TableCell fontSize="large" align="center"><TableText>Emri</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Mbiemri</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Email</TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Qyteti</TableText></TableCell>
+                            <TableCell fontSize="large" align="center"><TableText>Kompania</TableText></TableCell>
+                    
                             <TableCell align="right"><TableText>Menaxho</TableText></TableCell>
 
                         </TableRow>
@@ -194,7 +165,7 @@ export function PuntoriTable() {
                                     <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.mbiemri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.email}</RowText></TableCell>
-                                    <TableCell align="center"><RowText>{row.qyteti.emri}</RowText></TableCell>
+                                    <TableCell align="center"><RowText>{row.kompania}</RowText></TableCell>
                                     <TableCell align="right">
                                         <UpdateButton
                                             onClick={() =>
@@ -257,45 +228,7 @@ export function PuntoriTable() {
                         </Button>
                     </Modal.Actions>
                 </Modal>
-                <Modal
-                    closeIcon
-                    open={AddModal.open}
-                    size='mini'
-                    onClose={() => setAddModal({ open: false })}
-                    onOpen={() => setAddModal({ open: true })}
-                >
-                    <Header icon='add' content='Shto puntorë' />
-                    <Modal.Content>
-                        <Input focus placeholder='Emri puntorit' name="emri"
-                            onChange={handleChange} />
-                        <Input focus placeholder='Mbiemri' name="mbiemri"
-                            onChange={handleChange} />
-                        <Input focus placeholder='Email' name="email"
-                            onChange={handleChange} />
-                        <Select onChange={ChangetheState} name="emriQytetit"  >
-                            <option>Shteti</option>
-                            {shtetet.map((e, key) => {
-                                return <option key={key} value={e.shtetiId}>{e.emri}</option>;
-                            })}
-                        </Select>
-                        <Select name="QytetiId" onChange={handleChange} >
-                            <option>Qyteti</option>
-                            {qytetet.map((e, key) => {
-                                return <option key={key} value={e.qytetiId}>{e.emri}</option>;
-                            })}
-                        </Select>
-
-
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <Button color='black' onClick={() => setAddModal({ open: false })}>
-                            <Icon name='remove' /> Pishmon
-                        </Button>
-                        <Button color='green' onClick={ShtoPuntore}>
-                            <Icon name='checkmark' />Shto
-                        </Button>
-                    </Modal.Actions>
-                </Modal>
+                
             </BoxContainer>
         </IconContext.Provider>
     );

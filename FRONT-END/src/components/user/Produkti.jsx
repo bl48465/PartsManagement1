@@ -143,7 +143,7 @@ export function ProduktiTable() {
             })
             .catch((error) => {
                 console.log(error);
-                setAlert({validity:false,message:error.response.data})
+                setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
     }
 

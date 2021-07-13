@@ -14,6 +14,7 @@ import Alert from '@material-ui/lab/Alert';
 import { RiMoneyEuroCircleFill } from 'react-icons/ri';
 import {selectUser} from '../../reducers/rootReducer'
 import { useSelector } from "react-redux";
+import PuntoriNav from './puntorinav/Navbar';
 import Navbar from './navbar/Navbar';
 
 
@@ -84,7 +85,7 @@ export function ShitjaTable() {
     }
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-            <Navbar/>
+             {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>

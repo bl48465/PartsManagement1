@@ -16,6 +16,7 @@ import { SearchBar } from './navbar/SearchBar';
 import { RiUserLocationFill } from 'react-icons/ri';
 import Alert from '@material-ui/lab/Alert';
 import Navbar from './navbar/Navbar';
+import PuntoriNav from './puntorinav/Navbar';
 import {selectUser} from '../../reducers/rootReducer'
 import { useSelector } from "react-redux";
 
@@ -154,7 +155,7 @@ export function FurnitoriTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-            <Navbar/>
+            {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>

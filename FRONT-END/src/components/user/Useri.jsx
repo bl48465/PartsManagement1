@@ -8,6 +8,9 @@ import { useSelector } from "react-redux";
 import logo from '../../assets/logo/logo.png'
 import Alert from '@material-ui/lab/Alert';
 import { Select } from './navbar/StyledComponents';
+import PuntoriNav from './puntorinav/Navbar';
+
+import Navbar from './navbar/Navbar';
 
 export const BoxContainer = styled.div`
 margin-left:21%;
@@ -23,12 +26,15 @@ flex-direction:row;
 `;
 
 export default function UserCard() {
+
     const [emri, setEmri] = useState("");
     const [email, setEmail] = useState("");
     const [mbiemri, setMbiemri] = useState("");
     const [qyteti, setQyteti] = useState(0);
     const [user, setUser] = useState([]);
     const [qytetet, setQytetet] = useState([]);
+
+    
     
     const [deleteModal,setDeleteModal]=useState(false);
 
@@ -114,6 +120,7 @@ export default function UserCard() {
 
     return (
         <BoxContainer>
+             {(useriFromRedux.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <Flex>
                 <img src={logo} className="picu" width="35%" />
                 <div className="myInfo-box">

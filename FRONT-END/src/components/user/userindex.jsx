@@ -9,7 +9,7 @@ import UserCard from './Useri';
 function UserApp() {
     return (
      <div>
-        <Navbar />
+        
         <UserCard/>
         </div>
     );

@@ -10,8 +10,8 @@ using PartsManagement.Models;
 namespace PartsManagement.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20210709193742_Initial")]
-    partial class Initial
+    [Migration("20210713115216_First")]
+    partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,22 +50,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "23642bf0-4dd8-407b-85e6-aac47660d457",
-                            ConcurrencyStamp = "2efea42d-16ec-45ec-b231-adb39c4cea6d",
+                            Id = "fa8f9d96-d0c6-459e-be11-6c2a8b0ae977",
+                            ConcurrencyStamp = "b869f331-dd72-48e1-adfb-0fedd8f560c1",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "a1bf863d-b5e3-45a9-b4b3-01e3dfc543c8",
-                            ConcurrencyStamp = "fb4348b0-b359-40c8-b0c6-3a716104d8d7",
+                            Id = "03a3dc22-c932-4257-b70d-999d363939dd",
+                            ConcurrencyStamp = "14fc1472-e02c-4b0c-bf4e-ea2d31c76de3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a54250eb-0733-4796-a4b9-469316b360d2",
-                            ConcurrencyStamp = "e29d9283-78c0-488d-aa08-b9897fe0599e",
+                            Id = "f691f3e3-b87b-4923-be87-4503d4d8f8d0",
+                            ConcurrencyStamp = "8ee53348-4032-4fa4-9099-d2af6497220d",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });
@@ -288,6 +288,9 @@ namespace PartsManagement.Migrations
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("emriKomentuesit")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("KomentiId");
 

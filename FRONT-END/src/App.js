@@ -19,6 +19,7 @@ import { ShitjaTable } from './components/user/Shitja';
 import { StokuTable } from './components/user/Stoku';
 import { PuntoriTable } from './components/user/Puntori';
 import { HomeUser } from './components/user/Home';
+import { AdminTable } from "./components/user/admin/Admin";
 
 
 const AppContainer = styled.div `
@@ -31,58 +32,128 @@ const AppContainer = styled.div `
 `;
 
 function App() {
-  const user = useSelector(selectUser);
+    const user = useSelector(selectUser);
 
-    return (
-    <BrowserRouter >
-        <div className = "Container" >
-            <Switch>
-              <Route exact path = "/" >
-              <Homepage />
-              </Route>
+    return ( <
+        BrowserRouter >
+        <
+        div className = "Container" >
+        <
+        Switch >
+        <
+        Route exact path = "/" >
+        <
+        Homepage / >
+        <
+        /Route>
 
-              <Route path = "/AccountBox" >
-              <AppContainer >
-              <AccountBox />
-              </AppContainer>
-              </Route>
+        <
+        Route path = "/Section" >
+        <
+        AppContainer >
+        <
+        AdminTable / >
+        <
+        /AppContainer> < /
+        Route >
 
-            
-
-              <ProtectedRoute path="/HomeUser" role={user===null?'':user.roli} component={HomeUser} isAuth={user===null?false:true}/> 
-              <ProtectedRoute path="/Produkti" role={user===null?'':user.roli} component={ProduktiTable} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Komenti" role={user===null?'':user.roli} component={KomentiTable} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Sektori" role={user===null?'':user.roli} component={SektoriTable} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Porosite" role={user===null?'':user.roli} component={PorositeTable} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Logout" role={user===null?'':user.roli} component={Logout} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Furnitori" role={user===null?'':user.roli} component={FurnitoriTable} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Settings" role={user===null?'':user.roli} component={UserApp} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Stoku" role={user===null?'':user.roli} component={StokuTable} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Shitja" role={user===null?'':user.roli} component={ShitjaTable} isAuth={user===null?false:true}/>
-              <ProtectedRoute path="/Puntori" role={user===null?'':user.roli} component={PuntoriTable} isAuth={user===null?false:true}/>
-{/*               
-              <ProtectedAdmin path="/HomeAdmin" role={user===null?'':user.roli} component={HomeAdmin} isAuth={user===null?false:true}/>
-              <ProtectedAdmin path="/SupportAdmin" role={user===null?'':user.roli} component={SupportAdmin} isAuth={user===null?false:true}/>
-              <ProtectedAdmin path="/MessagesAdmin" role={user===null?'':user.roli} component={MessagesAdmin} isAuth={user===null?false:true}/>
-              <ProtectedAdmin path="/UsersAdmin" role={user===null?'':user.roli} component={UsersAdmin} isAuth={user===null?false:true}/>
-              <ProtectedAdmin path="/SettingsAdmin" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/>  
-
-              <ProtectedPuntor path="/HomePuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
-              <ProtectedPuntor path="/KomentePuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
-              <ProtectedPuntor path="/PorositePuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
-              <ProtectedPuntor path="/ProduktetPuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
-              <ProtectedPuntor path="/SettingsPuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
-              <ProtectedPuntor path="/SupportPuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/>  */}
-
-              <Route path = "/NotFound" >
-              <NotFound/>
-              </Route>
+        <
+        Route path = "/AccountBox" >
+        <
+        AppContainer >
+        <
+        AccountBox / >
+        <
+        /AppContainer> < /
+        Route >
 
 
-            </Switch>
-          </div> 
-    </BrowserRouter>
-    );
+
+
+        <
+        ProtectedRoute path = "/HomeUser"
+        role = { user === null ? '' : user.roli }
+        component = { HomeUser }
+        isAuth = { user === null ? false : true }
+        />  <
+        ProtectedRoute path = "/Produkti"
+        role = { user === null ? '' : user.roli }
+        component = { ProduktiTable }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Komenti"
+        role = { user === null ? '' : user.roli }
+        component = { KomentiTable }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Sektori"
+        role = { user === null ? '' : user.roli }
+        component = { SektoriTable }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Porosite"
+        role = { user === null ? '' : user.roli }
+        component = { PorositeTable }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Logout"
+        role = { user === null ? '' : user.roli }
+        component = { Logout }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Furnitori"
+        role = { user === null ? '' : user.roli }
+        component = { FurnitoriTable }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Settings"
+        role = { user === null ? '' : user.roli }
+        component = { UserApp }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Stoku"
+        role = { user === null ? '' : user.roli }
+        component = { StokuTable }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Shitja"
+        role = { user === null ? '' : user.roli }
+        component = { ShitjaTable }
+        isAuth = { user === null ? false : true }
+        /> <
+        ProtectedRoute path = "/Puntori"
+        role = { user === null ? '' : user.roli }
+        component = { PuntoriTable }
+        isAuth = { user === null ? false : true }
+        /> {
+        /*               
+                      <ProtectedAdmin path="/HomeAdmin" role={user===null?'':user.roli} component={HomeAdmin} isAuth={user===null?false:true}/>
+                      <ProtectedAdmin path="/SupportAdmin" role={user===null?'':user.roli} component={SupportAdmin} isAuth={user===null?false:true}/>
+                      <ProtectedAdmin path="/MessagesAdmin" role={user===null?'':user.roli} component={MessagesAdmin} isAuth={user===null?false:true}/>
+                      <ProtectedAdmin path="/UsersAdmin" role={user===null?'':user.roli} component={UsersAdmin} isAuth={user===null?false:true}/>
+                      <ProtectedAdmin path="/SettingsAdmin" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/>  
+
+                      <ProtectedPuntor path="/HomePuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
+                      <ProtectedPuntor path="/KomentePuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
+                      <ProtectedPuntor path="/PorositePuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
+                      <ProtectedPuntor path="/ProduktetPuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
+                      <ProtectedPuntor path="/SettingsPuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/> 
+                      <ProtectedPuntor path="/SupportPuntori" role={user===null?'':user.roli} component={SettingsAdmin} isAuth={user===null?false:true}/>  */
+    }
+
+    <
+    Route path = "/NotFound" >
+        <
+        NotFound / >
+        <
+        /Route>
+
+
+    <
+    /Switch> < /
+    div > <
+        /BrowserRouter>
+);
 }
 
 export default App;

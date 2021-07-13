@@ -15,8 +15,10 @@ import { IconContext } from 'react-icons';
 import { SearchBar }  from './navbar/SearchBar';
 import { GoListUnordered } from 'react-icons/go'
 import Navbar from './navbar/Navbar';
+import PuntoriNav from './puntorinav/Navbar';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../reducers/rootReducer';
+
 export function PorositeTable() {
     const useri = useSelector(selectUser);
 
@@ -141,7 +143,7 @@ export function PorositeTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
-            <Navbar/>
+        {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
         <BoxContainer>
         <MainDiv>
             <Flexirimi>

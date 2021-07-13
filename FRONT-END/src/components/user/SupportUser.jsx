@@ -2,11 +2,12 @@ import React from 'react';
 import * as RiIcons from 'react-icons/ri';
 import { IconContext } from 'react-icons';
 import Navbar from './navbar/Navbar';
+import PuntoriNav from './puntorinav/Navbar';
 
 function SupportUser() {
     return (
         <IconContext.Provider value={{ color: 'FC4747', size: '30%' }}>
-            <Navbar/>
+             {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <div class="help">
                 <h1 class='help-h1'>Përshendetje, keni nevojë për ndihmë?</h1>
                 <div class='help-content'>

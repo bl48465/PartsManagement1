@@ -16,6 +16,7 @@ import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { GoFileDirectory } from 'react-icons/go';
 import Navbar from './navbar/Navbar';
+import PuntoriNav from './puntorinav/Navbar';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../reducers/rootReducer';
 
@@ -119,7 +120,7 @@ export function SektoriTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-            <Navbar/>
+             {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
@@ -153,18 +154,16 @@ export function SektoriTable() {
                                     <TableCell align="left"><GoFileDirectory color="#fc4747" size="30"/></TableCell>
                                     <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
                                     <TableCell align="right">
-                                        <UpdateButton
-                                            onClick={() =>
-                                                setEditModal(
-                                                    { currentID: row.sektoriId, open: true, emri: row.emri })}>
+                                    {(useri.roli == "Puntor") ? null : <UpdateButton
+                                    onClick={() =>setEditModal({ currentID: row.sektoriId, open: true, emri: row.emri })}>
                                             <Icon name='history' />
                                             Përditëso
-                                        </UpdateButton>
-                                        <DeleteButton
+                                        </UpdateButton>}
+                                        {(useri.roli == "Puntor") ? null : <DeleteButton
                                             onClick={() => setModal({ currentID: row.sektoriId, open: true })}>
                                             <Icon name='delete' />
                                             Fshij
-                                        </DeleteButton>
+                                        </DeleteButton>}
                                     </TableCell>
                                 </TableRow>
                             ))}

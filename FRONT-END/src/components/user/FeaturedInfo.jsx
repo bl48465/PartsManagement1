@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Icon, Image, Statistic } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../reducers/rootReducer';
+import styled from "styled-components";
 
 
 export default function FeaturedInfo() {
@@ -47,13 +48,12 @@ axios.get('http://localhost:5000/api/Komenti',config).then(response => {
   
     <div className="featured">
       <div className="featuredItem">
-  
     <Statistic>
     <Statistic.Value>
         {/* <Image src={furnitori} inline circular /> */}
         <Icon name='chart bar' size='tiny' /> {count}
       </Statistic.Value>
-      <Statistic.Label>Furnitor Te Regjistruar</Statistic.Label>
+      <Statistic.Label>Furnitorë</Statistic.Label>
     </Statistic>
       </div>
       
@@ -62,7 +62,7 @@ axios.get('http://localhost:5000/api/Komenti',config).then(response => {
       <Statistic.Value>
         <Icon name='chart bar' size='tiny' />{countProd}
       </Statistic.Value>
-      <Statistic.Label>Nr i Produkteve</Statistic.Label>
+      <Statistic.Label>Produkte</Statistic.Label>
     </Statistic>
         </div>
 
@@ -71,7 +71,7 @@ axios.get('http://localhost:5000/api/Komenti',config).then(response => {
       <Statistic.Value>
         <Icon name='chart bar' size='tiny' />{countPor}
       </Statistic.Value>
-      <Statistic.Label>Nr i Porosive</Statistic.Label>
+      <Statistic.Label>Porosi</Statistic.Label>
     </Statistic>
         </div>
 
@@ -80,7 +80,7 @@ axios.get('http://localhost:5000/api/Komenti',config).then(response => {
       <Statistic.Value>
         <Icon name='chart bar' size='tiny' />{countKom}
       </Statistic.Value>
-      <Statistic.Label>Nr i Komenteve</Statistic.Label>
+      <Statistic.Label>Komente</Statistic.Label>
     </Statistic>
         </div>
 

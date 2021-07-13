@@ -29,6 +29,7 @@ namespace PartsManagement.Controllers
         private readonly IMapper _mapper;
         private readonly SignInManager<User> _signInManager;
         private readonly IAuthManager _authManager;
+        private readonly IMailer _mailer;
 
         public AdminController(UserManager<User> userManager,
             ILogger<AccountController> logger,
@@ -36,11 +37,13 @@ namespace PartsManagement.Controllers
             IAuthManager authManager,
             MyContext context,
             SignInManager<User> signInManager,
+            IMailer mailer,
             IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _logger = logger;
             _mapper = mapper;
+            _mailer = mailer;
             _authManager = authManager;
             _context = context;
             _signInManager = signInManager;
@@ -49,7 +52,10 @@ namespace PartsManagement.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet("users")]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(){
-            var userat = await _context.Users.Where(a => !(a.Kompania.Equals("BeliTECH"))).ToListAsync();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userat = await _context.Users.Where(a => a.ShefiId == null && !a.Id.Equals(userId)).ToListAsync();
             return Ok(userat);
         }
 
@@ -77,12 +83,22 @@ namespace PartsManagement.Controllers
                 return BadRequest("Submitted data is invalid");
             }
 
-            _mapper.Map(userDTO, p);
-            p.UserName = p.Email;
-            _context.Users.Update(p);
-            await _context.SaveChangesAsync();
 
-            return Ok("Përdoruesi u përditësua me sukses!");
+            if (!userDTO.Password.Equals("") || userDTO.Password != null)
+            {
+                await _userManager.RemovePasswordAsync(p);
+                await _userManager.AddPasswordAsync(p, userDTO.Password);
+                await _userManager.UpdateAsync(p);
+
+                await _mailer.SendEmailAsync($"{p.Email}", "Fjalëkalimi i përdoruesit", $"Fjalëkalimi i ri i përdoruesit :{userDTO.Password}");
+            }
+            else
+            {
+                userDTO.Password = p.PasswordHash;
+                await _userManager.UpdateAsync(p);
+            }
+
+            return Ok("Fjalëkalimi i përdoruesit u përditësua me sukses");
 
         }
         [Authorize(Roles = "Admin")]
@@ -97,6 +113,8 @@ namespace PartsManagement.Controllers
                 _logger.LogError($"Invalid DELETE attempt in {nameof(DeleteUser)}");
                 return BadRequest();
             }
+            var puntort = _context.Users.Where(a => a.ShefiId.Equals(id));
+            _context.Users.RemoveRange(puntort);
 
             var përdoruesi = _context.Users.Where(a => a.Id.Equals(id));
 

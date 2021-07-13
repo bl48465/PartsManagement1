@@ -57,7 +57,7 @@ namespace PartsManagement.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var puntoret = await _userManager.Users.Include(x => x.Qyteti).Where(a => a.ShefiId == userId).ToListAsync();
+            var puntoret = await _context.Users.Include(x => x.Qyteti).Where(a => a.ShefiId == userId).ToListAsync();
 
             return Ok(puntoret);
         }
@@ -93,10 +93,10 @@ namespace PartsManagement.Controllers
                 var user = _context.Users.Where(x => x.Id == userId);
                 var u = user.FirstOrDefault();
 
-                userDTO.UserId = userId;
+                userDTO.ShefiId = userId;
                 userDTO.Kompania = u.Kompania;
                 userDTO.Roles = new string[] { "Puntor" };
-                userDTO.Password = $"{userDTO.Emri}123.";
+                userDTO.Password = $"{userDTO.Emri}123@";
 
                 var useri = _mapper.Map<User>(userDTO);
                 useri.UserName = userDTO.Email;
@@ -109,7 +109,7 @@ namespace PartsManagement.Controllers
                     {
                         ModelState.AddModelError(error.Code, error.Description);
                     }
-                    return BadRequest(ModelState);
+                    return BadRequest(ModelState + "So mir puna");
                 }
 
                 await _userManager.AddToRolesAsync(useri, userDTO.Roles);
@@ -152,7 +152,7 @@ namespace PartsManagement.Controllers
                 if (p == null) { return NotFound($"Puntori me ID {p.Id} nuk u gjet!"); }
 
                 userDTO.Kompania = p.Kompania;
-                userDTO.UserId = p.ShefiId;
+                userDTO.ShefiId = p.ShefiId;
                 userDTO.Roles = new string[] { "Puntor" };
 
                 p.NormalizedEmail = userDTO.Email.ToUpper();
@@ -175,7 +175,7 @@ namespace PartsManagement.Controllers
                 if (us == null) { return NotFound($"Useri me ID {us.Id} nuk u gjet!"); }
 
                 userDTO.Kompania = us.Kompania;
-                userDTO.UserId = us.Id;
+                userDTO.ShefiId = us.Id;
                 userDTO.Roles = new string[] { "User" };
                 us.NormalizedEmail = userDTO.Email.ToUpper();
                 us.Email = userDTO.Email;
@@ -214,7 +214,8 @@ namespace PartsManagement.Controllers
                 await _userManager.RemovePasswordAsync(p);
                 await _userManager.AddPasswordAsync(p, userDTO.Password);
                 await _userManager.UpdateAsync(p);
-                await _mailer.SendEmailAsync($"{userDTO.Email}", "Fjalëkalimi i përdoruesit", $"Fjalëkalimi i ri i përdoruesit :{userDTO.Password}");
+
+                await _mailer.SendEmailAsync($"{p.Email}", "Fjalëkalimi i përdoruesit", $"Fjalëkalimi i ri i përdoruesit :{userDTO.Password}");
             }
             else
             {

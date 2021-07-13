@@ -15,6 +15,7 @@ import { SearchBar }  from './navbar/SearchBar';
 import Navbar from './navbar/Navbar';
 import {selectUser} from '../../reducers/rootReducer'
 import { useSelector } from "react-redux";
+import PuntoriNav from './puntorinav/Navbar';
 import { MdComment } from 'react-icons/md'
 
 export  function KomentiTable() {
@@ -104,7 +105,7 @@ export  function KomentiTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white' , size: '2%'}}>
-        <Navbar/>
+         {(user.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
         <BoxContainer>
         <MainDiv>
             <Flexirimi>

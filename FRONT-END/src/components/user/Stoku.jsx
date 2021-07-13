@@ -17,6 +17,7 @@ import { SearchBar } from './navbar/SearchBar';
 import Alert from '@material-ui/lab/Alert';
 import { GoFileDirectory } from 'react-icons/go';
 import Navbar from './navbar/Navbar';
+import PuntoriNav from './puntorinav/Navbar';
 
 
 export function StokuTable() {
@@ -90,7 +91,7 @@ export function StokuTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-            <Navbar/>
+             {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>

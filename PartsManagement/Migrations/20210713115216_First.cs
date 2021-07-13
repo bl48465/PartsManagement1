@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PartsManagement.Migrations
 {
-    public partial class Initial : Migration
+    public partial class First : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -266,6 +266,7 @@ namespace PartsManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Titulli = table.Column<string>(nullable: true),
                     Body = table.Column<string>(nullable: true),
+                    emriKomentuesit = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true),
                     PuntoriId = table.Column<string>(nullable: true)
                 },
@@ -411,9 +412,9 @@ namespace PartsManagement.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "23642bf0-4dd8-407b-85e6-aac47660d457", "2efea42d-16ec-45ec-b231-adb39c4cea6d", "User", "USER" },
-                    { "a1bf863d-b5e3-45a9-b4b3-01e3dfc543c8", "fb4348b0-b359-40c8-b0c6-3a716104d8d7", "Admin", "ADMIN" },
-                    { "a54250eb-0733-4796-a4b9-469316b360d2", "e29d9283-78c0-488d-aa08-b9897fe0599e", "Puntor", "PUNTOR" }
+                    { "fa8f9d96-d0c6-459e-be11-6c2a8b0ae977", "b869f331-dd72-48e1-adfb-0fedd8f560c1", "User", "USER" },
+                    { "03a3dc22-c932-4257-b70d-999d363939dd", "14fc1472-e02c-4b0c-bf4e-ea2d31c76de3", "Admin", "ADMIN" },
+                    { "f691f3e3-b87b-4923-be87-4503d4d8f8d0", "8ee53348-4032-4fa4-9099-d2af6497220d", "Puntor", "PUNTOR" }
                 });
 
             migrationBuilder.InsertData(

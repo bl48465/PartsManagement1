@@ -64,7 +64,7 @@ export function SignupForm(){
       const isEmail = name === "Email";
       const isPassword = name === "Password";
       const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-      const PasswordReg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+      const PasswordReg = /^^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%@&*-]).{8,}$/;
   
       validity[name] = value.length > 0 ;
       fieldValidationErrors[name] = validity[name]
@@ -81,7 +81,7 @@ export function SignupForm(){
           validity[name] = PasswordReg.test(value);
           fieldValidationErrors[name] = validity[name]
             ? ""
-            : `Fjalëkalimi duhet të përmbajë së paku 8 shkronja (1 numër, 1 shkronjë të madhe)`;
+            : `Fjalëkalimi duhet të përmbajë së paku 1 numër,shkronjë,karakter special`;
         }
       }
 
