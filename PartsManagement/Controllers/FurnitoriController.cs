@@ -73,7 +73,7 @@ namespace PartsManagement.Controllers
         
     }
 
-        [Authorize(Roles = "User")]
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -81,6 +81,10 @@ namespace PartsManagement.Controllers
         public async Task<IActionResult> CreateFurnitor([FromBody] CreateFurnitoriDTO furnitoriDTO)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var roli = User.FindFirstValue(ClaimTypes.Role);
+            var puntori = _context.Users.Where(a => a.Id.Equals(userId));
+            var p = puntori.FirstOrDefault();
+
 
             if (!ModelState.IsValid)
             {
@@ -88,20 +92,37 @@ namespace PartsManagement.Controllers
                 return BadRequest(ModelState);
             }
 
-            var checkExist = await _context.Furnitoret.FirstOrDefaultAsync(a => a.Emri.Equals(furnitoriDTO.Emri) && a.UserId == userId);
+            var checkExist = await _context.Furnitoret.FirstOrDefaultAsync(a => a.Emri.Equals(furnitoriDTO.Emri) && ( a.UserId == userId || p.ShefiId==a.UserId));
 
             if (checkExist != null)
             {
                 return BadRequest($"Furnitori me emrin { furnitoriDTO.Emri } ekziston!");
             }
+           
+            if(roli.Equals("Puntor"))
+            {
+               
+               
+                furnitoriDTO.UserId = p.ShefiId;
+                var furnitorii = _mapper.Map<Furnitori>(furnitoriDTO);
 
-            var furnitori = _mapper.Map<Furnitori>(furnitoriDTO);
-            furnitori.UserId = userId;
+                await _unitOfWork.Furnitoret.Insert(furnitorii);
+                await _unitOfWork.Save();
 
-            _context.Furnitoret.Add(furnitori);
-            await _context.SaveChangesAsync();
+                return Ok($"Furnitori { furnitorii.Emri } u shtua me sukses");
+            }
+            else
+            {
 
-            return Ok($"Furnitori {furnitori.Emri} u shtua me sukses");
+                var furnitori = _mapper.Map<Furnitori>(furnitoriDTO);
+                furnitoriDTO.UserId = userId;
+
+                _context.Furnitoret.Add(furnitori);
+                await _context.SaveChangesAsync();
+
+                return Ok($"Furnitori {furnitori.Emri} u shtua me sukses");
+
+            }
             //return CreatedAtAction("GetSektoret", new { id = sektori.SektoriId }, sektori);
         }
 

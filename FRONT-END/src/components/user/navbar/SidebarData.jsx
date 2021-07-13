@@ -7,7 +7,7 @@ import * as RiIcons from 'react-icons/ri';
 export const SidebarData = [
   {
     title: 'Shtëpia',
-    path: '/HomeUser',
+    path: '/Home',
     icon: <AiIcons.AiFillHome className="iconn" />,
     cName: 'nav-text'
   },
@@ -63,7 +63,7 @@ export const SidebarData = [
 
   {
     title: 'Ndihma',
-    path: '/SupportUser',
+    path: '/Support',
     icon: <IoIcons.IoMdHelpCircle className="iconn"/>,
     cName: 'nav-text'
   },

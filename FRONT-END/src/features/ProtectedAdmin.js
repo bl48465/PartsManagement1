@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-export const ProtectedRoute = ({
+export const ProtectedAdmin = ({
     isAuth: isAuth,
     role: role,
     component: Component,
@@ -11,7 +11,7 @@ export const ProtectedRoute = ({
         <Route
             {...rest}
             render={(props) => {
-                if (isAuth === true) {
+                if (isAuth === true && role === "Admin") {
                     return <Component />;
                 } else {
                     return (

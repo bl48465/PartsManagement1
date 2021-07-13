@@ -20,7 +20,6 @@ import styled from 'styled-components';
 import Navbar from './navbar/Navbar';
 import {selectUser} from '../../reducers/rootReducer'
 import { useSelector } from "react-redux";
-import PuntoriNav from './puntorinav/Navbar';
 
 export function ProduktiTable() {
 
@@ -39,14 +38,6 @@ export function ProduktiTable() {
             number: '',
             sektoriId:0,
             markaId:0
-        }
-        });
-
-    const [shitjaState, setShitjaState] = useState({
-        shitjaValues: {
-            number:'',
-            sasia:0,
-            qmimi:0
         }
         });
 
@@ -85,14 +76,6 @@ export function ProduktiTable() {
             open: false
         }
     });
-
-       
-    const [AddShitja, setAddShitjaModal] = useState({
-        modal: {
-            emri: '',
-            open: false
-        }
-    });
     const [SearchField, setSearchField] = useState('');
     const [emri ,setEmri] = useState("");
     const [number, setNumber] = useState("");
@@ -125,18 +108,11 @@ export function ProduktiTable() {
         setFormState({ formValues });
         };
 
-    const handleShitja = ({ target }) => {
-        const { shitjaValues } = shitjaState;
-        shitjaValues[target.name] = target.value;
-        setShitjaState({ shitjaValues });
-        };
-
-
-
+ 
     const UpdateProdukti = async () => {
-        console.log(sektoriId)
-        var id=Editmodal.currentID;
-        console.log(Editmodal);
+
+      var id=Editmodal.currentID;
+      console.log(Editmodal);
         setEditModal({ open: false })
         axios.put("http://localhost:5000/api/Produkti/"+ id, {
             emri: emri===""? Editmodal.emri:emri,
@@ -145,12 +121,15 @@ export function ProduktiTable() {
             markaId: markaId ===0? Editmodal.markaid:markaId,
         } ,config)
             .then((response) => {
+                setEmri("");
+                setNumber("");
+                setSektoriId(0);
+                setMarkaId(0);
                 console.log(response.data.message)
-
                 setAlert({validity:true,message:response.data})
             })
             .catch((error) => {
-                console.log(error.response.data);
+                console.log(error);
                 setAlert({validity:false,message:'Diqka shkoi gabim!'})
             })
 
@@ -171,25 +150,8 @@ export function ProduktiTable() {
             })
     }
 
-    const shtoShitje = async () => {
-
-        const { shitjaValues } = shitjaState;
-     
-        setAddShitjaModal({ open: false })
-
-        axios.post("http://localhost:5000/api/Produkti/shitja?productNo="+shitjaValues.number, shitjaValues, config)
-            .then((response) => {
-                console.log(response.data)
-                setAlert({validity:true,message:response.data})
-            })
-            .catch((error) => {
-                console.log(error.response.data);
-                setAlert({validity:false,message:error.response.data})
-            })
-    }
-
     useEffect(()=>{
-        axios.get("http://localhost:5000/api/Sektori/",config)
+        axios.get("http://localhost:5000/api/Sektori/user",config)
         .then((response) => {  
             setSektoret(response.data);
         })
@@ -206,19 +168,14 @@ export function ProduktiTable() {
     
         
             <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-            {(user.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
+                    <Navbar />
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>
-                        <div className="butonat" style={{ display: 'flex', justifySelf:'space-between', marginBottom: 1 }} ><AddButton onClick={() => setAddModal({ open: true })}>
+                        <AddButton onClick={() => setAddModal({ open: true })}>
                             <Icon name='add' />
                             Shto produkt
                         </AddButton>
-                        {(user.roli == "Puntor") ?<DeleteButton onClick={() => setAddShitjaModal({ open: true })}>
-                            <Icon name='add' />
-                            Shto shitje
-                        </DeleteButton> : null }
-                        </div>
                         {(alert.validity == null) ? null : (alert.validity == false) ? <Alert severity="error">{alert.message}</Alert> : <Alert severity="success">{alert.message}</Alert>}
                         <div style={{ display: 'block', padding: 10, marginBottom: 1 }}>
                             <SearchBar
@@ -235,7 +192,6 @@ export function ProduktiTable() {
                             <TableCell align="left"><TableText></TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Emri Produktit</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Numri</TableText></TableCell>
-                            <TableCell fontSize="large" align="center"><TableText>Sasia</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Marka</TableText></TableCell>
                             <TableCell fontSize="large" align="center"><TableText>Sektori</TableText></TableCell>
                             <TableCell align="right"><TableText>Menaxho</TableText></TableCell>
@@ -249,7 +205,6 @@ export function ProduktiTable() {
                                     <TableCell align="left"><GiCardboardBox color="#fc4747" size="30"/></TableCell>
                                     <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.number}</RowText></TableCell>
-                                    <TableCell align="center"><RowText>{row.sasia}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.marka.emri}</RowText></TableCell>
                                     <TableCell align="center"><RowText>{row.sektori.emri}</RowText></TableCell>
                                     <TableCell align="right">
@@ -344,14 +299,14 @@ export function ProduktiTable() {
                         <Input focus placeholder='Numri' name="number"
                             onChange={handleChange} />
 
-                        <Select  onChange={handleChange} name="sektoriId"  defaultValue={Editmodal.sektoriId}>  
+                        <Select  onChange={handleChange} name="sektoriId"  >  
                             <option>Sektori</option> 
                             {sektoret.map((e, key) => {  
                             return <option key={key} value={e.sektoriId}>{e.emri}</option>;  
                             })}  
                         </Select>
                         
-                        <Select  onChange={handleChange} name="markaId" defaultValue={Editmodal.markaId} >  
+                        <Select  onChange={handleChange} name="markaId"  >  
                             <option>Marka</option> 
                             {marka.map((e, key) => {  
                             return <option key={key} value={e.markaId}>{e.emri}</option>;  
@@ -368,37 +323,9 @@ export function ProduktiTable() {
                         </Button>
                     </Modal.Actions>
                 </Modal>
-
-                <Modal
-                    closeIcon
-                    open={AddShitja.open}
-                    size='mini'
-                    onClose={() => setAddShitjaModal({ open: false })}
-                    onOpen={() => setAddShitjaModal({ open: true })}
-                >
-                    <Header icon='add' content='Shto shitje' />
-                    <Modal.Content>
-                        <Input focus placeholder='Numri serik' name="number"
-                            onChange={handleShitja} />
-
-                        <Input focus placeholder='Sasia' name="sasia"
-                            onChange={handleShitja} />
-
-                        <Input focus placeholder='Qmimi €' name="qmimi"
-                            onChange={handleShitja} />
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <Button color='black' onClick={() => setAddShitjaModal({ open: false })}>
-                            <Icon name='remove' /> Pishmon
-                        </Button>
-                        <Button color='green' onClick={shtoShitje}>
-                            <Icon name='checkmark' />Shto
-                        </Button>
-                    </Modal.Actions>
-                </Modal>
             </BoxContainer>
         </IconContext.Provider>
-
+   
     );
 }
 export default withRouter(ProduktiTable);

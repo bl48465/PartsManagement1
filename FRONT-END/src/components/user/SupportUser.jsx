@@ -3,11 +3,15 @@ import * as RiIcons from 'react-icons/ri';
 import { IconContext } from 'react-icons';
 import Navbar from './navbar/Navbar';
 import PuntoriNav from './puntorinav/Navbar';
+import {selectUser} from '../../reducers/rootReducer'
+import { useSelector } from "react-redux";
 
-function SupportUser() {
+
+const Support = () => {
+    const user=useSelector(selectUser);
     return (
         <IconContext.Provider value={{ color: 'FC4747', size: '30%' }}>
-             {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
+            {(user.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <div class="help">
                 <h1 class='help-h1'>Përshendetje, keni nevojë për ndihmë?</h1>
                 <div class='help-content'>
@@ -48,4 +52,4 @@ function SupportUser() {
     );
 }
 
-export default SupportUser;
+export default Support;
