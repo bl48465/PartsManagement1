@@ -150,6 +150,23 @@ export function ProduktiTable() {
             })
     }
 
+    const shtoShitje = async () => {
+
+        const { shitjaValues } = shitjaState;
+
+        setAddShitjaModal({ open: false })
+
+        axios.post("http://localhost:5000/api/Produkti/shitja?productNo="+shitjaValues.number, shitjaValues, config)
+            .then((response) => {
+                console.log(response.data)
+                setAlert({validity:true,message:response.data})
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                setAlert({validity:false,message:error.response.data})
+            })
+    }
+
     useEffect(()=>{
         axios.get("http://localhost:5000/api/Sektori/user",config)
         .then((response) => {  

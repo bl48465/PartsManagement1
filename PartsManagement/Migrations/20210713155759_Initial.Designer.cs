@@ -10,8 +10,8 @@ using PartsManagement.Models;
 namespace PartsManagement.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20210713115216_First")]
-    partial class First
+    [Migration("20210713155759_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,22 +50,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fa8f9d96-d0c6-459e-be11-6c2a8b0ae977",
-                            ConcurrencyStamp = "b869f331-dd72-48e1-adfb-0fedd8f560c1",
+                            Id = "1e274982-07ba-4067-9787-4c07466157c6",
+                            ConcurrencyStamp = "5c7246ae-6a17-46c2-8646-0ac105e11d9b",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "03a3dc22-c932-4257-b70d-999d363939dd",
-                            ConcurrencyStamp = "14fc1472-e02c-4b0c-bf4e-ea2d31c76de3",
+                            Id = "1a90c24c-85ab-4649-9667-af4d47ab8a8c",
+                            ConcurrencyStamp = "c8391097-2481-4b19-b521-f07961f0a05a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f691f3e3-b87b-4923-be87-4503d4d8f8d0",
-                            ConcurrencyStamp = "8ee53348-4032-4fa4-9099-d2af6497220d",
+                            Id = "82f0ceba-19c8-4871-83df-40c117e94a64",
+                            ConcurrencyStamp = "803e145f-8354-472b-bcda-01f8caff004c",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });
@@ -173,6 +173,33 @@ namespace PartsManagement.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("PartsManagement.Models.Contact", b =>
+                {
+                    b.Property<int>("ContactId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedAt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Emri")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mbiemri")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pyetja")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ContactId");
+
+                    b.ToTable("Pyetjet");
                 });
 
             modelBuilder.Entity("PartsManagement.Models.FaturaIN", b =>

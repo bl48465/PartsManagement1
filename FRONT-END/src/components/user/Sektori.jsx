@@ -120,7 +120,7 @@ export function SektoriTable() {
 
     return (
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-             {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
+            {(useri.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
             <BoxContainer>
                 <MainDiv>
                     <Flexirimi>

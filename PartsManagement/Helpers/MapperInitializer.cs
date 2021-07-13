@@ -40,6 +40,9 @@ namespace PartsManagement.Configurations
             CreateMap<FaturaOUT, CreateFaturaOUTDTO>().ReverseMap();
             CreateMap<FaturaOUT, UpdateFaturaOUTDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<Contact, ContactDTO>().ReverseMap();
+            CreateMap<Contact, UpdateContactDTO>().ReverseMap();
+            CreateMap<Contact, CreateContactDTO>().ReverseMap();
         }
     }
 }
