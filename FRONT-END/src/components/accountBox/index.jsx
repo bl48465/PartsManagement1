@@ -6,6 +6,7 @@ import { AccountContext } from "./accountContext";
 //import  SignupForm  from "./signupForm";
 import BackgroundImg from "../../assets/pictures/company_team.jpg";
 import { SignupForm } from './signupForm'
+import {Navbar} from '../navbar/index';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -142,9 +143,12 @@ export function AccountBox(props) {
 
   return (
     <MainContainer>
+      
     <BackgroundFilter>
+    
     <AccountContext.Provider value={contextValue}>
       <BoxContainer>
+        
         <TopContainer>
           <BackDrop
             initial={false}

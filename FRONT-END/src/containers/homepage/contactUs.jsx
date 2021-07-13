@@ -77,10 +77,11 @@ export function ContactUs(props) {
     },
   });
 
-  const [errori, setErrori] = useState({
-    valid: {
-      mesazhi: "",
-    }});
+  const[errorState,setError] = useState({
+    errValues:{
+      success:''
+    }
+  })
 
   const handleValidation = (target) => {
     const { id, value } = target;
@@ -120,16 +121,19 @@ export function ContactUs(props) {
   const handleSubmit = event => {
       event.preventDefault();
       const { formValues, formValidity } = formState;
-      const { valid } = errori;
+      const { errValues } = errorState;
       if (Object.values(formValidity).every(Boolean)){
 
         axios.post("http://localhost:5000/api/Contact",formValues)
-        .then((response) => {
-            setErrori("Me sukses")
-        })
+        .then(
+          errorState.errValues.success='Sukses. Ne ju kontaktojmë në email!'
+        )
         .catch((error)=> {
-            setErrori("Diqka shkoi gabim!");
-        })
+          if(error.response){
+            errorState.errValues.emailExist = error.response.data.message;
+            setError({errValues});
+          }         
+        });
         console.log(formValues)
 
       } else {
@@ -154,7 +158,7 @@ export function ContactUs(props) {
           <br></br>
           <br></br>
           <br></br>
-          <SuccessMessage>{errori.valid.mesazhi}</SuccessMessage>
+          <SuccessMessage>{errorState.errValues.success}</SuccessMessage>
           <ErrMessage>{formState.formErrors.Emri}</ErrMessage>
           <ErrMessage>{formState.formErrors.Mbiemri}</ErrMessage>
           <ErrMessage>{formState.formErrors.Pyetja}</ErrMessage>
@@ -202,6 +206,7 @@ export function ContactUs(props) {
                 control={Button}
                 content="Konfirmo"
                 placeholder="Button"
+                onClick={handleChange}
               />
             </Form>
           </Element>

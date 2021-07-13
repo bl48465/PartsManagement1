@@ -174,7 +174,7 @@ export function ProduktiTable() {
     const shtoShitje = async () => {
 
         const { shitjaValues } = shitjaState;
-     
+
         setAddShitjaModal({ open: false })
 
         axios.post("http://localhost:5000/api/Produkti/shitja?productNo="+shitjaValues.number, shitjaValues, config)

@@ -39,7 +39,7 @@ export function Navbar(props) {
         <Logo inline />
       </BrandContainer>
       <AccessibilityContainer>
-        <Button small>Na kontaktoni</Button>
+        <Link  to="/ContactUs"><Button small>Na kontaktoni</Button></Link>
         <Marginer direction="horizontal" margin="8px" />
         <Link  to="/AccountBox"><LoginButton small>Kyquni</LoginButton></Link>
       </AccessibilityContainer>
