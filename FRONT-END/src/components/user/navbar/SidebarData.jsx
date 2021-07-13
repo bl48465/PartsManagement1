@@ -62,7 +62,7 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Kërkesa',
+    title: 'Kërkesa Modelev',
     path: '/Kerkesa',
     icon: <IoIcons.IoMdHelpCircle className="iconn"/>,
     cName: 'nav-text'
