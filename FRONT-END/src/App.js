@@ -20,6 +20,7 @@ import { StokuTable } from './components/user/Stoku';
 import { PuntoriTable } from './components/user/Puntori';
 import { AdminTable } from "./components/user/admin/Admin";
 import Dankmemes from "./components/user/Chart";
+import { ContactUs } from "./containers/homepage/contactUs";
 
 
 const AppContainer = styled.div `
@@ -49,12 +50,12 @@ function App() {
 
         <
         Route path = "/Section" >
+
+
         <
-        AppContainer >
+        ContactUs / >
         <
-        AdminTable / >
-        <
-        /AppContainer> < /
+        /
         Route >
 
         <

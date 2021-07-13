@@ -95,6 +95,7 @@ namespace PartsManagement.Controllers
                 var checkExist = await _unitOfWork.Porosite.Get(a => a.UserId == p.ShefiId && a.Titulli.Equals(porosiaDTO.Titulli));
                 if (checkExist != null) { return BadRequest($"Porosia ekziston!"); }
 
+
                 var porosia = _mapper.Map<Porosia>(porosiaDTO);
 
 

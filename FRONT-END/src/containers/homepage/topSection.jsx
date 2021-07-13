@@ -45,7 +45,7 @@ const DownArrowContainer = styled.div`
 
 export function TopSection(props) {
   const scrollToNextSection = () => {
-    scroller.scrollTo("servicesSection", { smooth: true, duration: 1500 });
+    scroller.scrollTo("ServicesSection", { smooth: true, duration: 1500 });
   };
 
   return (

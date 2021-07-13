@@ -20,6 +20,7 @@ namespace PartsManagement.Models
         public DbSet<FaturaIN> FaturatIN { get; set; }
         public DbSet<FaturaOUT> FaturatOUT { get; set; }
         public DbSet<Furnitori> Furnitoret { get; set; }
+        public DbSet<Contact> Pyetjet { get; set; }
         public DbSet<Modeli> Modelet { get; set; }
         public DbSet<Marka> Markat { get; set; }
         public DbSet<Shteti> Shtetet { get; set; }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PartsManagement.Migrations
 {
-    public partial class First : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,6 +32,23 @@ namespace PartsManagement.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Markat", x => x.MarkaId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pyetjet",
+                columns: table => new
+                {
+                    ContactId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Emri = table.Column<string>(nullable: true),
+                    Mbiemri = table.Column<string>(nullable: true),
+                    Pyetja = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pyetjet", x => x.ContactId);
                 });
 
             migrationBuilder.CreateTable(
@@ -412,9 +429,9 @@ namespace PartsManagement.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "fa8f9d96-d0c6-459e-be11-6c2a8b0ae977", "b869f331-dd72-48e1-adfb-0fedd8f560c1", "User", "USER" },
-                    { "03a3dc22-c932-4257-b70d-999d363939dd", "14fc1472-e02c-4b0c-bf4e-ea2d31c76de3", "Admin", "ADMIN" },
-                    { "f691f3e3-b87b-4923-be87-4503d4d8f8d0", "8ee53348-4032-4fa4-9099-d2af6497220d", "Puntor", "PUNTOR" }
+                    { "1e274982-07ba-4067-9787-4c07466157c6", "5c7246ae-6a17-46c2-8646-0ac105e11d9b", "User", "USER" },
+                    { "1a90c24c-85ab-4649-9667-af4d47ab8a8c", "c8391097-2481-4b19-b521-f07961f0a05a", "Admin", "ADMIN" },
+                    { "82f0ceba-19c8-4871-83df-40c117e94a64", "803e145f-8354-472b-bcda-01f8caff004c", "Puntor", "PUNTOR" }
                 });
 
             migrationBuilder.InsertData(
@@ -673,6 +690,9 @@ namespace PartsManagement.Migrations
 
             migrationBuilder.DropTable(
                 name: "Porosite");
+
+            migrationBuilder.DropTable(
+                name: "Pyetjet");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
