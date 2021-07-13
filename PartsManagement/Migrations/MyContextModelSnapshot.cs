@@ -48,22 +48,22 @@ namespace PartsManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8d6dc590-e6ef-49e1-9a62-3748c0f0f957",
-                            ConcurrencyStamp = "77cf9dd7-6696-4007-bee1-090da92d1c20",
+                            Id = "87ca3307-4815-4b9e-8cb3-01f50a7027af",
+                            ConcurrencyStamp = "9c23bb71-5484-43cd-af96-885dc1ba1bf3",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "ac6cc60a-9f60-4e05-a2bc-716547d4895c",
-                            ConcurrencyStamp = "9a081ce9-fe1b-45ca-bc6f-43956cb67e82",
+                            Id = "99559a09-49e6-4b2e-91fd-6438cba4f248",
+                            ConcurrencyStamp = "e3899028-628d-4402-a9b5-eb63c8b4d2d3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8d2181f6-bb7b-415e-8b41-2e90f0f6b37e",
-                            ConcurrencyStamp = "714b410a-00ee-48e9-9525-0df66b2c7f97",
+                            Id = "a1add32a-e317-4b0d-939e-1f534f4a37ef",
+                            ConcurrencyStamp = "5115a44c-1d46-4f8e-af73-7612a1a39ac4",
                             Name = "Puntor",
                             NormalizedName = "PUNTOR"
                         });

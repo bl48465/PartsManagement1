@@ -5,6 +5,7 @@ import Navbar from './navbar/Navbar';
 import PuntoriNav from './puntorinav/Navbar';
 import {selectUser} from '../../reducers/rootReducer'
 import { useSelector } from "react-redux";
+import './Ndihma.css';
 
 
 const Support = () => {

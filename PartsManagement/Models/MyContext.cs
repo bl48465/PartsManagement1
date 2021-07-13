@@ -26,6 +26,7 @@ namespace PartsManagement.Models
         public DbSet<Shteti> Shtetet { get; set; }
         public DbSet<Qyteti> Qytetet { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder model)
         {
           base.OnModelCreating(model);

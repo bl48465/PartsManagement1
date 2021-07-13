@@ -22,7 +22,8 @@ import { AdminTable } from "./components/user/admin/Admin";
 import Dankmemes from "./components/user/Chart";
 import Support from "./components/user/SupportUser";
 import { ProtectedAdmin } from "./features/ProtectedAdmin";
-import { HomeAdmin } from "./components/user/admin/HomeAdmin";
+import { ContactUs } from "./containers/homepage/contactUs";
+import { ContactTable } from "./components/user/ContactUs";
 
 const AppContainer = styled.div`
   width: 100%;
@@ -51,6 +52,11 @@ function App() {
                     <Route path="/AccountBox">
                         <AppContainer>
                             <AccountBox />
+                        </AppContainer>
+                    </Route>
+                    <Route path="/ContactUs">
+                        <AppContainer>
+                        <ContactUs/>
                         </AppContainer>
                     </Route>
                     <ProtectedRoute
@@ -113,6 +119,7 @@ function App() {
                         component={Support}
                         isAuth={user === null ? false : true}
                     />
+           
                     <ProtectedRoute
                         path="/Shitja"
                         role={user === null ? "" : user.roli}
@@ -126,7 +133,7 @@ function App() {
                         isAuth={user === null ? false : true}
                     />
 
-                    <ProtectedAdmin path="/HomeAdmin" role={user === null ? '' : user.roli} component={HomeAdmin} isAuth={user === null ? false : true} />
+                    <ProtectedAdmin path="/HomeAdmin" role={user === null ? '' : user.roli} component={ContactTable} isAuth={user === null ? false : true} />
 
                     <Route path="/NotFound">
                         <NotFound />

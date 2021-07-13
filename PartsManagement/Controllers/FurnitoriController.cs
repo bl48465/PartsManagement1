@@ -66,7 +66,7 @@ namespace PartsManagement.Controllers
             }
             else
             {
-                var furnitoreteuserit = await _unitOfWork.Furnitoret.GetAll(a => a.UserId == userId);
+                var furnitoreteuserit = await _context.Furnitoret.Where(a => a.UserId == userId).ToListAsync();
                 if (furnitoreteuserit == null) { return NotFound($"Produktet nuk u gjetën!"); }
                 return Ok(furnitoreteuserit);
             }
@@ -114,8 +114,9 @@ namespace PartsManagement.Controllers
             else
             {
 
-                var furnitori = _mapper.Map<Furnitori>(furnitoriDTO);
+              
                 furnitoriDTO.UserId = userId;
+                var furnitori = _mapper.Map<Furnitori>(furnitoriDTO);
 
                 _context.Furnitoret.Add(furnitori);
                 await _context.SaveChangesAsync();

@@ -117,7 +117,8 @@ export function ShitjaTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {shitja.map((row, key) => (
+                        {shitja.filter(rreshti => rreshti.produkti.emri.toLowerCase()
+                                .includes(SearchField.toLowerCase())).map((row, key) => (
                                 <TableRow key={row.faturaId}>
                                     <TableCell align="left"><RiMoneyEuroCircleFill color="#fc4747" size="30"/></TableCell>
                                     <TableCell align="center"><RowText>{row.produkti.number}</RowText></TableCell>

@@ -10,7 +10,8 @@ export const SearchBar = (props) => {
             icon="search"
             placeholder={props.placeholder}
             onSearchChange={props.handleChange}
-        />
+            open={false}
+            />
     )
 
 }

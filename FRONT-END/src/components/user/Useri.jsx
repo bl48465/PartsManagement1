@@ -9,11 +9,12 @@ import logo from '../../assets/logo/logo.png'
 import { IconContext } from 'react-icons';
 import Alert from '@material-ui/lab/Alert';
 import { Select } from './navbar/StyledComponents';
-import PuntoriNav from './puntorinav/Navbar';
 import { useDispatch } from 'react-redux';
-import Navbar from './navbar/Navbar';
 import { useHistory } from 'react-router';
 import { logout } from '../../reducers/rootReducer';
+import PuntoriNav from './puntorinav/Navbar';
+import AdminNav from './adminnav/Navbar';
+import Navbar from './navbar/Navbar';
 
 export const BoxContainer = styled.div`
 margin-left:21%;
@@ -128,7 +129,7 @@ export default function UserCard() {
 
     return (      
         <IconContext.Provider value={{ color: 'white', size: '2%' }}>
-        {(useriFromRedux.roli == "Puntor") ? <PuntoriNav/> : <Navbar/>}
+        {((useriFromRedux.roli === "Puntor") ? <PuntoriNav/> : (useriFromRedux.roli === "Admin")? <AdminNav/>:<Navbar/>)}
         <BoxContainer>
             <Flex>
                 <img src={logo} className="picu" width="35%" />

@@ -73,7 +73,7 @@ export function LoginForm(props) {
       return <Redirect to="/Home"/>;
     }
     else if(rolii === 'Admin'){
-      return <Redirect to="/AdminHome"/>;
+      return <Redirect to="/HomeAdmin"/>;
     }
     else if(rolii === 'Puntor'){
       return <Redirect to="/Home"/>;

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PartsManagement.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -429,9 +429,9 @@ namespace PartsManagement.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1e274982-07ba-4067-9787-4c07466157c6", "5c7246ae-6a17-46c2-8646-0ac105e11d9b", "User", "USER" },
-                    { "1a90c24c-85ab-4649-9667-af4d47ab8a8c", "c8391097-2481-4b19-b521-f07961f0a05a", "Admin", "ADMIN" },
-                    { "82f0ceba-19c8-4871-83df-40c117e94a64", "803e145f-8354-472b-bcda-01f8caff004c", "Puntor", "PUNTOR" }
+                    { "87ca3307-4815-4b9e-8cb3-01f50a7027af", "9c23bb71-5484-43cd-af96-885dc1ba1bf3", "User", "USER" },
+                    { "99559a09-49e6-4b2e-91fd-6438cba4f248", "e3899028-628d-4402-a9b5-eb63c8b4d2d3", "Admin", "ADMIN" },
+                    { "a1add32a-e317-4b0d-939e-1f534f4a37ef", "5115a44c-1d46-4f8e-af73-7612a1a39ac4", "Puntor", "PUNTOR" }
                 });
 
             migrationBuilder.InsertData(

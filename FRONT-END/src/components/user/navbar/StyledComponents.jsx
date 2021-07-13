@@ -59,7 +59,7 @@ export const TableHead = styled.thead`
 
 
 export const TableText = styled.p`
-  font-size: 21px;
+  font-size: 17px;
   color: #white;
   font-weight: normal;
   line-height: 1.4;

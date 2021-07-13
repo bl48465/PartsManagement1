@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../reducers/rootReducer';
 import { NavText } from './StyledComponents';
 
-function AdminNav(props) {
+function PuntoriNav(props) {
 
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
@@ -82,4 +82,4 @@ function AdminNav(props) {
   );
 }
 
-export default AdminNav;
+export default PuntoriNav;

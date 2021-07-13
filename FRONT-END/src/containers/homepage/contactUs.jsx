@@ -116,7 +116,10 @@ export function ContactUs(props) {
     formValues[target.id] = target.value;
     setFormState({ formValues });
     handleValidation(target);
+    setscMessage('');
   };
+
+  const[scmesage,setscMessage]=useState("");
 
   const handleSubmit = event => {
       event.preventDefault();
@@ -126,7 +129,7 @@ export function ContactUs(props) {
 
         axios.post("http://localhost:5000/api/Contact",formValues)
         .then(
-          errorState.errValues.success='Sukses. Ne ju kontaktojmë në email!'
+          setscMessage('Sukses. Ne ju kontaktojmë në email!')
         )
         .catch((error)=> {
           if(error.response){
@@ -157,8 +160,7 @@ export function ContactUs(props) {
           <Link to="/"><Logo /></Link>
           <br></br>
           <br></br>
-          <br></br>
-          <SuccessMessage>{errorState.errValues.success}</SuccessMessage>
+          <SuccessMessage>{scmesage}</SuccessMessage>
           <ErrMessage>{formState.formErrors.Emri}</ErrMessage>
           <ErrMessage>{formState.formErrors.Mbiemri}</ErrMessage>
           <ErrMessage>{formState.formErrors.Pyetja}</ErrMessage>
@@ -206,7 +208,7 @@ export function ContactUs(props) {
                 control={Button}
                 content="Konfirmo"
                 placeholder="Button"
-                onClick={handleChange}
+                onClick={handleSubmit}
               />
             </Form>
           </Element>

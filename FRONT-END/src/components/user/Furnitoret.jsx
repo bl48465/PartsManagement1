@@ -84,7 +84,8 @@ export function FurnitoriTable() {
     useEffect(() => {
         axios.get('http://localhost:5000/api/Furnitori/user', config).then(response => {
             setfurnitoret(response.data);
-        });
+            
+        }).catch(error=>console.log(error.response.data));
 
     }, [furnitorii])
 
@@ -192,8 +193,9 @@ export function FurnitoriTable() {
                                         <TableCell align="center"><RowText>{row.emri}</RowText></TableCell>
                                         <TableCell align="center"><RowText>{row.mbiemri}</RowText></TableCell>
                                         <TableCell align="center"><RowText>{row.lokacioni}</RowText></TableCell>
-                                        <TableCell align="center"><RowText><ReactCountryFlag countryCode="XK" svg  style={{width: '1em',height: '1em'}}/>  {row.telefoni}</RowText></TableCell>
+                                        <TableCell align="center"><RowText>{row.telefoni}</RowText></TableCell>
                                         <TableCell align="center">
+                                        <Flexirimi>
                                             <UpdateButton
                                                 onClick={() =>
                                                     setEditModal(
@@ -213,6 +215,7 @@ export function FurnitoriTable() {
                                                 <Icon name='delete' />
                                                 Fshij
                                             </DeleteButton>
+                                            </Flexirimi>
                                         </TableCell>
 
                                     </TableRow>

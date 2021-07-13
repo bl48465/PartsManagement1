@@ -20,6 +20,7 @@ export default function FeaturedInfo() {
   const[countProd,setCountProd]=useState(0);
   const[countPor,setCountPor]=useState(0);
   const[countKom,setCountKom]=useState(0);
+  const[countSec,setCountSec]=useState(0);
 
   
   useEffect(() => {
@@ -39,6 +40,9 @@ axios.get('http://localhost:5000/api/Porosia/user',config).then(response => {
 });
 axios.get('http://localhost:5000/api/Komenti',config).then(response => {
   setCountKom(response.data.length);
+});
+axios.get('http://localhost:5000/api/Sektori',config).then(response => {
+  setCountSec(response.data.length);
 });
 }
 
@@ -80,18 +84,18 @@ axios.get('http://localhost:5000/api/Komenti',config).then(response => {
       <Statistic.Value>
         <Icon name='chart bar' size='tiny' />{countKom}
       </Statistic.Value>
-      <Statistic.Label>Komente</Statistic.Label>
+      <Statistic.Label>Komentet</Statistic.Label>
     </Statistic>
         </div>
 
-        {/* <div className="featuredItem">
+         <div className="featuredItem">
       <Statistic>
       <Statistic.Value>
-        <Icon name='chart bar' size='tiny' />5
+        <Icon name='chart bar' size='tiny' />{countSec}
       </Statistic.Value>
-      <Statistic.Label>Nr i Shitjeve</Statistic.Label>
+      <Statistic.Label>Sektorët</Statistic.Label>
     </Statistic>
-        </div> */}
+        </div> 
 
         </div>
   );
